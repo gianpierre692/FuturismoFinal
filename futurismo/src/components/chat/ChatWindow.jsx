@@ -16,16 +16,31 @@ const ChatWindow = ({ chat, onClose }) => {
   const fileInputRef = useRef(null);
 
   // Datos mock de mensajes
-  const [messages, setMessages] = useState([
-    {
-      id: '1',
-      senderId: chat?.id,
-      senderName: chat?.name,
-      content: 'Hola, ¿cómo están todos?',
-      timestamp: new Date(Date.now() - 3600000),
-      type: 'text',
-      status: 'read'
-    },
+  const getInitialMessages = () => {
+    if (chat?.isFromAgenda) {
+      return [
+        {
+          id: '1',
+          senderId: 'system',
+          senderName: 'Sistema',
+          content: `Chat de coordinación iniciado con ${chat.name}`,
+          timestamp: new Date(),
+          type: 'system',
+          status: 'read'
+        }
+      ];
+    }
+    
+    return [
+      {
+        id: '1',
+        senderId: chat?.id,
+        senderName: chat?.name,
+        content: 'Hola, ¿cómo están todos?',
+        timestamp: new Date(Date.now() - 3600000),
+        type: 'text',
+        status: 'read'
+      },
     {
       id: '2',
       senderId: 'current-user',
@@ -99,7 +114,10 @@ const ChatWindow = ({ chat, onClose }) => {
       type: 'text',
       status: 'sent'
     }
-  ]);
+    ];
+  };
+
+  const [messages, setMessages] = useState(() => getInitialMessages());
 
   useEffect(() => {
     scrollToBottom();
@@ -150,6 +168,20 @@ const ChatWindow = ({ chat, onClose }) => {
 
   const renderMessage = (msg) => {
     const isCurrentUser = msg.senderId === 'current-user';
+    const isSystemMessage = msg.type === 'system';
+
+    if (isSystemMessage) {
+      return (
+        <div key={msg.id} className="flex justify-center mb-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-2 max-w-md">
+            <p className="text-sm text-blue-800 text-center">{msg.content}</p>
+            <div className="text-xs text-blue-600 text-center mt-1">
+              {formatters.formatTime(msg.timestamp)}
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div
@@ -263,9 +295,18 @@ const ChatWindow = ({ chat, onClose }) => {
           )}
           
           <div>
-            <h3 className="font-semibold text-gray-900">{chat.name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-gray-900">{chat.name}</h3>
+              {chat.isFromAgenda && (
+                <span className="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+                  Coordinación
+                </span>
+              )}
+            </div>
             <p className="text-xs text-gray-500">
-              {chat.typing && chat.typingUser ? (
+              {chat.isFromAgenda ? (
+                'Chat iniciado desde agenda de coordinación'
+              ) : chat.typing && chat.typingUser ? (
                 <span className="text-primary-600">{chat.typingUser}</span>
               ) : chat.online ? (
                 'En línea'

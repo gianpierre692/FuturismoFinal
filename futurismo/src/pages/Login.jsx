@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, Loader2, Building2, Map, Shield } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Building2, Map, Shield, UserCheck } from 'lucide-react';
 
 // Store y validación
 import useAuthStore from '../stores/authStore';
@@ -154,8 +154,8 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setValue('email', 'agencia@futurismo.com');
-                  setValue('password', 'demo123');
+                  setValue('email', 'agencia@test.com');
+                  setValue('password', 'agencia123');
                   setValue('remember', true);
                   handleSubmit(onSubmit)();
                 }}
@@ -167,7 +167,7 @@ const Login = () => {
                       <Building2 className="w-4 h-4 text-primary-600" />
                       Agencia de Viajes
                     </p>
-                    <p className="text-sm text-gray-600">agencia@futurismo.com</p>
+                    <p className="text-sm text-gray-600">agencia@test.com</p>
                   </div>
                   <span className="text-xs text-primary-600 font-medium bg-primary-100 px-2 py-1 rounded">
                     B2B
@@ -179,8 +179,8 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setValue('email', 'guia@futurismo.com');
-                  setValue('password', 'demo123');
+                  setValue('email', 'guia@test.com');
+                  setValue('password', 'guia123');
                   setValue('remember', true);
                   handleSubmit(onSubmit)();
                 }}
@@ -192,10 +192,35 @@ const Login = () => {
                       <Map className="w-4 h-4 text-secondary-600" />
                       Guía Turístico
                     </p>
-                    <p className="text-sm text-gray-600">guia@futurismo.com</p>
+                    <p className="text-sm text-gray-600">guia@test.com</p>
                   </div>
                   <span className="text-xs text-secondary-600 font-medium bg-secondary-100 px-2 py-1 rounded">
                     Operativo
+                  </span>
+                </div>
+              </button>
+
+              {/* Botón Guía Freelance */}
+              <button
+                type="button"
+                onClick={() => {
+                  setValue('email', 'freelance@test.com');
+                  setValue('password', 'freelance123');
+                  setValue('remember', true);
+                  handleSubmit(onSubmit)();
+                }}
+                className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-gray-900 flex items-center gap-2">
+                      <UserCheck className="w-4 h-4 text-green-600" />
+                      Guía Freelance
+                    </p>
+                    <p className="text-sm text-gray-600">freelance@test.com</p>
+                  </div>
+                  <span className="text-xs text-green-600 font-medium bg-green-100 px-2 py-1 rounded">
+                    Freelance
                   </span>
                 </div>
               </button>
@@ -205,7 +230,7 @@ const Login = () => {
                 type="button"
                 onClick={() => {
                   setValue('email', 'admin@futurismo.com');
-                  setValue('password', 'demo123');
+                  setValue('password', 'admin123');
                   setValue('remember', true);
                   handleSubmit(onSubmit)();
                 }}
@@ -227,7 +252,7 @@ const Login = () => {
             </div>
             
             <p className="text-xs text-gray-500 text-center mt-3">
-              Contraseña para todos: <code className="bg-gray-100 px-1 py-0.5 rounded">demo123</code>
+              Credenciales válidas para cada rol específico
             </p>
           </div>
         </div>

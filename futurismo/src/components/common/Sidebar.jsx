@@ -11,7 +11,9 @@ import {
   ChevronRight,
   Settings,
   Users,
-  FileText
+  FileText,
+  CalendarDays,
+  UserCheck
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 
@@ -34,18 +36,27 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { path: '/profile', icon: User, label: 'Perfil' }
       ];
     } else if (user?.role === 'guide') {
-      return [
+      const guideItems = [
         ...baseItems,
         { path: '/monitoring', icon: Map, label: 'Mis Tours' },
         { path: '/history', icon: Clock, label: 'Historial' },
-        { path: '/chat', icon: MessageSquare, label: 'Chat' },
-        { path: '/profile', icon: User, label: 'Perfil' }
+        { path: '/chat', icon: MessageSquare, label: 'Chat' }
       ];
+      
+      // Agregar agenda solo para guías freelance
+      if (user?.guideType === 'freelance') {
+        guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDays, label: 'Mi Agenda' });
+      }
+      
+      guideItems.push({ path: '/profile', icon: User, label: 'Perfil' });
+      return guideItems;
     } else if (user?.role === 'admin') {
       return [
         ...baseItems,
         { path: '/monitoring', icon: Map, label: 'Monitoreo' },
         { path: '/reservations', icon: Calendar, label: 'Reservas' },
+        { path: '/assignments', icon: UserCheck, label: 'Asignaciones' },
+        { path: '/agenda', icon: CalendarDays, label: 'Coordinación' },
         { path: '/history', icon: FileText, label: 'Reportes' },
         { path: '/chat', icon: MessageSquare, label: 'Chat' },
         { path: '/users', icon: Users, label: 'Usuarios' },

@@ -105,6 +105,7 @@ export const mockGuides = [
     email: 'carlos.mendoza@futurismo.com',
     phone: '+51 987654321',
     avatar: 'https://i.pravatar.cc/150?img=1',
+    tipo: 'planta',
     languages: ['Español', 'Inglés', 'Portugués'],
     specialties: ['Historia', 'Arqueología', 'Cultura'],
     rating: 4.8,
@@ -125,6 +126,7 @@ export const mockGuides = [
     email: 'maria.garcia@futurismo.com',
     phone: '+51 976543210',
     avatar: 'https://i.pravatar.cc/150?img=2',
+    tipo: 'planta',
     languages: ['Español', 'Inglés'],
     specialties: ['Gastronomía', 'Cultura', 'Historia'],
     rating: 4.9,
@@ -145,6 +147,7 @@ export const mockGuides = [
     email: 'juan.perez@futurismo.com',
     phone: '+51 965432198',
     avatar: 'https://i.pravatar.cc/150?img=3',
+    tipo: 'planta',
     languages: ['Español', 'Inglés', 'Francés'],
     specialties: ['Aventura', 'Naturaleza', 'Deportes'],
     rating: 4.7,
@@ -157,6 +160,66 @@ export const mockGuides = [
       thisMonth: 28,
       punctuality: 95,
       satisfaction: 94
+    }
+  },
+  {
+    id: '4',
+    name: 'Ana Rodríguez',
+    email: 'ana.rodriguez@gmail.com',
+    phone: '+51 954321987',
+    avatar: 'https://i.pravatar.cc/150?img=4',
+    tipo: 'freelance',
+    languages: ['Español', 'Inglés'],
+    specialties: ['Historia', 'Arte', 'Fotografía'],
+    rating: 4.6,
+    experience: 6,
+    certifications: ['Guía Oficial MINCETUR'],
+    availability: 'disponible',
+    tours: ['TL001', 'PB001'],
+    agenda: {
+      '2024-02-15': { disponible: true, horarios: ['09:00-13:00', '14:00-18:00'] },
+      '2024-02-16': { disponible: true, horarios: ['09:00-17:00'] },
+      '2024-02-17': { disponible: false, horarios: [] },
+      '2024-02-18': { disponible: true, horarios: ['14:00-18:00'] },
+      '2024-02-19': { disponible: true, horarios: ['09:00-13:00'] },
+      '2024-02-20': { disponible: false, horarios: [] },
+      '2024-02-21': { disponible: true, horarios: ['09:00-17:00'] }
+    },
+    stats: {
+      totalTours: 189,
+      thisMonth: 12,
+      punctuality: 97,
+      satisfaction: 95
+    }
+  },
+  {
+    id: '5',
+    name: 'Roberto Vargas',
+    email: 'roberto.vargas@outlook.com',
+    phone: '+51 943210876',
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    tipo: 'freelance',
+    languages: ['Español', 'Inglés', 'Italiano'],
+    specialties: ['Gastronomía', 'Cultura', 'Vinos'],
+    rating: 4.8,
+    experience: 4,
+    certifications: ['Guía Oficial MINCETUR', 'Sommelier'],
+    availability: 'disponible',
+    tours: ['TG001', 'TL001'],
+    agenda: {
+      '2024-02-15': { disponible: false, horarios: [] },
+      '2024-02-16': { disponible: true, horarios: ['11:00-16:00'] },
+      '2024-02-17': { disponible: true, horarios: ['09:00-13:00', '15:00-18:00'] },
+      '2024-02-18': { disponible: false, horarios: [] },
+      '2024-02-19': { disponible: true, horarios: ['10:00-17:00'] },
+      '2024-02-20': { disponible: true, horarios: ['09:00-12:00'] },
+      '2024-02-21': { disponible: false, horarios: [] }
+    },
+    stats: {
+      totalTours: 124,
+      thisMonth: 8,
+      punctuality: 94,
+      satisfaction: 97
     }
   }
 ];
@@ -370,6 +433,270 @@ export const mockStatistics = {
   }
 };
 
+export const mockUsers = [
+  {
+    id: 'user-1',
+    username: 'admin',
+    email: 'admin@futurismo.com',
+    firstName: 'Carlos',
+    lastName: 'Administrator',
+    role: 'admin',
+    status: 'activo',
+    avatar: 'https://i.pravatar.cc/150?img=7',
+    phone: '+51 999999999',
+    department: 'Administración',
+    position: 'Administrador General',
+    lastLogin: new Date('2024-02-14T10:30:00'),
+    createdAt: new Date('2023-01-15'),
+    permissions: [
+      'users.create',
+      'users.read',
+      'users.update',
+      'users.delete',
+      'reservations.manage',
+      'guides.manage',
+      'reports.view',
+      'system.admin'
+    ],
+    preferences: {
+      language: 'es',
+      timezone: 'America/Lima',
+      notifications: {
+        email: true,
+        push: true,
+        sms: false
+      }
+    }
+  },
+  {
+    id: 'user-2',
+    username: 'supervisor',
+    email: 'supervisor@futurismo.com',
+    firstName: 'María',
+    lastName: 'Rodríguez',
+    role: 'supervisor',
+    status: 'activo',
+    avatar: 'https://i.pravatar.cc/150?img=8',
+    phone: '+51 987654321',
+    department: 'Operaciones',
+    position: 'Supervisor de Tours',
+    lastLogin: new Date('2024-02-14T09:15:00'),
+    createdAt: new Date('2023-03-20'),
+    permissions: [
+      'users.read',
+      'reservations.manage',
+      'guides.read',
+      'guides.assign',
+      'monitoring.view',
+      'reports.view'
+    ],
+    preferences: {
+      language: 'es',
+      timezone: 'America/Lima',
+      notifications: {
+        email: true,
+        push: true,
+        sms: true
+      }
+    }
+  },
+  {
+    id: 'user-3',
+    username: 'vendedor1',
+    email: 'ventas1@futurismo.com',
+    firstName: 'Jorge',
+    lastName: 'Vargas',
+    role: 'ventas',
+    status: 'activo',
+    avatar: 'https://i.pravatar.cc/150?img=9',
+    phone: '+51 976543210',
+    department: 'Ventas',
+    position: 'Ejecutivo de Ventas',
+    lastLogin: new Date('2024-02-14T08:45:00'),
+    createdAt: new Date('2023-06-10'),
+    permissions: [
+      'reservations.create',
+      'reservations.read',
+      'reservations.update',
+      'clients.manage',
+      'reports.basic'
+    ],
+    preferences: {
+      language: 'es',
+      timezone: 'America/Lima',
+      notifications: {
+        email: true,
+        push: false,
+        sms: false
+      }
+    }
+  },
+  {
+    id: 'user-4',
+    username: 'recepcion',
+    email: 'recepcion@futurismo.com',
+    firstName: 'Ana',
+    lastName: 'Torres',
+    role: 'recepcionista',
+    status: 'activo',
+    avatar: 'https://i.pravatar.cc/150?img=10',
+    phone: '+51 965432109',
+    department: 'Atención al Cliente',
+    position: 'Recepcionista',
+    lastLogin: new Date('2024-02-13T17:30:00'),
+    createdAt: new Date('2023-08-25'),
+    permissions: [
+      'reservations.read',
+      'clients.read',
+      'guides.read',
+      'chat.access'
+    ],
+    preferences: {
+      language: 'es',
+      timezone: 'America/Lima',
+      notifications: {
+        email: false,
+        push: true,
+        sms: false
+      }
+    }
+  },
+  {
+    id: 'user-5',
+    username: 'contador',
+    email: 'finanzas@futurismo.com',
+    firstName: 'Luis',
+    lastName: 'Mendoza',
+    role: 'contador',
+    status: 'activo',
+    avatar: 'https://i.pravatar.cc/150?img=11',
+    phone: '+51 954321098',
+    department: 'Finanzas',
+    position: 'Contador',
+    lastLogin: new Date('2024-02-14T07:20:00'),
+    createdAt: new Date('2023-02-28'),
+    permissions: [
+      'reports.financial',
+      'reservations.read',
+      'clients.read',
+      'payments.manage'
+    ],
+    preferences: {
+      language: 'es',
+      timezone: 'America/Lima',
+      notifications: {
+        email: true,
+        push: false,
+        sms: false
+      }
+    }
+  },
+  {
+    id: 'user-6',
+    username: 'marketing',
+    email: 'marketing@futurismo.com',
+    firstName: 'Sofia',
+    lastName: 'Castillo',
+    role: 'marketing',
+    status: 'inactivo',
+    avatar: 'https://i.pravatar.cc/150?img=12',
+    phone: '+51 943210987',
+    department: 'Marketing',
+    position: 'Especialista en Marketing',
+    lastLogin: new Date('2024-01-15T16:45:00'),
+    createdAt: new Date('2023-11-05'),
+    permissions: [
+      'reports.marketing',
+      'clients.read',
+      'reservations.read'
+    ],
+    preferences: {
+      language: 'es',
+      timezone: 'America/Lima',
+      notifications: {
+        email: true,
+        push: true,
+        sms: false
+      }
+    }
+  }
+];
+
+export const userRoles = [
+  {
+    id: 'admin',
+    name: 'Administrador',
+    description: 'Acceso completo al sistema',
+    level: 5,
+    color: 'red'
+  },
+  {
+    id: 'supervisor',
+    name: 'Supervisor',
+    description: 'Supervisión de operaciones y personal',
+    level: 4,
+    color: 'orange'
+  },
+  {
+    id: 'ventas',
+    name: 'Ventas',
+    description: 'Gestión de reservas y clientes',
+    level: 3,
+    color: 'blue'
+  },
+  {
+    id: 'contador',
+    name: 'Contador',
+    description: 'Gestión financiera y reportes',
+    level: 3,
+    color: 'green'
+  },
+  {
+    id: 'recepcionista',
+    name: 'Recepcionista',
+    description: 'Atención al cliente y consultas',
+    level: 2,
+    color: 'purple'
+  },
+  {
+    id: 'marketing',
+    name: 'Marketing',
+    description: 'Análisis y promociones',
+    level: 2,
+    color: 'pink'
+  }
+];
+
+export const systemPermissions = [
+  { id: 'users.create', name: 'Crear usuarios', module: 'Usuarios' },
+  { id: 'users.read', name: 'Ver usuarios', module: 'Usuarios' },
+  { id: 'users.update', name: 'Editar usuarios', module: 'Usuarios' },
+  { id: 'users.delete', name: 'Eliminar usuarios', module: 'Usuarios' },
+  { id: 'reservations.create', name: 'Crear reservas', module: 'Reservas' },
+  { id: 'reservations.read', name: 'Ver reservas', module: 'Reservas' },
+  { id: 'reservations.update', name: 'Editar reservas', module: 'Reservas' },
+  { id: 'reservations.delete', name: 'Eliminar reservas', module: 'Reservas' },
+  { id: 'reservations.manage', name: 'Gestionar reservas', module: 'Reservas' },
+  { id: 'guides.create', name: 'Crear guías', module: 'Guías' },
+  { id: 'guides.read', name: 'Ver guías', module: 'Guías' },
+  { id: 'guides.update', name: 'Editar guías', module: 'Guías' },
+  { id: 'guides.delete', name: 'Eliminar guías', module: 'Guías' },
+  { id: 'guides.manage', name: 'Gestionar guías', module: 'Guías' },
+  { id: 'guides.assign', name: 'Asignar guías', module: 'Guías' },
+  { id: 'clients.create', name: 'Crear clientes', module: 'Clientes' },
+  { id: 'clients.read', name: 'Ver clientes', module: 'Clientes' },
+  { id: 'clients.update', name: 'Editar clientes', module: 'Clientes' },
+  { id: 'clients.manage', name: 'Gestionar clientes', module: 'Clientes' },
+  { id: 'monitoring.view', name: 'Ver monitoreo', module: 'Monitoreo' },
+  { id: 'reports.view', name: 'Ver reportes básicos', module: 'Reportes' },
+  { id: 'reports.basic', name: 'Reportes básicos', module: 'Reportes' },
+  { id: 'reports.financial', name: 'Reportes financieros', module: 'Reportes' },
+  { id: 'reports.marketing', name: 'Reportes de marketing', module: 'Reportes' },
+  { id: 'payments.manage', name: 'Gestionar pagos', module: 'Pagos' },
+  { id: 'chat.access', name: 'Acceso al chat', module: 'Comunicación' },
+  { id: 'system.admin', name: 'Administración del sistema', module: 'Sistema' }
+];
+
 export const mockMessages = [
   {
     id: '1',
@@ -435,7 +762,74 @@ export const getMockData = {
     if (filters.language) {
       result = result.filter(guide => guide.languages.includes(filters.language));
     }
+    if (filters.tipo) {
+      result = result.filter(guide => guide.tipo === filters.tipo);
+    }
+    if (filters.fecha && filters.hora) {
+      result = result.filter(guide => {
+        // Guías de planta siempre están disponibles (excepto si están ocupados)
+        if (guide.tipo === 'planta') {
+          return guide.availability === 'disponible';
+        }
+        // Guías freelance deben tener disponibilidad en su agenda
+        if (guide.tipo === 'freelance' && guide.agenda) {
+          const fechaStr = filters.fecha.toISOString().split('T')[0];
+          const agendaFecha = guide.agenda[fechaStr];
+          if (!agendaFecha || !agendaFecha.disponible) {
+            return false;
+          }
+          // Verificar si la hora está dentro de los horarios disponibles
+          const horaFiltro = filters.hora;
+          return agendaFecha.horarios.some(horario => {
+            const [inicio, fin] = horario.split('-');
+            return horaFiltro >= inicio && horaFiltro <= fin;
+          });
+        }
+        return false;
+      });
+    }
     return result;
+  },
+
+  guidesAvailableForDateTime: (fecha, hora) => {
+    return getMockData.guides({ fecha, hora, availability: 'disponible' });
+  },
+
+  users: (filters = {}) => {
+    let result = [...mockUsers];
+    
+    if (filters.role) {
+      result = result.filter(user => user.role === filters.role);
+    }
+    
+    if (filters.status) {
+      result = result.filter(user => user.status === filters.status);
+    }
+    
+    if (filters.department) {
+      result = result.filter(user => user.department === filters.department);
+    }
+    
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      result = result.filter(user => 
+        user.firstName.toLowerCase().includes(searchTerm) ||
+        user.lastName.toLowerCase().includes(searchTerm) ||
+        user.email.toLowerCase().includes(searchTerm) ||
+        user.username.toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    return result;
+  },
+
+  guideAgenda: (guideId, fecha) => {
+    const guide = mockGuides.find(g => g.id === guideId);
+    if (!guide || guide.tipo !== 'freelance' || !guide.agenda) {
+      return null;
+    }
+    const fechaStr = fecha.toISOString().split('T')[0];
+    return guide.agenda[fechaStr] || { disponible: false, horarios: [] };
   },
   
   reservations: (filters = {}) => {
@@ -507,6 +901,9 @@ export default {
   notifications: mockNotifications,
   statistics: mockStatistics,
   messages: mockMessages,
+  users: mockUsers,
+  userRoles,
+  systemPermissions,
   getMockData,
   mockRealtimeUpdates
 };

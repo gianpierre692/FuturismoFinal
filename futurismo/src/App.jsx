@@ -19,20 +19,27 @@ const Reservations = lazy(() => import('./pages/Reservations'));
 const History = lazy(() => import('./pages/History'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Chat = lazy(() => import('./pages/Chat'));
+const Users = lazy(() => import('./pages/Users'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Agenda = lazy(() => import('./pages/Agenda'));
+const TourAssignments = lazy(() => import('./pages/TourAssignments'));
 
 // WebSocket service
 import webSocketService from './services/websocket';
 
 function App() {
-  const { isAuthenticated, token, checkTokenExpiry } = useAuthStore();
+  const { isAuthenticated, token, initialize } = useAuthStore();
   const { addNotification } = useNotificationsStore();
 
-  // Verificar token al cargar
+  // Inicializar la aplicación
   useEffect(() => {
-    if (isAuthenticated) {
-      checkTokenExpiry();
+    try {
+      initialize();
+    } catch (error) {
+      console.warn('Error al inicializar aplicación:', error);
+      localStorage.clear();
     }
-  }, []);
+  }, [initialize]);
 
   // Conectar WebSocket cuando se autentique
   useEffect(() => {
@@ -100,10 +107,7 @@ function App() {
               path="users" 
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold">Gestión de Usuarios</h1>
-                    <p className="text-gray-600 mt-2">Módulo disponible solo para administradores</p>
-                  </div>
+                  <Users />
                 </ProtectedRoute>
               } 
             />
@@ -111,10 +115,23 @@ function App() {
               path="settings" 
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <div className="p-6">
-                    <h1 className="text-3xl font-bold">Configuración del Sistema</h1>
-                    <p className="text-gray-600 mt-2">Módulo disponible solo para administradores</p>
-                  </div>
+                  <Settings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="agenda" 
+              element={
+                <ProtectedRoute allowedRoles={['guide', 'admin']}>
+                  <Agenda />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="assignments" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <TourAssignments />
                 </ProtectedRoute>
               } 
             />

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ChatList from './ChatList';
 import ChatWindow from './ChatWindow';
 import { MessageSquare } from 'lucide-react';
@@ -6,6 +7,7 @@ import { MessageSquare } from 'lucide-react';
 const ChatContainer = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSelectChat = (chat) => {
     setSelectedChat(chat);
@@ -16,7 +18,36 @@ const ChatContainer = () => {
 
   const handleCloseChat = () => {
     setIsMobileView(false);
+    // Limpiar parámetros de URL al cerrar chat
+    setSearchParams({});
   };
+
+  // Efecto para manejar parámetros de URL (cuando viene desde agenda)
+  useEffect(() => {
+    const guideId = searchParams.get('guide');
+    const guideName = searchParams.get('name');
+    
+    if (guideId && guideName) {
+      // Crear un chat temporal para el guía (en una app real, esto vendría del backend)
+      const guideChat = {
+        id: `guide-${guideId}`,
+        type: 'guide',
+        name: decodeURIComponent(guideName),
+        avatar: `https://i.pravatar.cc/150?img=${parseInt(guideId)}`,
+        lastMessage: 'Coordinación desde agenda',
+        lastMessageTime: new Date(),
+        unreadCount: 0,
+        online: true,
+        typing: false,
+        isFromAgenda: true // Marcar que viene desde agenda
+      };
+      
+      setSelectedChat(guideChat);
+      if (window.innerWidth < 1024) {
+        setIsMobileView(true);
+      }
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex h-full bg-gray-50">

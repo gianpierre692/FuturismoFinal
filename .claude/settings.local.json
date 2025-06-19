@@ -12,7 +12,13 @@
       "Bash(grep:*)",
       "Bash(npm install:*)",
       "Bash(npm run dev:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "Bash(npm ls:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run clean:*)",
+      "Bash(npm run start:fresh:*)",
+      "Bash(pkill:*)",
+      "Bash(npm start:*)"
     ],
     "deny": []
   }

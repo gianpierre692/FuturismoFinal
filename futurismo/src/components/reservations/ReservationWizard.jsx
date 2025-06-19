@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { 
   MapPin, Calendar, Users, Clock, DollarSign, 
   ChevronRight, ChevronLeft, Check, AlertCircle,
-  User, Phone, Mail, Building
+  User, Phone, Mail, Building, UserCheck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useReservationsStore } from '../../stores/reservationsStore';
 import { formatters } from '../../utils/formatters';
 import { validators } from '../../utils/validators';
+import { getMockData } from '../../data/mockData';
 import toast from 'react-hot-toast';
 
 // Esquemas de validación para cada paso
@@ -23,6 +24,10 @@ const step1Schema = yup.object({
 });
 
 const step2Schema = yup.object({
+  guideId: yup.string().required('Debe seleccionar un guía')
+});
+
+const step3Schema = yup.object({
   adults: yup.number().required('Número de adultos requerido').min(1, 'Mínimo 1 adulto'),
   children: yup.number().min(0, 'No puede ser negativo'),
   pickupLocation: yup.string().required('El lugar de recojo es requerido'),
@@ -36,7 +41,7 @@ const step2Schema = yup.object({
     .email('Email inválido')
 });
 
-const step3Schema = yup.object({
+const step4Schema = yup.object({
   paymentMethod: yup.string().required('Seleccione un método de pago'),
   billingName: yup.string().required('Nombre para facturación requerido'),
   billingDocument: yup.string().required('Documento requerido'),
@@ -50,6 +55,7 @@ const ReservationWizard = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availableGuides, setAvailableGuides] = useState([]);
 
   // Mock data para tours disponibles
   const availableTours = [
@@ -61,9 +67,20 @@ const ReservationWizard = ({ onClose }) => {
 
   const steps = [
     { number: 1, title: 'Servicio', icon: MapPin },
-    { number: 2, title: 'Detalles', icon: Users },
-    { number: 3, title: 'Confirmación', icon: Check }
+    { number: 2, title: 'Guía', icon: UserCheck },
+    { number: 3, title: 'Detalles', icon: Users },
+    { number: 4, title: 'Confirmación', icon: Check }
   ];
+
+  // Cargar guías disponibles cuando se selecciona fecha y hora
+  useEffect(() => {
+    if (formData.date && formData.time) {
+      const fecha = new Date(formData.date);
+      const hora = formData.time;
+      const guides = getMockData.guidesAvailableForDateTime(fecha, hora);
+      setAvailableGuides(guides);
+    }
+  }, [formData.date, formData.time]);
 
   // Configuración de formularios para cada paso
   const getStepConfig = () => {
@@ -83,6 +100,13 @@ const ReservationWizard = ({ onClose }) => {
         return {
           schema: step2Schema,
           defaultValues: {
+            guideId: formData.guideId || ''
+          }
+        };
+      case 3:
+        return {
+          schema: step3Schema,
+          defaultValues: {
             adults: formData.adults || 1,
             children: formData.children || 0,
             pickupLocation: formData.pickupLocation || '',
@@ -92,9 +116,9 @@ const ReservationWizard = ({ onClose }) => {
             contactEmail: formData.contactEmail || ''
           }
         };
-      case 3:
+      case 4:
         return {
-          schema: step3Schema,
+          schema: step4Schema,
           defaultValues: {
             paymentMethod: formData.paymentMethod || 'transfer',
             billingName: formData.billingName || '',
@@ -126,7 +150,7 @@ const ReservationWizard = ({ onClose }) => {
 
   const handleNext = (data) => {
     setFormData({ ...formData, ...data });
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
       handleFinalSubmit({ ...formData, ...data });
@@ -275,8 +299,95 @@ const ReservationWizard = ({ onClose }) => {
           </div>
         )}
 
-        {/* Step 2: Details */}
+        {/* Step 2: Guide Selection */}
         {currentStep === 2 && (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold mb-4">Selecciona el Guía</h3>
+
+            {availableGuides.length > 0 ? (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 mb-4">
+                  Guías disponibles para {formatters.formatDate(formData.date)} a las {formData.time}:
+                </p>
+                
+                {availableGuides.map(guide => (
+                  <label key={guide.id} className="block">
+                    <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all">
+                      <input
+                        type="radio"
+                        value={guide.id}
+                        {...register('guideId')}
+                        className="mr-4"
+                      />
+                      <div className="flex items-center space-x-4 flex-1">
+                        <img 
+                          src={guide.avatar} 
+                          alt={guide.name}
+                          className="h-12 w-12 rounded-full object-cover"
+                        />
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <h4 className="font-medium text-gray-900">{guide.name}</h4>
+                            <span className={`px-2 py-1 text-xs rounded-full ${
+                              guide.tipo === 'planta' 
+                                ? 'bg-blue-100 text-blue-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {guide.tipo === 'planta' ? 'Planta' : 'Freelance'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">
+                            {guide.specialties.join(', ')} • {guide.languages.join(', ')}
+                          </p>
+                          <div className="flex items-center space-x-4 mt-1">
+                            <span className="text-sm text-yellow-600">
+                              ⭐ {guide.rating} ({guide.stats.totalTours} tours)
+                            </span>
+                            <span className="text-sm text-gray-500">
+                              {guide.experience} años de experiencia
+                            </span>
+                          </div>
+                          {guide.tipo === 'freelance' && guide.agenda && (
+                            <div className="text-xs text-gray-500 mt-1">
+                              Disponible: {getMockData.guideAgenda(guide.id, new Date(formData.date))?.horarios.join(', ') || 'Todo el día'}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                ))}
+                
+                {errors.guideId && (
+                  <p className="mt-2 text-sm text-red-600">{errors.guideId.message}</p>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h4 className="text-lg font-medium text-gray-900 mb-2">
+                  No hay guías disponibles
+                </h4>
+                <p className="text-gray-600">
+                  {formData.date && formData.time 
+                    ? `No hay guías disponibles para ${formatters.formatDate(formData.date)} a las ${formData.time}`
+                    : 'Selecciona una fecha y hora para ver los guías disponibles'
+                  }
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(1)}
+                  className="mt-4 text-blue-600 hover:text-blue-800"
+                >
+                  ← Cambiar fecha u hora
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Step 3: Details */}
+        {currentStep === 3 && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold mb-4">Detalles de la Reserva</h3>
 
@@ -376,8 +487,8 @@ const ReservationWizard = ({ onClose }) => {
           </div>
         )}
 
-        {/* Step 3: Confirmation */}
-        {currentStep === 3 && (
+        {/* Step 4: Confirmation */}
+        {currentStep === 4 && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold mb-4">Confirmación y Pago</h3>
 
@@ -400,6 +511,21 @@ const ReservationWizard = ({ onClose }) => {
                   <span className="text-gray-600">Hora:</span>
                   <span className="font-medium">{formData.time}</span>
                 </div>
+                {formData.guideId && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Guía:</span>
+                    <span className="font-medium">
+                      {getMockData.guides().find(g => g.id === formData.guideId)?.name}
+                      <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
+                        getMockData.guides().find(g => g.id === formData.guideId)?.tipo === 'planta' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {getMockData.guides().find(g => g.id === formData.guideId)?.tipo === 'planta' ? 'Planta' : 'Freelance'}
+                      </span>
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Pasajeros:</span>
                   <span className="font-medium">
@@ -518,7 +644,7 @@ const ReservationWizard = ({ onClose }) => {
             className="btn btn-primary flex items-center gap-2"
             disabled={isSubmitting}
           >
-            {currentStep === 3 ? (
+            {currentStep === 4 ? (
               <>
                 {isSubmitting ? 'Procesando...' : 'Confirmar Reserva'}
                 <Check className="w-4 h-4" />
