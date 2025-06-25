@@ -1,5 +1,5 @@
 import { 
-  X, Calendar, Clock, Users, MapPin, Phone, Mail, 
+  X, Calendar, Clock, Users, MapPin, Phone, 
   DollarSign, FileText, Download, Send, Edit, 
   CheckCircle, AlertCircle, Building
 } from 'lucide-react';
@@ -117,30 +117,138 @@ const ReservationDetail = ({ reservation, onClose }) => {
               </div>
             </div>
 
-            {/* Información del Cliente */}
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="font-semibold text-lg mb-4">Información del Cliente</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Nombre</p>
-                  <p className="font-medium">{reservation.clientName}</p>
+            {/* Información de los Grupos */}
+            <div className="bg-blue-50 rounded-lg p-6">
+              <h3 className="font-semibold text-lg mb-4 flex items-center">
+                <Users className="w-5 h-5 mr-2 text-blue-600" />
+                Grupos de la Reserva ({(reservation.groups || []).length || 1})
+              </h3>
+              
+              {/* Si hay grupos múltiples */}
+              {reservation.groups && reservation.groups.length > 0 ? (
+                <div className="space-y-4">
+                  {reservation.groups.map((group, index) => (
+                    <div key={index} className="border border-blue-200 rounded-lg p-4 bg-white">
+                      <h4 className="font-medium text-blue-900 mb-3 flex items-center">
+                        <User className="w-4 h-4 mr-2" />
+                        Grupo #{index + 1}
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <p className="text-sm text-gray-600">Representante</p>
+                          <p className="font-medium">{group.representativeName}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Teléfono</p>
+                          <div className="flex items-center gap-1">
+                            <Phone className="w-4 h-4 text-gray-500" />
+                            <span className="font-medium">{group.representativePhone}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-600">Total Personas</p>
+                          <p className="font-medium">
+                            {(group.companionsCount || 0) + 1} persona{((group.companionsCount || 0) + 1) !== 1 ? 's' : ''}
+                            <span className="text-sm text-gray-500 ml-1">
+                              ({group.companionsCount || 0} acompañantes + representante)
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <p className="text-sm text-gray-600">Email</p>
-                  <div className="flex items-center gap-1">
-                    <Mail className="w-4 h-4 text-gray-500" />
-                    <span className="font-medium">{reservation.clientEmail}</span>
+              ) : (
+                /* Compatibilidad con reservas anteriores */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Representante</p>
+                    <p className="font-medium">{reservation.representativeName || reservation.clientName}</p>
                   </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Teléfono</p>
+                    <div className="flex items-center gap-1">
+                      <Phone className="w-4 h-4 text-gray-500" />
+                      <span className="font-medium">{reservation.representativePhone || reservation.clientPhone}</span>
+                    </div>
+                  </div>
+                  {reservation.representativeEmail && (
+                    <div>
+                      <p className="text-sm text-gray-600">Email</p>
+                      <p className="font-medium">{reservation.representativeEmail}</p>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <p className="text-sm text-gray-600">Teléfono</p>
-                  <div className="flex items-center gap-1">
-                    <Phone className="w-4 h-4 text-gray-500" />
-                    <span className="font-medium">{reservation.clientPhone}</span>
-                  </div>
+              )}
+            </div>
+
+            {/* Información de Integrantes del Grupo */}
+            {(reservation.groupMembers && reservation.groupMembers.length > 0) || (reservation.companions && reservation.companions.length > 0) && (
+              <div className="bg-green-50 rounded-lg p-6">
+                <h3 className="font-semibold text-lg mb-4 flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-green-600" />
+                  Integrantes del Grupo ({(reservation.groupMembers || reservation.companions || []).length})
+                </h3>
+                <div className="space-y-4">
+                  {(reservation.groupMembers || reservation.companions || []).map((member, index) => {
+                    const isMinor = member.age && member.age < 18;
+                    return (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+                        <div className="flex items-center mb-3">
+                          <User className="w-4 h-4 mr-2 text-green-500" />
+                          <h4 className="font-medium text-gray-900">
+                            Integrante #{index + 1}
+                            {isMinor && (
+                              <span className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                                Menor de edad
+                              </span>
+                            )}
+                          </h4>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-600">Nombre</p>
+                            <p className="font-medium">{member.name}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-600">Documento</p>
+                            <p className="font-medium">{member.document || 'No especificado'}</p>
+                          </div>
+                          {member.age && (
+                            <div>
+                              <p className="text-sm text-gray-600">Edad</p>
+                              <p className="font-medium">{member.age} años</p>
+                            </div>
+                          )}
+                          {member.phone && (
+                            <div>
+                              <p className="text-sm text-gray-600">Teléfono</p>
+                              <div className="flex items-center gap-1">
+                                <Phone className="w-4 h-4 text-gray-500" />
+                                <span className="font-medium">{member.phone}</span>
+                              </div>
+                            </div>
+                          )}
+                          {member.guardianName && (
+                            <div className="md:col-span-2">
+                              <p className="text-sm text-gray-600">Tutor/Responsable</p>
+                              <p className="font-medium text-orange-700">{member.guardianName}</p>
+                            </div>
+                          )}
+                          {/* Compatibilidad con el formato anterior */}
+                          {member.relationship && (
+                            <div>
+                              <p className="text-sm text-gray-600">Relación</p>
+                              <p className="font-medium capitalize">{member.relationship}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Información de Pago */}
             <div className="bg-gray-50 rounded-lg p-6">

@@ -27,7 +27,6 @@ const ReservationList = () => {
       id: 'RES001',
       tourName: 'City Tour Lima Histórica',
       clientName: 'Juan Pérez',
-      clientEmail: 'juan@email.com',
       clientPhone: '+51 987654321',
       date: new Date('2024-02-15'),
       time: '09:00',
@@ -37,13 +36,24 @@ const ReservationList = () => {
       status: 'confirmada',
       pickupLocation: 'Hotel Marriott Miraflores',
       createdAt: new Date('2024-02-01'),
-      paymentStatus: 'pagado'
+      paymentStatus: 'pagado',
+      groups: [
+        {
+          representativeName: 'Juan Pérez',
+          representativePhone: '+51 987654321',
+          companionsCount: 2
+        },
+        {
+          representativeName: 'Carlos García',
+          representativePhone: '+51 987654322',
+          companionsCount: 1
+        }
+      ]
     },
     {
       id: 'RES002',
       tourName: 'Tour Gastronómico Miraflores',
       clientName: 'María García',
-      clientEmail: 'maria@email.com',
       clientPhone: '+51 976543210',
       date: new Date('2024-02-16'),
       time: '12:00',
@@ -59,7 +69,6 @@ const ReservationList = () => {
       id: 'RES003',
       tourName: 'Islas Palomino',
       clientName: 'Carlos Rodríguez',
-      clientEmail: 'carlos@email.com',
       clientPhone: '+51 965432198',
       date: new Date('2024-02-18'),
       time: '06:00',
@@ -75,7 +84,6 @@ const ReservationList = () => {
       id: 'RES004',
       tourName: 'Pachacámac y Barranco',
       clientName: 'Ana López',
-      clientEmail: 'ana@email.com',
       clientPhone: '+51 954321876',
       date: new Date('2024-02-14'),
       time: '14:00',

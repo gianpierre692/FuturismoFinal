@@ -1,265 +1,212 @@
 import { create } from 'zustand';
-import { getMockData, mockGuides } from '../data/mockData';
+
+// Catálogo de idiomas disponibles
+const languages = [
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'en', name: 'Inglés', flag: '🇺🇸' },
+  { code: 'fr', name: 'Francés', flag: '🇫🇷' },
+  { code: 'de', name: 'Alemán', flag: '🇩🇪' },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  { code: 'pt', name: 'Portugués', flag: '🇵🇹' },
+  { code: 'ja', name: 'Japonés', flag: '🇯🇵' },
+  { code: 'ko', name: 'Coreano', flag: '🇰🇷' },
+  { code: 'zh', name: 'Chino Mandarín', flag: '🇨🇳' },
+  { code: 'ru', name: 'Ruso', flag: '🇷🇺' }
+];
+
+// Datos mock de guías
+const mockGuides = [
+  {
+    id: 'guide001',
+    fullName: 'María Elena Torres Vásquez',
+    dni: '12345678',
+    phone: '+51 987 654 321',
+    email: 'maria.torres@futurismo.com',
+    address: 'Av. Grau 123, Miraflores, Lima',
+    guideType: 'freelance',
+    specializations: {
+      languages: [
+        { code: 'es', level: 'nativo' },
+        { code: 'en', level: 'avanzado' },
+        { code: 'fr', level: 'intermedio' }
+      ],
+      museums: [
+        { name: 'Museo Larco', expertise: 'experto' },
+        { name: 'Museo del Oro', expertise: 'avanzado' },
+        { name: 'Museo Nacional de Antropología', expertise: 'intermedio' }
+      ]
+    },
+    stats: {
+      toursCompleted: 156,
+      yearsExperience: 5,
+      rating: 4.8,
+      certifications: 3
+    },
+    status: 'active',
+    createdAt: '2019-03-15T00:00:00.000Z',
+    updatedAt: '2024-01-15T00:00:00.000Z'
+  },
+  {
+    id: 'guide002',
+    fullName: 'Carlos Alberto Mendoza Silva',
+    dni: '87654321',
+    phone: '+51 987 654 322',
+    email: 'carlos.mendoza@futurismo.com',
+    address: 'Jr. Lima 456, San Isidro, Lima',
+    guideType: 'planta',
+    specializations: {
+      languages: [
+        { code: 'es', level: 'nativo' },
+        { code: 'en', level: 'experto' },
+        { code: 'de', level: 'avanzado' }
+      ],
+      museums: [
+        { name: 'Museo de Arte de Lima', expertise: 'experto' },
+        { name: 'Museo Pedro de Osma', expertise: 'avanzado' }
+      ]
+    },
+    stats: {
+      toursCompleted: 234,
+      yearsExperience: 8,
+      rating: 4.9,
+      certifications: 5
+    },
+    status: 'active',
+    createdAt: '2016-08-20T00:00:00.000Z',
+    updatedAt: '2024-01-10T00:00:00.000Z'
+  },
+  {
+    id: 'guide003',
+    fullName: 'Ana Sofía Quispe Mamani',
+    dni: '11223344',
+    phone: '+51 987 654 323',
+    email: 'ana.quispe@futurismo.com',
+    address: 'Av. Arequipa 789, Lince, Lima',
+    guideType: 'freelance',
+    specializations: {
+      languages: [
+        { code: 'es', level: 'nativo' },
+        { code: 'en', level: 'intermedio' },
+        { code: 'ja', level: 'avanzado' }
+      ],
+      museums: [
+        { name: 'Museo de la Nación', expertise: 'experto' },
+        { name: 'Museo de Sitio Pachacamac', expertise: 'intermedio' }
+      ]
+    },
+    stats: {
+      toursCompleted: 89,
+      yearsExperience: 3,
+      rating: 4.6,
+      certifications: 2
+    },
+    status: 'active',
+    createdAt: '2021-06-10T00:00:00.000Z',
+    updatedAt: '2024-01-05T00:00:00.000Z'
+  }
+];
 
 const useGuidesStore = create((set, get) => ({
   // Estado
   guides: mockGuides,
-  isLoading: false,
-  error: null,
-
-  // Acciones para obtener guías
-  getGuides: (filters = {}) => {
-    const { guides } = get();
-    
-    let filtered = [...guides];
-    
-    if (filters.tipo) {
-      filtered = filtered.filter(guide => guide.tipo === filters.tipo);
-    }
-    
-    if (filters.availability) {
-      filtered = filtered.filter(guide => guide.availability === filters.availability);
-    }
-    
-    if (filters.language) {
-      filtered = filtered.filter(guide => guide.languages.includes(filters.language));
-    }
-    
-    if (filters.specialty) {
-      filtered = filtered.filter(guide => guide.specialties.includes(filters.specialty));
-    }
-    
-    return filtered;
-  },
-
-  // Obtener guías disponibles para una fecha y hora específica
-  getAvailableGuides: (fecha, hora) => {
-    return getMockData.guidesAvailableForDateTime(fecha, hora);
-  },
-
-  // Obtener un guía por ID
-  getGuideById: (guideId) => {
-    const { guides } = get();
-    return guides.find(guide => guide.id === guideId);
-  },
-
-  // Obtener agenda de un guía freelance
-  getGuideAgenda: (guideId, fecha) => {
-    const guide = get().getGuideById(guideId);
-    if (!guide || guide.tipo !== 'freelance' || !guide.agenda) {
-      return null;
-    }
-    
-    const fechaStr = fecha.toISOString().split('T')[0];
-    return guide.agenda[fechaStr] || { disponible: false, horarios: [] };
-  },
-
-  // Actualizar agenda de un guía freelance
-  updateGuideAgenda: (guideId, fecha, agendaData) => {
-    set((state) => {
-      const fechaStr = fecha.toISOString().split('T')[0];
+  languages: languages,
+  museums: [], // Ya no necesitamos un catálogo fijo de museos
+  
+  // Acciones
+  actions: {
+    // Agregar nuevo guía
+    addGuide: (guideData) => {
+      const newGuide = {
+        id: `guide${Date.now()}`,
+        ...guideData,
+        stats: {
+          toursCompleted: 0,
+          yearsExperience: 0,
+          rating: 0,
+          certifications: 0
+        },
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
       
-      const updatedGuides = state.guides.map(guide => {
-        if (guide.id === guideId && guide.tipo === 'freelance') {
-          return {
-            ...guide,
-            agenda: {
-              ...guide.agenda,
-              [fechaStr]: agendaData
-            }
-          };
+      set((state) => ({
+        guides: [...state.guides, newGuide]
+      }));
+      
+      return newGuide;
+    },
+
+    // Actualizar guía existente
+    updateGuide: (guideId, updateData) => {
+      set((state) => ({
+        guides: state.guides.map(guide =>
+          guide.id === guideId
+            ? { ...guide, ...updateData, updatedAt: new Date().toISOString() }
+            : guide
+        )
+      }));
+    },
+
+    // Eliminar guía
+    deleteGuide: (guideId) => {
+      set((state) => ({
+        guides: state.guides.filter(guide => guide.id !== guideId)
+      }));
+    },
+
+    // Obtener guía por ID
+    getGuideById: (guideId) => {
+      const { guides } = get();
+      return guides.find(guide => guide.id === guideId);
+    },
+
+    // Filtrar guías
+    filterGuides: (filters) => {
+      const { guides } = get();
+      
+      return guides.filter(guide => {
+        // Filtro por tipo
+        if (filters.type && guide.guideType !== filters.type) {
+          return false;
         }
-        return guide;
+        
+        // Filtro por idioma
+        if (filters.language && !guide.specializations.languages.some(lang => lang.code === filters.language)) {
+          return false;
+        }
+        
+        // Filtro por museo (buscar en el nombre)
+        if (filters.museum && !guide.specializations.museums.some(museum => 
+          museum.name.toLowerCase().includes(filters.museum.toLowerCase())
+        )) {
+          return false;
+        }
+        
+        // Filtro por texto de búsqueda
+        if (filters.search) {
+          const searchTerm = filters.search.toLowerCase();
+          return guide.fullName.toLowerCase().includes(searchTerm) ||
+                 guide.email.toLowerCase().includes(searchTerm) ||
+                 guide.dni.includes(searchTerm);
+        }
+        
+        return true;
       });
+    },
+
+    // Obtener estadísticas
+    getStatistics: () => {
+      const { guides } = get();
       
-      return { guides: updatedGuides };
-    });
-  },
-
-  // Actualizar disponibilidad general de un guía
-  updateGuideAvailability: (guideId, availability) => {
-    set((state) => ({
-      guides: state.guides.map(guide =>
-        guide.id === guideId 
-          ? { ...guide, availability }
-          : guide
-      )
-    }));
-  },
-
-  // Asignar guía a un servicio/reserva
-  assignGuideToService: (guideId, serviceData) => {
-    set((state) => ({
-      guides: state.guides.map(guide =>
-        guide.id === guideId 
-          ? { 
-              ...guide, 
-              availability: 'ocupado',
-              currentService: serviceData
-            }
-          : guide
-      )
-    }));
-  },
-
-  // Liberar guía de un servicio
-  releaseGuideFromService: (guideId) => {
-    set((state) => ({
-      guides: state.guides.map(guide =>
-        guide.id === guideId 
-          ? { 
-              ...guide, 
-              availability: 'disponible',
-              currentService: null
-            }
-          : guide
-      )
-    }));
-  },
-
-  // Obtener estadísticas de guías
-  getGuidesStatistics: () => {
-    const { guides } = get();
-    
-    const totalGuides = guides.length;
-    const plantaGuides = guides.filter(g => g.tipo === 'planta').length;
-    const freelanceGuides = guides.filter(g => g.tipo === 'freelance').length;
-    const disponibles = guides.filter(g => g.availability === 'disponible').length;
-    const ocupados = guides.filter(g => g.availability === 'ocupado').length;
-    
-    return {
-      total: totalGuides,
-      planta: plantaGuides,
-      freelance: freelanceGuides,
-      disponibles,
-      ocupados,
-      ocupancyRate: totalGuides > 0 ? (ocupados / totalGuides * 100).toFixed(1) : 0
-    };
-  },
-
-  // Obtener disponibilidad de freelance para una semana
-  getFreelanceWeeklyAvailability: (startDate) => {
-    const { guides } = get();
-    const freelanceGuides = guides.filter(g => g.tipo === 'freelance');
-    const weeklyData = [];
-    
-    for (let i = 0; i < 7; i++) {
-      const currentDate = new Date(startDate);
-      currentDate.setDate(startDate.getDate() + i);
-      const fechaStr = currentDate.toISOString().split('T')[0];
-      
-      const dayData = {
-        fecha: currentDate,
-        fechaStr,
-        guides: freelanceGuides.map(guide => ({
-          ...guide,
-          agendaDelDia: guide.agenda?.[fechaStr] || { disponible: false, horarios: [] }
-        }))
-      };
-      
-      weeklyData.push(dayData);
-    }
-    
-    return weeklyData;
-  },
-
-  // Buscar conflictos de horarios
-  checkScheduleConflicts: (guideId, fecha, horaInicio, horaFin) => {
-    const guide = get().getGuideById(guideId);
-    
-    if (!guide) return { hasConflict: true, reason: 'Guía no encontrado' };
-    
-    // Guías de planta: solo verificar disponibilidad general
-    if (guide.tipo === 'planta') {
       return {
-        hasConflict: guide.availability !== 'disponible',
-        reason: guide.availability !== 'disponible' ? 'Guía no disponible' : null
+        total: guides.length,
+        planta: guides.filter(g => g.guideType === 'planta').length,
+        freelance: guides.filter(g => g.guideType === 'freelance').length,
+        active: guides.filter(g => g.status === 'active').length
       };
     }
-    
-    // Guías freelance: verificar agenda específica
-    const agenda = get().getGuideAgenda(guideId, fecha);
-    
-    if (!agenda || !agenda.disponible) {
-      return { hasConflict: true, reason: 'Guía no disponible este día' };
-    }
-    
-    // Verificar si el horario solicitado está dentro de los horarios disponibles
-    const isTimeSlotAvailable = agenda.horarios.some(horario => {
-      const [inicio, fin] = horario.split('-');
-      return horaInicio >= inicio && horaFin <= fin;
-    });
-    
-    return {
-      hasConflict: !isTimeSlotAvailable,
-      reason: !isTimeSlotAvailable ? 'Horario no disponible' : null
-    };
-  },
-
-  // Obtener recomendaciones de guías
-  getGuideRecommendations: (requirements = {}) => {
-    const { guides } = get();
-    
-    let scored = guides.map(guide => {
-      let score = 0;
-      
-      // Puntuación base por rating
-      score += guide.rating * 10;
-      
-      // Puntuación por experiencia
-      score += Math.min(guide.experience, 10) * 2;
-      
-      // Puntuación por idiomas requeridos
-      if (requirements.languages) {
-        const matchingLanguages = guide.languages.filter(lang => 
-          requirements.languages.includes(lang)
-        ).length;
-        score += matchingLanguages * 15;
-      }
-      
-      // Puntuación por especialidades requeridas
-      if (requirements.specialties) {
-        const matchingSpecialties = guide.specialties.filter(spec => 
-          requirements.specialties.includes(spec)
-        ).length;
-        score += matchingSpecialties * 20;
-      }
-      
-      // Penalización por tipo si se prefiere uno específico
-      if (requirements.preferredType) {
-        if (guide.tipo === requirements.preferredType) {
-          score += 10;
-        } else {
-          score -= 5;
-        }
-      }
-      
-      // Puntuación por disponibilidad
-      if (guide.availability === 'disponible') {
-        score += 25;
-      }
-      
-      return { ...guide, score };
-    });
-    
-    // Ordenar por puntuación descendente
-    return scored.sort((a, b) => b.score - a.score);
-  },
-
-  // Configurar carga de datos
-  setLoading: (isLoading) => set({ isLoading }),
-  
-  setError: (error) => set({ error }),
-  
-  // Limpiar errores
-  clearError: () => set({ error: null }),
-  
-  // Reinicializar store
-  resetStore: () => set({
-    guides: mockGuides,
-    isLoading: false,
-    error: null
-  })
+  }
 }));
 
 export { useGuidesStore };

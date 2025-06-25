@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { 
   MapPin, Calendar, Users, Clock, DollarSign, 
   ChevronRight, ChevronLeft, Check, AlertCircle,
-  User, Phone, Mail, Building, UserCheck
+  User, Phone, Plus, Minus, UserPlus, Trash2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useReservationsStore } from '../../stores/reservationsStore';
-import { formatters } from '../../utils/formatters';
+import { formatters, canBookDirectly, generateWhatsAppURL } from '../../utils/formatters';
 import { validators } from '../../utils/validators';
-import { getMockData } from '../../data/mockData';
+import WhatsAppConsultButton from './WhatsAppConsultButton';
 import toast from 'react-hot-toast';
 
 // Esquemas de validación para cada paso
@@ -19,29 +19,30 @@ const step1Schema = yup.object({
   serviceType: yup.string().required('El tipo de servicio es requerido'),
   tourId: yup.string().required('Debe seleccionar un tour'),
   date: yup.date().required('La fecha es requerida').min(new Date(), 'La fecha debe ser futura'),
-  time: yup.string().required('La hora es requerida'),
-  duration: yup.number().required('La duración es requerida').min(1, 'La duración mínima es 1 hora')
+  time: yup.string().required('La hora es requerida')
 });
 
 const step2Schema = yup.object({
-  guideId: yup.string().required('Debe seleccionar un guía')
-});
-
-const step3Schema = yup.object({
   adults: yup.number().required('Número de adultos requerido').min(1, 'Mínimo 1 adulto'),
   children: yup.number().min(0, 'No puede ser negativo'),
   pickupLocation: yup.string().required('El lugar de recojo es requerido'),
   specialRequirements: yup.string(),
-  contactName: yup.string().required('El nombre de contacto es requerido'),
-  contactPhone: yup.string()
-    .required('El teléfono es requerido')
-    .test('phone', 'Teléfono inválido', value => validators.validatePhone(value || '')),
-  contactEmail: yup.string()
-    .required('El email es requerido')
-    .email('Email inválido')
+  // Múltiples grupos en la reserva
+  groups: yup.array().of(
+    yup.object({
+      representativeName: yup.string().required('El nombre del representante es requerido'),
+      representativePhone: yup.string()
+        .required('El teléfono del representante es requerido')
+        .test('phone', 'Teléfono inválido', value => validators.validatePhone(value || '')),
+      companionsCount: yup.number()
+        .required('Número de acompañantes es requerido')
+        .min(0, 'No puede ser negativo')
+        .max(50, 'Máximo 50 acompañantes por grupo')
+    })
+  ).min(1, 'Debe haber al menos un grupo')
 });
 
-const step4Schema = yup.object({
+const step3Schema = yup.object({
   paymentMethod: yup.string().required('Seleccione un método de pago'),
   billingName: yup.string().required('Nombre para facturación requerido'),
   billingDocument: yup.string().required('Documento requerido'),
@@ -55,32 +56,42 @@ const ReservationWizard = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [availableGuides, setAvailableGuides] = useState([]);
+  const [isFulldayTour, setIsFulldayTour] = useState(false);
+  const [canBookDirectReservation, setCanBookDirectReservation] = useState(true);
 
   // Mock data para tours disponibles
   const availableTours = [
-    { id: '1', name: 'City Tour Lima Histórica', price: 35, duration: 4 },
-    { id: '2', name: 'Tour Gastronómico Miraflores', price: 65, duration: 5 },
-    { id: '3', name: 'Pachacámac y Barranco', price: 45, duration: 6 },
-    { id: '4', name: 'Islas Palomino', price: 85, duration: 8 }
+    { id: '1', name: 'City Tour Lima Histórica', price: 35, duration: 4, type: 'regular' },
+    { id: '2', name: 'Tour Gastronómico Miraflores', price: 65, duration: 5, type: 'regular' },
+    { id: '3', name: 'Pachacámac y Barranco', price: 45, duration: 6, type: 'regular' },
+    { id: '4', name: 'Islas Palomino', price: 85, duration: 8, type: 'fullday' },
+    { id: '5', name: 'Machu Picchu Full Day', price: 180, duration: 12, type: 'fullday' },
+    { id: '6', name: 'Valle Sagrado Full Day', price: 150, duration: 10, type: 'fullday' }
   ];
 
   const steps = [
     { number: 1, title: 'Servicio', icon: MapPin },
-    { number: 2, title: 'Guía', icon: UserCheck },
-    { number: 3, title: 'Detalles', icon: Users },
-    { number: 4, title: 'Confirmación', icon: Check }
+    { number: 2, title: 'Detalles', icon: Users },
+    { number: 3, title: 'Confirmación', icon: Check }
   ];
 
-  // Cargar guías disponibles cuando se selecciona fecha y hora
+
+  // Verificar si es tour fullday y horario de reserva
   useEffect(() => {
-    if (formData.date && formData.time) {
-      const fecha = new Date(formData.date);
-      const hora = formData.time;
-      const guides = getMockData.guidesAvailableForDateTime(fecha, hora);
-      setAvailableGuides(guides);
+    if (formData.tourId) {
+      const selectedTour = availableTours.find(t => t.id === formData.tourId);
+      const isFullday = selectedTour?.type === 'fullday';
+      setIsFulldayTour(isFullday);
+      
+      // Si es fullday, verificar horario para reserva directa
+      if (isFullday) {
+        const canBook = canBookDirectly();
+        setCanBookDirectReservation(canBook);
+      } else {
+        setCanBookDirectReservation(true);
+      }
     }
-  }, [formData.date, formData.time]);
+  }, [formData.tourId]);
 
   // Configuración de formularios para cada paso
   const getStepConfig = () => {
@@ -92,33 +103,29 @@ const ReservationWizard = ({ onClose }) => {
             serviceType: formData.serviceType || 'tour',
             tourId: formData.tourId || '',
             date: formData.date || '',
-            time: formData.time || '',
-            duration: formData.duration || 4
+            time: formData.time || ''
           }
         };
       case 2:
         return {
           schema: step2Schema,
           defaultValues: {
-            guideId: formData.guideId || ''
+            adults: formData.adults || 1,
+            children: formData.children || 0,
+            pickupLocation: formData.pickupLocation || '',
+            specialRequirements: formData.specialRequirements || '',
+            groups: formData.groups || [
+              {
+                representativeName: '',
+                representativePhone: '',
+                companionsCount: 0
+              }
+            ]
           }
         };
       case 3:
         return {
           schema: step3Schema,
-          defaultValues: {
-            adults: formData.adults || 1,
-            children: formData.children || 0,
-            pickupLocation: formData.pickupLocation || '',
-            specialRequirements: formData.specialRequirements || '',
-            contactName: formData.contactName || '',
-            contactPhone: formData.contactPhone || '',
-            contactEmail: formData.contactEmail || ''
-          }
-        };
-      case 4:
-        return {
-          schema: step4Schema,
           defaultValues: {
             paymentMethod: formData.paymentMethod || 'transfer',
             billingName: formData.billingName || '',
@@ -133,9 +140,14 @@ const ReservationWizard = ({ onClose }) => {
   };
 
   const stepConfig = getStepConfig();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+  const { register, handleSubmit, watch, control, setValue, formState: { errors } } = useForm({
     resolver: yupResolver(stepConfig.schema),
     defaultValues: stepConfig.defaultValues
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "groups"
   });
 
   const selectedTour = watch('tourId');
@@ -150,7 +162,7 @@ const ReservationWizard = ({ onClose }) => {
 
   const handleNext = (data) => {
     setFormData({ ...formData, ...data });
-    if (currentStep < 4) {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
       handleFinalSubmit({ ...formData, ...data });
@@ -283,111 +295,52 @@ const ReservationWizard = ({ onClose }) => {
               </div>
             </div>
 
-            <div>
-              <label className="label">Duración (horas)</label>
-              <input 
-                type="number" 
-                {...register('duration')} 
-                className="input"
-                min="1"
-                max="12"
-              />
-              {errors.duration && (
-                <p className="mt-1 text-sm text-red-600">{errors.duration.message}</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Step 2: Guide Selection */}
-        {currentStep === 2 && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold mb-4">Selecciona el Guía</h3>
-
-            {availableGuides.length > 0 ? (
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 mb-4">
-                  Guías disponibles para {formatters.formatDate(formData.date)} a las {formData.time}:
-                </p>
-                
-                {availableGuides.map(guide => (
-                  <label key={guide.id} className="block">
-                    <div className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all">
-                      <input
-                        type="radio"
-                        value={guide.id}
-                        {...register('guideId')}
-                        className="mr-4"
-                      />
-                      <div className="flex items-center space-x-4 flex-1">
-                        <img 
-                          src={guide.avatar} 
-                          alt={guide.name}
-                          className="h-12 w-12 rounded-full object-cover"
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2">
-                            <h4 className="font-medium text-gray-900">{guide.name}</h4>
-                            <span className={`px-2 py-1 text-xs rounded-full ${
-                              guide.tipo === 'planta' 
-                                ? 'bg-blue-100 text-blue-800' 
-                                : 'bg-green-100 text-green-800'
-                            }`}>
-                              {guide.tipo === 'planta' ? 'Planta' : 'Freelance'}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600">
-                            {guide.specialties.join(', ')} • {guide.languages.join(', ')}
-                          </p>
-                          <div className="flex items-center space-x-4 mt-1">
-                            <span className="text-sm text-yellow-600">
-                              ⭐ {guide.rating} ({guide.stats.totalTours} tours)
-                            </span>
-                            <span className="text-sm text-gray-500">
-                              {guide.experience} años de experiencia
-                            </span>
-                          </div>
-                          {guide.tipo === 'freelance' && guide.agenda && (
-                            <div className="text-xs text-gray-500 mt-1">
-                              Disponible: {getMockData.guideAgenda(guide.id, new Date(formData.date))?.horarios.join(', ') || 'Todo el día'}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                ))}
-                
-                {errors.guideId && (
-                  <p className="mt-2 text-sm text-red-600">{errors.guideId.message}</p>
-                )}
+            {/* Alerta para tours fullday después de las 5 PM */}
+            {isFulldayTour && !canBookDirectReservation && (
+              <div className="border border-orange-300 bg-orange-50 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <AlertCircle className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="text-sm font-medium text-orange-800 mb-2">
+                      Reserva de Tour Full Day después de las 5 PM
+                    </h4>
+                    <p className="text-sm text-orange-700 mb-3">
+                      Para tours full day después de las 5:00 PM, es necesario consultar disponibilidad 
+                      antes de realizar la reserva.
+                    </p>
+                    <WhatsAppConsultButton 
+                      message={`Hola, necesito consultar disponibilidad para el tour "${availableTours.find(t => t.id === selectedTour)?.name}" para la fecha ${watch('date')} a las ${watch('time')}`}
+                      variant="secondary"
+                      size="sm"
+                      className="w-full sm:w-auto"
+                    />
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className="text-center py-8">
-                <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h4 className="text-lg font-medium text-gray-900 mb-2">
-                  No hay guías disponibles
-                </h4>
-                <p className="text-gray-600">
-                  {formData.date && formData.time 
-                    ? `No hay guías disponibles para ${formatters.formatDate(formData.date)} a las ${formData.time}`
-                    : 'Selecciona una fecha y hora para ver los guías disponibles'
-                  }
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(1)}
-                  className="mt-4 text-blue-600 hover:text-blue-800"
-                >
-                  ← Cambiar fecha u hora
-                </button>
+            )}
+
+            {/* Información para tours fullday antes de las 5 PM */}
+            {isFulldayTour && canBookDirectReservation && (
+              <div className="border border-green-300 bg-green-50 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="text-sm font-medium text-green-800 mb-1">
+                      Tour Full Day - Reserva Directa Disponible
+                    </h4>
+                    <p className="text-sm text-green-700">
+                      Puedes realizar tu reserva directamente hasta las 5:00 PM. 
+                      Después de ese horario será necesario consultar disponibilidad.
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         )}
 
-        {/* Step 3: Details */}
-        {currentStep === 3 && (
+        {/* Step 2: Details */}
+        {currentStep === 2 && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold mb-4">Detalles de la Reserva</h3>
 
@@ -442,53 +395,145 @@ const ReservationWizard = ({ onClose }) => {
               />
             </div>
 
-            <div className="border-t pt-4">
-              <h4 className="font-medium mb-3">Información de Contacto</h4>
-              
-              <div>
-                <label className="label">Nombre Completo</label>
-                <input 
-                  type="text" 
-                  {...register('contactName')} 
-                  className="input"
-                />
-                {errors.contactName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.contactName.message}</p>
-                )}
+            {/* Sección de Grupos */}
+            <div className="border-t pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-blue-500" />
+                  Grupos ({fields.length})
+                </h4>
+                <button
+                  type="button"
+                  onClick={() => append({ representativeName: '', representativePhone: '', companionsCount: 0 })}
+                  className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Agregar Grupo</span>
+                </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="label">Teléfono</label>
-                  <input 
-                    type="tel" 
-                    {...register('contactPhone')} 
-                    className="input"
-                    placeholder="+51 999999999"
-                  />
-                  {errors.contactPhone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.contactPhone.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="label">Email</label>
-                  <input 
-                    type="email" 
-                    {...register('contactEmail')} 
-                    className="input"
-                  />
-                  {errors.contactEmail && (
-                    <p className="mt-1 text-sm text-red-600">{errors.contactEmail.message}</p>
-                  )}
-                </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Información:</strong> Puede agregar múltiples grupos a la misma reserva. 
+                  Cada grupo debe tener un representante responsable.
+                </p>
               </div>
+
+              {fields.length === 0 && (
+                <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-500 mb-2">No hay grupos agregados</p>
+                  <p className="text-sm text-gray-400">
+                    Agregue al menos un grupo con su representante
+                  </p>
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <h5 className="font-medium text-gray-900 flex items-center">
+                        <Users className="w-4 h-4 mr-2 text-blue-500" />
+                        Grupo #{index + 1}
+                      </h5>
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50"
+                        title="Eliminar grupo"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nombre del Representante *
+                        </label>
+                        <input
+                          type="text"
+                          {...register(`groups.${index}.representativeName`)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Nombre completo del responsable"
+                        />
+                        {errors.groups?.[index]?.representativeName && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.groups[index].representativeName.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Teléfono del Representante *
+                        </label>
+                        <input
+                          type="tel"
+                          {...register(`groups.${index}.representativePhone`)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="+51 999999999"
+                        />
+                        {errors.groups?.[index]?.representativePhone && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.groups[index].representativePhone.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Número de Acompañantes *
+                        </label>
+                        <input
+                          type="number"
+                          {...register(`groups.${index}.companionsCount`, { valueAsNumber: true })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="0"
+                          min="0"
+                          max="50"
+                        />
+                        {errors.groups?.[index]?.companionsCount && (
+                          <p className="mt-1 text-sm text-red-600">
+                            {errors.groups[index].companionsCount.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="mt-3 text-sm text-gray-600">
+                      <p>
+                        <strong>Total del grupo:</strong> {(watch(`groups.${index}.companionsCount`) || 0) + 1} persona
+                        {((watch(`groups.${index}.companionsCount`) || 0) + 1) !== 1 ? 's' : ''} 
+                        (incluye al representante)
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {fields.length > 0 && (
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-start space-x-3">
+                    <Users className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm text-blue-800">
+                      <p className="font-medium mb-1">Información Importante:</p>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>El representante es responsable de todo su grupo</li>
+                        <li>Todos los integrantes deben estar presentes en el punto de recojo</li>
+                        <li>Se requieren documentos de identidad para todos los participantes</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
 
-        {/* Step 4: Confirmation */}
-        {currentStep === 4 && (
+        {/* Step 3: Confirmation */}
+        {currentStep === 3 && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold mb-4">Confirmación y Pago</h3>
 
@@ -511,27 +556,35 @@ const ReservationWizard = ({ onClose }) => {
                   <span className="text-gray-600">Hora:</span>
                   <span className="font-medium">{formData.time}</span>
                 </div>
-                {formData.guideId && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Guía:</span>
-                    <span className="font-medium">
-                      {getMockData.guides().find(g => g.id === formData.guideId)?.name}
-                      <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
-                        getMockData.guides().find(g => g.id === formData.guideId)?.tipo === 'planta' 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {getMockData.guides().find(g => g.id === formData.guideId)?.tipo === 'planta' ? 'Planta' : 'Freelance'}
-                      </span>
-                    </span>
-                  </div>
-                )}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Pasajeros:</span>
                   <span className="font-medium">
                     {formData.adults} adultos{formData.children > 0 && `, ${formData.children} niños`}
                   </span>
                 </div>
+                {formData.groups && formData.groups.length > 0 && (
+                  <div className="border-t pt-2 pb-2">
+                    <div className="flex justify-between mb-2">
+                      <span className="text-gray-600">Grupos:</span>
+                      <span className="font-medium">{formData.groups.length} grupo{formData.groups.length !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div className="space-y-2">
+                      {formData.groups.map((group, index) => {
+                        const totalPersons = (group.companionsCount || 0) + 1;
+                        return (
+                          <div key={index} className="text-xs bg-blue-50 p-2 rounded">
+                            <p className="font-medium text-blue-900">
+                              Grupo #{index + 1}: {group.representativeName}
+                            </p>
+                            <p className="text-blue-700">
+                              Tel: {group.representativePhone} | Total: {totalPersons} persona{totalPersons !== 1 ? 's' : ''}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 <div className="border-t pt-2 flex justify-between text-lg font-semibold">
                   <span>Total:</span>
                   <span className="text-primary-600">${calculateTotal()}</span>
@@ -642,16 +695,19 @@ const ReservationWizard = ({ onClose }) => {
           <button
             type="submit"
             className="btn btn-primary flex items-center gap-2"
-            disabled={isSubmitting}
+            disabled={isSubmitting || (currentStep === 1 && isFulldayTour && !canBookDirectReservation)}
           >
-            {currentStep === 4 ? (
+            {currentStep === 3 ? (
               <>
                 {isSubmitting ? 'Procesando...' : 'Confirmar Reserva'}
                 <Check className="w-4 h-4" />
               </>
             ) : (
               <>
-                Siguiente
+                {(currentStep === 1 && isFulldayTour && !canBookDirectReservation) 
+                  ? 'Consultar por WhatsApp' 
+                  : 'Siguiente'
+                }
                 <ChevronRight className="w-4 h-4" />
               </>
             )}

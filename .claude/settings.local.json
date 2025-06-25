@@ -18,7 +18,11 @@
       "Bash(npm run clean:*)",
       "Bash(npm run start:fresh:*)",
       "Bash(pkill:*)",
-      "Bash(npm start:*)"
+      "Bash(npm start:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run:*)",
+      "Bash(rg:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

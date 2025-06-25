@@ -23,6 +23,13 @@ const Users = lazy(() => import('./pages/Users'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Agenda = lazy(() => import('./pages/Agenda'));
 const TourAssignments = lazy(() => import('./pages/TourAssignments'));
+const Providers = lazy(() => import('./pages/Providers'));
+const EmergencyProtocols = lazy(() => import('./pages/EmergencyProtocols'));
+const GuidesManagement = lazy(() => import('./pages/GuidesManagement'));
+const AgencyCalendar = lazy(() => import('./pages/AgencyCalendar'));
+const AgencyReports = lazy(() => import('./pages/AgencyReports'));
+const AgencyPoints = lazy(() => import('./pages/AgencyPoints'));
+const AdminReservations = lazy(() => import('./pages/AdminReservations'));
 
 // WebSocket service
 import webSocketService from './services/websocket';
@@ -100,6 +107,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="admin/reservations" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminReservations />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="history" element={<History />} />
             <Route path="chat" element={<Chat />} />
             <Route path="profile" element={<Profile />} />
@@ -132,6 +147,54 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <TourAssignments />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="providers" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <Providers />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="emergency" 
+              element={
+                <ProtectedRoute allowedRoles={['guide', 'admin']}>
+                  <EmergencyProtocols />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="guides" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <GuidesManagement />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="agency/calendar" 
+              element={
+                <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                  <AgencyCalendar />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="agency/reports" 
+              element={
+                <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                  <AgencyReports />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="agency/points" 
+              element={
+                <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                  <AgencyPoints />
                 </ProtectedRoute>
               } 
             />

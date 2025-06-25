@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import React, { useState, useRef, useEffect } from 'react';
+import { pdf } from '@react-pdf/renderer';
 import {
   CalendarIcon,
   UserGroupIcon,
@@ -12,6 +12,7 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import TourAssignmentBrochure from './TourAssignmentBrochure';
+import TourAssignmentBrochurePDF from './TourAssignmentBrochurePDF';
 
 const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
   const [assignment, setAssignment] = useState({
@@ -119,17 +120,35 @@ const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
     }));
   };
 
-  const handleGeneratePDF = useReactToPrint({
-    content: () => brochureRef.current,
-    documentTitle: `Asignacion_${assignment.agency.name}_${assignment.tourDate}`,
-    onBeforeGetContent: () => {
-      setIsGenerating(true);
-      return Promise.resolve();
-    },
-    onAfterPrint: () => {
+  const handleGeneratePDF = async () => {
+    if (!isAssignmentComplete) {
+      alert('Por favor completa la asignación antes de generar el PDF');
+      return;
+    }
+
+    setIsGenerating(true);
+    
+    try {
+      // Generar el PDF usando @react-pdf/renderer
+      const blob = await pdf(<TourAssignmentBrochurePDF assignment={assignment} />).toBlob();
+      
+      // Crear URL para descarga
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Asignacion_${assignment.agency?.name || 'Tour'}_${assignment.tourDate}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      setIsGenerating(false);
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+      alert('Error al generar el PDF. Por favor intenta nuevamente.');
       setIsGenerating(false);
     }
-  });
+  };
 
   const handleSendWhatsApp = async () => {
     if (!assignment.agency.whatsapp) {
@@ -409,10 +428,6 @@ const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
         </div>
       )}
 
-      {/* Hidden component for PDF generation */}
-      <div style={{ display: 'none' }}>
-        <TourAssignmentBrochure ref={brochureRef} assignment={assignment} />
-      </div>
     </div>
   );
 };

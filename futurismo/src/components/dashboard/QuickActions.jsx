@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
+import { generateWhatsAppURL, canBookDirectly } from '../../utils/formatters';
 
 const QuickActions = () => {
   const navigate = useNavigate();
@@ -39,11 +40,18 @@ const QuickActions = () => {
     },
     {
       id: 4,
-      title: 'Enviar Mensaje',
-      description: 'Comunicarse con guías',
+      title: 'Consultar Full Day',
+      description: 'WhatsApp para tours después 5PM',
       icon: MessageSquare,
-      color: 'bg-purple-500 hover:bg-purple-600 text-white',
-      onClick: () => console.log('Abrir chat')
+      color: 'bg-green-500 hover:bg-green-600 text-white',
+      onClick: () => {
+        const currentHour = new Date().getHours();
+        const message = currentHour >= 17 
+          ? "Hola, necesito consultar disponibilidad para un tour fullday"
+          : "Hola, necesito información sobre tours fullday disponibles";
+        window.open(generateWhatsAppURL(message), '_blank');
+      },
+      badge: !canBookDirectly() ? 'Requerido' : null
     },
     {
       id: 5,
@@ -140,11 +148,18 @@ const QuickActions = () => {
           <button
             key={action.id}
             onClick={action.onClick}
-            className={`p-4 rounded-lg transition-all transform hover:scale-105 ${action.color} group`}
+            className={`p-4 rounded-lg transition-all transform hover:scale-105 ${action.color} group relative`}
           >
             <action.icon className="w-8 h-8 mb-2" />
             <h4 className="font-medium text-sm">{action.title}</h4>
             <p className="text-xs opacity-90 mt-1">{action.description}</p>
+            
+            {/* Badge para indicar si es requerido */}
+            {action.badge && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
+                {action.badge}
+              </span>
+            )}
           </button>
         ))}
       </div>

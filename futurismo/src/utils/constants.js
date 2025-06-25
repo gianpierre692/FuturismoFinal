@@ -50,6 +50,13 @@ export const LIMITS = {
   DEBOUNCE_DELAY: 300 // ms para búsquedas
 };
 
+// Configuración de reservas fulldays
+export const FULLDAY_CONFIG = {
+  CUTOFF_HOUR: 17, // 5 PM - hora límite para reservas directas
+  WHATSAPP_NUMBER: "+51999888777", // Número de WhatsApp para consultas
+  WHATSAPP_MESSAGE: "Hola, necesito consultar disponibilidad para un tour fullday después de las 5 PM"
+};
+
 // URLs de API (se sobrescribirán con variables de entorno)
 export const API_ENDPOINTS = {
   BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',

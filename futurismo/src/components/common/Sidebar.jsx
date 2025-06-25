@@ -13,7 +13,12 @@ import {
   Users,
   FileText,
   CalendarDays,
-  UserCheck
+  UserCheck,
+  Building2,
+  Shield,
+  UserCog,
+  BarChart3,
+  Star
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 
@@ -31,6 +36,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         ...baseItems,
         { path: '/monitoring', icon: Map, label: 'Monitoreo' },
         { path: '/reservations', icon: Calendar, label: 'Reservas' },
+        { path: '/agency/calendar', icon: CalendarDays, label: 'Calendario' },
+        { path: '/agency/reports', icon: BarChart3, label: 'Reportes' },
+        { path: '/agency/points', icon: Star, label: 'Puntos' },
         { path: '/history', icon: Clock, label: 'Historial' },
         { path: '/chat', icon: MessageSquare, label: 'Chat' },
         { path: '/profile', icon: User, label: 'Perfil' }
@@ -48,14 +56,18 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDays, label: 'Mi Agenda' });
       }
       
+      guideItems.splice(-1, 0, { path: '/emergency', icon: Shield, label: 'Emergencias' });
       guideItems.push({ path: '/profile', icon: User, label: 'Perfil' });
       return guideItems;
     } else if (user?.role === 'admin') {
       return [
         ...baseItems,
         { path: '/monitoring', icon: Map, label: 'Monitoreo' },
-        { path: '/reservations', icon: Calendar, label: 'Reservas' },
+        { path: '/admin/reservations', icon: Calendar, label: 'Gestión Reservas' },
         { path: '/assignments', icon: UserCheck, label: 'Asignaciones' },
+        { path: '/guides', icon: UserCog, label: 'Guías' },
+        { path: '/providers', icon: Building2, label: 'Proveedores' },
+        { path: '/emergency', icon: Shield, label: 'Emergencias' },
         { path: '/agenda', icon: CalendarDays, label: 'Coordinación' },
         { path: '/history', icon: FileText, label: 'Reportes' },
         { path: '/chat', icon: MessageSquare, label: 'Chat' },

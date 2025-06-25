@@ -33,10 +33,12 @@ const useAuthStore = create((set, get) => ({
       
       // Crear usuario mock
       const mockUser = {
-        id: '1',
+        id: credentials.email === 'admin@futurismo.com' ? 'admin1' : 
+            credentials.email === 'agencia@test.com' ? 'agency1' :
+            credentials.email === 'guia@test.com' ? 'guide1' : 'user123', // ID específico para guía freelance
         name: credentials.email === 'admin@futurismo.com' ? 'Administrador' : 
               credentials.email === 'agencia@test.com' ? 'Agencia Test' :
-              credentials.email === 'guia@test.com' ? 'Guía Planta' : 'Guía Freelance',
+              credentials.email === 'guia@test.com' ? 'Guía Planta' : 'María Torres',
         email: credentials.email,
         role: userCredentials.role,
         guideType: userCredentials.guideType || null,

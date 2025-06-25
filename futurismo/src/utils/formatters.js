@@ -1,6 +1,6 @@
 import { format, formatDistanceToNow, parseISO, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { DATE_FORMATS } from './constants';
+import { DATE_FORMATS, FULLDAY_CONFIG } from './constants';
 
 /**
  * Formatea una fecha según el formato especificado
@@ -231,6 +231,25 @@ export const formatTime = (date) => {
   return format(dateObj, 'HH:mm');
 };
 
+/**
+ * Verifica si es hora válida para reserva directa de fullday
+ * Las agencias pueden reservar sin consultar hasta las 5 PM
+ */
+export const canBookDirectly = () => {
+  const now = new Date();
+  const currentHour = now.getHours();
+  return currentHour < FULLDAY_CONFIG.CUTOFF_HOUR;
+};
+
+/**
+ * Genera URL de WhatsApp para consultar disponibilidad
+ */
+export const generateWhatsAppURL = (customMessage = null) => {
+  const message = customMessage || FULLDAY_CONFIG.WHATSAPP_MESSAGE;
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${FULLDAY_CONFIG.WHATSAPP_NUMBER.replace('+', '')}?text=${encodedMessage}`;
+};
+
 // Exportar todos los formatters agrupados
 export const formatters = {
   formatCoordinates,
@@ -249,5 +268,7 @@ export const formatters = {
   formatTime,
   getInitials,
   pluralize,
-  truncateText
+  truncateText,
+  canBookDirectly,
+  generateWhatsAppURL
 };
