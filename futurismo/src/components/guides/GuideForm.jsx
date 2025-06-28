@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { 
-  X, Plus, Save, Trash2, User, Mail, Phone, 
-  MapPin, Globe, GraduationCap, Award
-} from 'lucide-react';
+import { XMarkIcon, PlusIcon, DocumentCheckIcon, TrashIcon, UserIcon, EnvelopeIcon, PhoneIcon, MapPinIcon, GlobeAltIcon, AcademicCapIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { useForm, useFieldArray } from 'react-hook-form';
 import useGuidesStore from '../../stores/guidesStore';
 
@@ -86,9 +83,9 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
   // Ya no necesitamos filtrar museos disponibles porque ahora es texto libre
 
   const tabs = [
-    { id: 'personal', label: 'Información Personal', icon: User },
-    { id: 'languages', label: 'Idiomas', icon: Globe },
-    { id: 'museums', label: 'Conocimiento de Museos', icon: GraduationCap }
+    { id: 'personal', label: 'Información Personal', icon: UserIcon },
+    { id: 'languages', label: 'Idiomas', icon: GlobeAltIcon },
+    { id: 'museums', label: 'Conocimiento de Museos', icon: AcademicCapIcon }
   ];
 
   return (
@@ -102,7 +99,7 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -251,7 +248,7 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
                     onClick={() => appendLanguage({ code: '', level: 'principiante' })}
                     className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
                   >
-                    <Plus className="w-4 h-4" />
+                    <PlusIcon className="w-4 h-4" />
                     <span>Agregar Idioma</span>
                   </button>
                 </div>
@@ -302,7 +299,7 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
                               onClick={() => removeLanguage(index)}
                               className="mt-8 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           )}
                         </div>
@@ -325,7 +322,7 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
                     onClick={() => appendMuseum({ name: '', expertise: 'principiante' })}
                     className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
                   >
-                    <Plus className="w-4 h-4" />
+                    <PlusIcon className="w-4 h-4" />
                     <span>Agregar Museo</span>
                   </button>
                 </div>
@@ -368,7 +365,7 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
                               onClick={() => removeMuseum(index)}
                               className="mt-8 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           )}
                         </div>
@@ -392,7 +389,7 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
             onClick={handleSubmit(onSubmit)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <Save className="w-4 h-4" />
+            <DocumentCheckIcon className="w-4 h-4" />
             <span>Guardar</span>
           </button>
         </div>

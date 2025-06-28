@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
 
 const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
   const colorClasses = {
@@ -21,9 +21,9 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
           {trend && (
             <div className="flex items-center mt-2">
               {isPositiveTrend ? (
-                <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+                <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
               ) : (
-                <TrendingDown className="w-4 h-4 text-red-500 mr-1" />
+                <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 mr-1" />
               )}
               <span className={`text-sm font-medium ${isPositiveTrend ? 'text-green-600' : 'text-red-600'}`}>
                 {trend}

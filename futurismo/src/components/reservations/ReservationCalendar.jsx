@@ -1,8 +1,5 @@
 import { useState, useMemo } from 'react';
-import { 
-  Calendar as CalendarIcon, ChevronLeft, ChevronRight, 
-  Users, Clock, MapPin, Eye, Plus, Filter
-} from 'lucide-react';
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, UserGroupIcon, ClockIcon, MapPinIcon, EyeIcon, PlusIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, 
   isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, 
   endOfWeek, isToday } from 'date-fns';
@@ -173,7 +170,7 @@ const ReservationCalendar = ({ onNewReservation }) => {
                 onClick={handlePreviousMonth}
                 className="p-1 rounded hover:bg-gray-100 transition-colors"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeftIcon className="w-5 h-5" />
               </button>
               <button
                 onClick={handleToday}
@@ -185,7 +182,7 @@ const ReservationCalendar = ({ onNewReservation }) => {
                 onClick={handleNextMonth}
                 className="p-1 rounded hover:bg-gray-100 transition-colors"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRightIcon className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -195,7 +192,7 @@ const ReservationCalendar = ({ onNewReservation }) => {
               onClick={onNewReservation}
               className="btn btn-primary flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               Nueva Reserva
             </button>
           </div>
@@ -204,7 +201,7 @@ const ReservationCalendar = ({ onNewReservation }) => {
         {/* Filtros */}
         <div className="mt-4 flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500" />
+            <FunnelIcon className="w-4 h-4 text-gray-500" />
             <span className="text-sm font-medium text-gray-700">Filtros:</span>
           </div>
           
@@ -354,11 +351,11 @@ const ReservationCalendar = ({ onNewReservation }) => {
                         <p className="font-medium text-sm">{reservation.tourName}</p>
                         <div className="flex items-center gap-3 text-xs text-gray-600">
                           <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
+                            <ClockIcon className="w-3 h-3" />
                             {reservation.time}
                           </span>
                           <span className="flex items-center gap-1">
-                            <Users className="w-3 h-3" />
+                            <UserGroupIcon className="w-3 h-3" />
                             {reservation.adults + (reservation.children || 0)} pax
                           </span>
                           <span>{reservation.clientName}</span>
@@ -369,7 +366,7 @@ const ReservationCalendar = ({ onNewReservation }) => {
                       onClick={() => handleViewReservation(reservation)}
                       className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                      <Eye className="w-4 h-4 text-gray-600" />
+                      <EyeIcon className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
                 ))}

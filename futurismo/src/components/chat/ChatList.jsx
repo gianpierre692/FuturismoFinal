@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, MessageSquare, Circle, Check, CheckCheck, Users } from 'lucide-react';
+import { MagnifyingGlassIcon, ChatBubbleLeftRightIcon, CheckIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 
 const ChatList = ({ onSelectChat, selectedChatId }) => {
@@ -87,9 +87,9 @@ const ChatList = ({ onSelectChat, selectedChatId }) => {
     // Simular estado de mensaje enviado/leído
     const isRead = Math.random() > 0.5;
     return isRead ? (
-      <CheckCheck className="w-4 h-4 text-blue-500" />
+      <CheckIcon className="w-4 h-4 text-blue-500" />
     ) : (
-      <Check className="w-4 h-4 text-gray-400" />
+      <CheckIcon className="w-4 h-4 text-gray-400" />
     );
   };
 
@@ -98,7 +98,7 @@ const ChatList = ({ onSelectChat, selectedChatId }) => {
       {/* Header con búsqueda */}
       <div className="p-4 border-b border-gray-200">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
             placeholder="Buscar conversación..."
@@ -113,7 +113,7 @@ const ChatList = ({ onSelectChat, selectedChatId }) => {
       <div className="flex-1 overflow-y-auto">
         {filteredChats.length === 0 ? (
           <div className="p-4 text-center text-gray-500">
-            <MessageSquare className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+            <ChatBubbleLeftRightIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
             <p>No se encontraron conversaciones</p>
           </div>
         ) : (
@@ -129,7 +129,7 @@ const ChatList = ({ onSelectChat, selectedChatId }) => {
               <div className="relative flex-shrink-0">
                 {chat.type === 'group' ? (
                   <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                    <Users className="w-6 h-6 text-primary-600" />
+                    <UserGroupIcon className="w-6 h-6 text-primary-600" />
                   </div>
                 ) : (
                   <>

@@ -165,6 +165,37 @@ const useServicesStore = create((set, get) => ({
   setError: (error) => set({ error }),
 
   // Obtener estadísticas
+  getActiveServices: (filters = {}) => {
+    const { activeServices } = get();
+    
+    if (!filters || Object.keys(filters).length === 0) {
+      return activeServices;
+    }
+    
+    return activeServices.filter(service => {
+      // Filtro por estado
+      if (filters.status && service.status !== filters.status) {
+        return false;
+      }
+      
+      // Filtro por fecha
+      if (filters.date) {
+        const serviceDate = new Date(service.date).toDateString();
+        const filterDate = new Date(filters.date).toDateString();
+        if (serviceDate !== filterDate) {
+          return false;
+        }
+      }
+      
+      // Filtro por tipo de servicio
+      if (filters.serviceType && service.type !== filters.serviceType) {
+        return false;
+      }
+      
+      return true;
+    });
+  },
+
   getStatistics: () => {
     const { activeServices } = get();
     
@@ -174,6 +205,89 @@ const useServicesStore = create((set, get) => ({
       onWay: activeServices.filter(s => s.status === SERVICE_STATUS.ON_WAY).length,
       inService: activeServices.filter(s => s.status === SERVICE_STATUS.IN_SERVICE).length
     };
+  },
+
+  // Inicializar con datos mock
+  initializeMockData: () => {
+    const mockServices = [
+      {
+        id: 1,
+        code: 'TUR001',
+        status: 'en_curso',
+        client: { name: 'María González', phone: '+51 987654321' },
+        guide: { name: 'Carlos Mendoza', phone: '+51 123456789' },
+        startTime: '09:00',
+        pickupLocation: 'Plaza de Armas',
+        destination: 'Circuito Mágico del Agua',
+        currentLocation: { lat: -12.0464, lng: -77.0428 },
+        lastUpdate: new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 2,
+        code: 'TUR002',
+        status: 'programado',
+        client: { name: 'John Smith', phone: '+1 555-0123' },
+        guide: { name: 'Ana Rivera', phone: '+51 987654321' },
+        startTime: '14:00',
+        pickupLocation: 'Hotel Miraflores',
+        destination: 'Museo Nacional',
+        currentLocation: { lat: -12.1215, lng: -77.0298 },
+        lastUpdate: new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 3,
+        code: 'TUR003',
+        status: 'en_curso',
+        client: { name: 'Sophie Dubois', phone: '+33 123456789' },
+        guide: { name: 'Miguel Torres', phone: '+51 876543210' },
+        startTime: '11:30',
+        pickupLocation: 'Barranco',
+        destination: 'Centro Histórico',
+        currentLocation: { lat: -12.1533, lng: -77.0244 },
+        lastUpdate: new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 4,
+        code: 'TUR004',
+        status: 'pausado',
+        client: { name: 'Roberto Silva', phone: '+51 555-9876' },
+        guide: { name: 'Lucia Fernandez', phone: '+51 765432109' },
+        startTime: '16:00',
+        pickupLocation: 'San Isidro',
+        destination: 'Larco Mar',
+        currentLocation: { lat: -12.0956, lng: -77.0364 },
+        lastUpdate: new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 5,
+        code: 'TUR005',
+        status: 'programado',
+        client: { name: 'Emma Johnson', phone: '+44 20 7946 0958' },
+        guide: { name: 'Pedro Ramirez', phone: '+51 654321098' },
+        startTime: '18:30',
+        pickupLocation: 'Callao',
+        destination: 'Fortaleza del Real Felipe',
+        currentLocation: { lat: -12.0735, lng: -77.0826 },
+        lastUpdate: new Date().toISOString(),
+        date: new Date().toISOString().split('T')[0]
+      }
+    ];
+
+    set((state) => {
+      const active = mockServices.filter(s => 
+        s.status !== 'completado' && s.status !== 'cancelado'
+      );
+      
+      return {
+        services: mockServices,
+        activeServices: active,
+        historicalServices: []
+      };
+    });
   },
 
   // Limpiar store

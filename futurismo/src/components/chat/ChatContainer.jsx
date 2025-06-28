@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import ChatList from './ChatList';
 import ChatWindow from './ChatWindow';
-import { MessageSquare } from 'lucide-react';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 
 const ChatContainer = () => {
   const [selectedChat, setSelectedChat] = useState(null);
@@ -69,7 +69,7 @@ const ChatContainer = () => {
         ) : (
           <div className="flex-1 flex items-center justify-center bg-gray-50">
             <div className="text-center">
-              <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <ChatBubbleLeftRightIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 Bienvenido al Chat de Futurismo
               </h3>

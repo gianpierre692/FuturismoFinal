@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { 
-  MapPin, Calendar, Users, Clock, DollarSign, 
-  ChevronRight, ChevronLeft, Check, AlertCircle,
-  User, Phone, Plus, Minus, UserPlus, Trash2
-} from 'lucide-react';
+import { MapPinIcon, CalendarIcon, UserGroupIcon, ClockIcon, CurrencyDollarIcon, ChevronRightIcon, ChevronLeftIcon, CheckIcon, ExclamationTriangleIcon, UserIcon, PhoneIcon, PlusIcon, MinusIcon, UserPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useReservationsStore } from '../../stores/reservationsStore';
 import { formatters, canBookDirectly, generateWhatsAppURL } from '../../utils/formatters';
@@ -70,8 +66,8 @@ const ReservationWizard = ({ onClose }) => {
   ];
 
   const steps = [
-    { number: 1, title: 'Servicio', icon: MapPin },
-    { number: 2, title: 'Detalles', icon: Users },
+    { number: 1, title: 'Servicio', icon: MapPinIcon },
+    { number: 2, title: 'Detalles', icon: UserGroupIcon },
     { number: 3, title: 'Confirmación', icon: Check }
   ];
 
@@ -299,7 +295,7 @@ const ReservationWizard = ({ onClose }) => {
             {isFulldayTour && !canBookDirectReservation && (
               <div className="border border-orange-300 bg-orange-50 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
-                  <AlertCircle className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
+                  <ExclamationTriangleIcon className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
                     <h4 className="text-sm font-medium text-orange-800 mb-2">
                       Reserva de Tour Full Day después de las 5 PM
@@ -399,7 +395,7 @@ const ReservationWizard = ({ onClose }) => {
             <div className="border-t pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="font-medium flex items-center">
-                  <Users className="w-5 h-5 mr-2 text-blue-500" />
+                  <UserGroupIcon className="w-5 h-5 mr-2 text-blue-500" />
                   Grupos ({fields.length})
                 </h4>
                 <button
@@ -407,7 +403,7 @@ const ReservationWizard = ({ onClose }) => {
                   onClick={() => append({ representativeName: '', representativePhone: '', companionsCount: 0 })}
                   className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   <span>Agregar Grupo</span>
                 </button>
               </div>
@@ -421,7 +417,7 @@ const ReservationWizard = ({ onClose }) => {
 
               {fields.length === 0 && (
                 <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <UserGroupIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                   <p className="text-gray-500 mb-2">No hay grupos agregados</p>
                   <p className="text-sm text-gray-400">
                     Agregue al menos un grupo con su representante
@@ -434,7 +430,7 @@ const ReservationWizard = ({ onClose }) => {
                   <div key={field.id} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                       <h5 className="font-medium text-gray-900 flex items-center">
-                        <Users className="w-4 h-4 mr-2 text-blue-500" />
+                        <UserGroupIcon className="w-4 h-4 mr-2 text-blue-500" />
                         Grupo #{index + 1}
                       </h5>
                       <button
@@ -443,7 +439,7 @@ const ReservationWizard = ({ onClose }) => {
                         className="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50"
                         title="Eliminar grupo"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </button>
                     </div>
 
@@ -516,7 +512,7 @@ const ReservationWizard = ({ onClose }) => {
               {fields.length > 0 && (
                 <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-start space-x-3">
-                    <Users className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <UserGroupIcon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-blue-800">
                       <p className="font-medium mb-1">Información Importante:</p>
                       <ul className="list-disc list-inside space-y-1">
@@ -666,7 +662,7 @@ const ReservationWizard = ({ onClose }) => {
             {/* Información importante */}
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <ExclamationTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-yellow-800">
                   <p className="font-medium mb-1">Información Importante:</p>
                   <ul className="list-disc list-inside space-y-1">
@@ -680,7 +676,7 @@ const ReservationWizard = ({ onClose }) => {
           </div>
         )}
 
-        {/* Navigation buttons */}
+        {/* MapIcon buttons */}
         <div className="flex justify-between mt-8">
           <button
             type="button"
@@ -688,7 +684,7 @@ const ReservationWizard = ({ onClose }) => {
             className="btn btn-outline flex items-center gap-2"
             disabled={currentStep === 1}
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeftIcon className="w-4 h-4" />
             Anterior
           </button>
 
@@ -708,7 +704,7 @@ const ReservationWizard = ({ onClose }) => {
                   ? 'Consultar por WhatsApp' 
                   : 'Siguiente'
                 }
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRightIcon className="w-4 h-4" />
               </>
             )}
           </button>

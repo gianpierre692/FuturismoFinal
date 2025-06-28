@@ -1,8 +1,4 @@
-import { 
-  Star, Phone, Mail, MapPin, Users, 
-  Edit, Trash2, Eye, Clock, DollarSign,
-  Badge, Award
-} from 'lucide-react';
+import { StarIcon, PhoneIcon, EnvelopeIcon, MapPinIcon, UserGroupIcon, PencilIcon, TrashIcon, EyeIcon, ClockIcon, CurrencyDollarIcon, BadgeCheckIcon, TrophyIcon } from '@heroicons/react/24/outline';
 
 const ProviderCard = ({ 
   provider, 
@@ -32,20 +28,20 @@ const ProviderCard = ({
 
     for (let i = 0; i < fullStars; i++) {
       stars.push(
-        <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+        <StarIcon key={i} className="w-4 h-4 text-yellow-400 fill-current" />
       );
     }
 
     if (hasHalfStar) {
       stars.push(
-        <Star key="half" className="w-4 h-4 text-yellow-400 fill-current opacity-50" />
+        <StarIcon key="half" className="w-4 h-4 text-yellow-400 fill-current opacity-50" />
       );
     }
 
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
       stars.push(
-        <Star key={`empty-${i}`} className="w-4 h-4 text-gray-300" />
+        <StarIcon key={`empty-${i}`} className="w-4 h-4 text-gray-300" />
       );
     }
 
@@ -83,19 +79,19 @@ const ProviderCard = ({
 
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <span className="flex items-center">
-                  <MapPin className="w-4 h-4 mr-1" />
+                  <MapPinIcon className="w-4 h-4 mr-1" />
                   {locationName}
                 </span>
                 <span className="flex items-center">
                   {categoryInfo?.icon} {categoryInfo?.name}
                 </span>
                 <span className="flex items-center">
-                  <Star className="w-4 h-4 mr-1 text-yellow-400" />
+                  <StarIcon className="w-4 h-4 mr-1 text-yellow-400" />
                   {provider.rating}
                 </span>
                 {provider.capacity && (
                   <span className="flex items-center">
-                    <Users className="w-4 h-4 mr-1" />
+                    <UserGroupIcon className="w-4 h-4 mr-1" />
                     {provider.capacity}
                   </span>
                 )}
@@ -120,14 +116,14 @@ const ProviderCard = ({
               className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
               title="Editar"
             >
-              <Edit className="w-4 h-4" />
+              <PencilIcon className="w-4 h-4" />
             </button>
             <button
               onClick={() => onDelete()}
               className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               title="Eliminar"
             >
-              <Trash2 className="w-4 h-4" />
+              <TrashIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -149,7 +145,7 @@ const ProviderCard = ({
             <div>
               <h3 className="font-semibold text-gray-900">{categoryInfo?.name}</h3>
               <p className="text-sm text-gray-600 flex items-center">
-                <MapPin className="w-3 h-3 mr-1" />
+                <MapPinIcon className="w-3 h-3 mr-1" />
                 {locationName}
               </p>
             </div>
@@ -215,7 +211,7 @@ const ProviderCard = ({
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-600">Capacidad:</span>
               <span className="font-medium text-gray-900 flex items-center">
-                <Users className="w-4 h-4 mr-1" />
+                <UserGroupIcon className="w-4 h-4 mr-1" />
                 {provider.capacity} personas
               </span>
             </div>
@@ -225,11 +221,11 @@ const ProviderCard = ({
         {/* Contacto */}
         <div className="space-y-1 mb-4 text-sm">
           <div className="flex items-center text-gray-600">
-            <Phone className="w-3 h-3 mr-2" />
+            <PhoneIcon className="w-3 h-3 mr-2" />
             {provider.contact.phone}
           </div>
           <div className="flex items-center text-gray-600">
-            <Mail className="w-3 h-3 mr-2" />
+            <EnvelopeIcon className="w-3 h-3 mr-2" />
             {provider.contact.email}
           </div>
         </div>
@@ -282,7 +278,7 @@ const ProviderCard = ({
               className="p-2 text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition-colors"
               title="Editar proveedor"
             >
-              <Edit className="w-4 h-4" />
+              <PencilIcon className="w-4 h-4" />
             </button>
             
             <button
@@ -290,7 +286,7 @@ const ProviderCard = ({
               className="p-2 text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition-colors"
               title="Eliminar proveedor"
             >
-              <Trash2 className="w-4 h-4" />
+              <TrashIcon className="w-4 h-4" />
             </button>
           </div>
         </div>

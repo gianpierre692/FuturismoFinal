@@ -1,8 +1,4 @@
-import { 
-  X, Edit, Phone, Mail, MapPin, Calendar, Award, 
-  Globe, GraduationCap, User, Star, Clock, Target,
-  CheckCircle, Users, Trophy
-} from 'lucide-react';
+import { XMarkIcon, PencilIcon, PhoneIcon, EnvelopeIcon, MapPinIcon, CalendarIcon, TrophyIcon, GlobeAltIcon, AcademicCapIcon, UserIcon, StarIcon, ClockIcon, CheckCircleIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import useGuidesStore from '../../stores/guidesStore';
 
 const GuideProfile = ({ guide, onClose, onEdit }) => {
@@ -31,7 +27,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
 
   const getRatingStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
-      <Star
+      <StarIcon
         key={index}
         className={`w-4 h-4 ${
           index < Math.floor(rating)
@@ -77,7 +73,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
             onClick={() => onEdit(guide)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <Edit className="w-4 h-4" />
+            <PencilIcon className="w-4 h-4" />
             <span>Editar</span>
           </button>
           <button
@@ -95,7 +91,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
           {/* Información de contacto */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <User className="w-5 h-5 mr-2 text-blue-500" />
+              <UserIcon className="w-5 h-5 mr-2 text-blue-500" />
               Información Personal
             </h3>
             
@@ -112,7 +108,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
 
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-blue-600" />
+                  <PhoneIcon className="w-4 h-4 text-blue-600" />
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{guide?.phone || 'Sin teléfono'}</p>
@@ -122,7 +118,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
 
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Mail className="w-4 h-4 text-green-600" />
+                  <EnvelopeIcon className="w-4 h-4 text-green-600" />
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{guide?.email || 'Sin email'}</p>
@@ -132,7 +128,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
 
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mt-1">
-                  <MapPin className="w-4 h-4 text-purple-600" />
+                  <MapPinIcon className="w-4 h-4 text-purple-600" />
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{guide?.address || 'Sin dirección'}</p>
@@ -145,14 +141,14 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
           {/* Estadísticas */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
+              <TrophyIcon className="w-5 h-5 mr-2 text-yellow-500" />
               Estadísticas
             </h3>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <div className="flex items-center justify-center mb-2">
-                  <Users className="w-6 h-6 text-blue-600" />
+                  <UserGroupIcon className="w-6 h-6 text-blue-600" />
                 </div>
                 <p className="text-2xl font-bold text-blue-600">{guide?.stats?.toursCompleted || 0}</p>
                 <p className="text-sm text-blue-700">Tours Completados</p>
@@ -160,7 +156,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
               
               <div className="text-center p-4 bg-green-50 rounded-lg">
                 <div className="flex items-center justify-center mb-2">
-                  <Clock className="w-6 h-6 text-green-600" />
+                  <ClockIcon className="w-6 h-6 text-green-600" />
                 </div>
                 <p className="text-2xl font-bold text-green-600">{guide?.stats?.yearsExperience || 0}</p>
                 <p className="text-sm text-green-700">Años de Experiencia</p>
@@ -168,7 +164,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
               
               <div className="text-center p-4 bg-yellow-50 rounded-lg">
                 <div className="flex items-center justify-center mb-2">
-                  <Award className="w-6 h-6 text-yellow-600" />
+                  <TrophyIcon className="w-6 h-6 text-yellow-600" />
                 </div>
                 <p className="text-2xl font-bold text-yellow-600">{guide?.stats?.certifications || 0}</p>
                 <p className="text-sm text-yellow-700">Certificaciones</p>
@@ -176,7 +172,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
               
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <div className="flex items-center justify-center mb-2">
-                  <Star className="w-6 h-6 text-purple-600" />
+                  <StarIcon className="w-6 h-6 text-purple-600" />
                 </div>
                 <p className="text-2xl font-bold text-purple-600">{guide?.stats?.rating || 0}</p>
                 <p className="text-sm text-purple-700">Calificación</p>
@@ -187,7 +183,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
           {/* Fechas importantes */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Calendar className="w-5 h-5 mr-2 text-indigo-500" />
+              <CalendarIcon className="w-5 h-5 mr-2 text-indigo-500" />
               Información Adicional
             </h3>
             
@@ -228,7 +224,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
           {/* Especialización en idiomas */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Globe className="w-5 h-5 mr-2 text-blue-500" />
+              <GlobeAltIcon className="w-5 h-5 mr-2 text-blue-500" />
               Especialización en Idiomas ({guide?.specializations?.languages?.length || 0})
             </h3>
             
@@ -269,7 +265,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
           {/* Conocimiento de museos */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <GraduationCap className="w-5 h-5 mr-2 text-purple-500" />
+              <AcademicCapIcon className="w-5 h-5 mr-2 text-purple-500" />
               Conocimiento de Museos ({guide?.specializations?.museums?.length || 0})
             </h3>
             
@@ -286,7 +282,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-start space-x-3">
                           <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <GraduationCap className="w-5 h-5 text-purple-600" />
+                            <AcademicCapIcon className="w-5 h-5 text-purple-600" />
                           </div>
                           <div className="flex-1">
                             <h4 className="font-semibold text-gray-900 line-clamp-2">{museumInfo.name}</h4>
@@ -312,14 +308,14 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
           {/* Resumen de competencias */}
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-              <Target className="w-5 h-5 mr-2 text-indigo-500" />
+              <TargetIcon className="w-5 h-5 mr-2 text-indigo-500" />
               Resumen de Competencias
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Globe className="w-8 h-8 text-blue-600" />
+                  <GlobeAltIcon className="w-8 h-8 text-blue-600" />
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Multilingüe</h4>
                 <p className="text-sm text-gray-600">
@@ -340,7 +336,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
               
               <div className="text-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <GraduationCap className="w-8 h-8 text-purple-600" />
+                  <AcademicCapIcon className="w-8 h-8 text-purple-600" />
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Especialista</h4>
                 <p className="text-sm text-gray-600">
@@ -355,7 +351,7 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
               
               <div className="text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+                  <CheckCircleIcon className="w-8 h-8 text-green-600" />
                 </div>
                 <h4 className="font-semibold text-gray-900 mb-2">Experimentado</h4>
                 <p className="text-sm text-gray-600">

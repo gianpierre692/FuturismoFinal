@@ -266,40 +266,61 @@ export const FreelanceAvailabilityView = () => {
         <div className="space-y-4">
           {freelanceGuides.map((guide) => {
             const agenda = getGuideAgenda(guide.id, selectedDate);
+            
+            // Crear especialidades de manera segura
+            const languages = guide.specializations?.languages?.map(lang => lang.code.toUpperCase()) || [];
+            const museums = guide.specializations?.museums?.map(museum => museum.name) || [];
+            const specialties = [...languages, ...museums.slice(0, 2)]; // Limitar a 2 museos
+            
+            // Verificar disponibilidad
+            const availableSlots = agenda?.slots?.filter(slot => slot.status === 'available') || [];
+            const isAvailable = availableSlots.length > 0;
+            const busySlots = agenda?.slots?.filter(slot => slot.status === 'busy') || [];
+            
             return (
               <div
                 key={guide.id}
                 className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
               >
                 <div className="flex items-center space-x-3">
-                  <img
-                    src={guide.avatar}
-                    alt={guide.name}
-                    className="h-10 w-10 rounded-full"
-                  />
+                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <span className="text-sm font-medium text-blue-800">
+                      {guide.fullName?.split(' ').map(n => n[0]).join('').slice(0, 2) || 'GU'}
+                    </span>
+                  </div>
                   <div>
-                    <h4 className="font-medium text-gray-900">{guide.name}</h4>
+                    <h4 className="font-medium text-gray-900">{guide.fullName}</h4>
                     <p className="text-sm text-gray-600">
-                      {guide.specialties.join(', ')}
+                      {specialties.length > 0 ? specialties.join(', ') : 'Guía turístico'}
                     </p>
+                    <div className="flex items-center text-xs text-gray-500 mt-1">
+                      <span className="bg-gray-100 px-2 py-1 rounded text-xs">
+                        ⭐ {guide.stats?.rating || 'N/A'} ({guide.stats?.toursCompleted || 0} tours)
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  {agenda?.disponible ? (
+                  {isAvailable ? (
                     <div>
                       <div className="flex items-center text-green-600 mb-1">
-                        <CheckCircleIcon className="h-4 w-4 mr-1" />
+                        <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                         <span className="text-sm font-medium">Disponible</span>
                       </div>
                       <div className="text-xs text-gray-600">
-                        {agenda.horarios.join(', ') || 'Todo el día'}
+                        {availableSlots.length} horarios libres
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center text-red-600">
-                      <XCircleIcon className="h-4 w-4 mr-1" />
-                      <span className="text-sm font-medium">No Disponible</span>
+                    <div>
+                      <div className="flex items-center text-red-600 mb-1">
+                        <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                        <span className="text-sm font-medium">Ocupado</span>
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {busySlots[0]?.tour || 'No disponible'}
+                      </div>
                     </div>
                   )}
                 </div>

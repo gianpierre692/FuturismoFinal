@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { 
-  MapPin, ChevronDown, ChevronRight, Building2,
-  Plus, Users
-} from 'lucide-react';
+import { MapPinIcon, ChevronDownIcon, ChevronRightIcon, BuildingOffice2Icon, PlusIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import useProvidersStore from '../../stores/providersStore';
 
 const LocationTree = () => {
@@ -51,7 +48,7 @@ const LocationTree = () => {
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-          <Building2 className="w-5 h-5 mr-2 text-blue-500" />
+          <BuildingOffice2Icon className="w-5 h-5 mr-2 text-blue-500" />
           Proveedores por Ubicación
         </h3>
         <p className="text-sm text-gray-600 mt-1">
@@ -81,13 +78,13 @@ const LocationTree = () => {
                   <div className="flex items-center space-x-2">
                     <button className="p-1">
                       {isExpanded ? (
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                        <ChevronDownIcon className="w-4 h-4 text-gray-400" />
                       ) : (
-                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                        <ChevronRightIcon className="w-4 h-4 text-gray-400" />
                       )}
                     </button>
                     
-                    <MapPin className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`} />
+                    <MapPinIcon className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`} />
                     
                     <div className="flex-1">
                       <span className={`text-sm font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
@@ -144,7 +141,7 @@ const LocationTree = () => {
 
                     {availableCategories.length === 0 && (
                       <div className="text-center py-4 text-gray-500">
-                        <Building2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                        <BuildingOffice2Icon className="w-8 h-8 mx-auto mb-2 opacity-50" />
                         <p className="text-sm">No hay categorías disponibles</p>
                       </div>
                     )}
@@ -187,7 +184,7 @@ const LocationTree = () => {
                 setExpandedLocations(new Set(locations.map(l => l.id)));
               }}
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <PlusIcon className="w-4 h-4 mr-2" />
               Expandir todas
             </button>
             
@@ -200,7 +197,7 @@ const LocationTree = () => {
                 actions.setSelectedCategory(null);
               }}
             >
-              <Building2 className="w-4 h-4 mr-2" />
+              <BuildingOffice2Icon className="w-4 h-4 mr-2" />
               Colapsar todas
             </button>
           </div>

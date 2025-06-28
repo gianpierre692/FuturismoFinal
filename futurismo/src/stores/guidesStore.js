@@ -112,6 +112,55 @@ const useGuidesStore = create((set, get) => ({
   languages: languages,
   museums: [], // Ya no necesitamos un catálogo fijo de museos
   
+  // Funciones principales (acceso directo)
+  getGuides: (filters = {}) => {
+    const { guides } = get();
+    
+    if (!filters || Object.keys(filters).length === 0) {
+      return guides;
+    }
+    
+    return guides.filter(guide => {
+      // Filtro por tipo
+      if (filters.tipo && guide.guideType !== filters.tipo) {
+        return false;
+      }
+      
+      // Filtro por idioma
+      if (filters.language && !guide.specializations.languages.some(lang => lang.code === filters.language)) {
+        return false;
+      }
+      
+      // Filtro por museo
+      if (filters.museum && !guide.specializations.museums.some(museum => 
+        museum.name.toLowerCase().includes(filters.museum.toLowerCase())
+      )) {
+        return false;
+      }
+      
+      return true;
+    });
+  },
+
+  getGuideAgenda: (guideId, date) => {
+    // Mock agenda data
+    return {
+      guideId,
+      date: date,
+      slots: [
+        { time: '09:00', status: 'available' },
+        { time: '10:00', status: 'busy', tour: 'City Tour Lima' },
+        { time: '11:00', status: 'busy', tour: 'City Tour Lima' },
+        { time: '12:00', status: 'available' },
+        { time: '13:00', status: 'break' },
+        { time: '14:00', status: 'available' },
+        { time: '15:00', status: 'available' },
+        { time: '16:00', status: 'busy', tour: 'Museo Larco' },
+        { time: '17:00', status: 'available' }
+      ]
+    };
+  },
+  
   // Acciones
   actions: {
     // Agregar nuevo guía

@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { 
-  X, Save, Plus, Trash2, AlertTriangle, 
-  Shield, Phone, Users, CheckCircle
-} from 'lucide-react';
+import { XMarkIcon, DocumentCheckIcon, PlusIcon, TrashIcon, ExclamationTriangleIcon, ShieldCheckIcon, PhoneIcon, UserGroupIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import useEmergencyStore from '../../stores/emergencyStore';
 
 const ProtocolEditor = ({ protocol, onClose, onSave }) => {
@@ -113,14 +110,14 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center">
-            <Shield className="w-6 h-6 mr-2 text-blue-500" />
+            <ShieldCheckIcon className="w-6 h-6 mr-2 text-blue-500" />
             {protocol ? 'Editar Protocolo' : 'Nuevo Protocolo'}
           </h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -227,7 +224,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
+                  <CheckCircleIcon className="w-5 h-5 mr-2 text-green-500" />
                   Pasos del Protocolo
                 </h3>
                 <button
@@ -235,7 +232,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
                   onClick={() => appendStep({ text: '' })}
                   className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   <span>Agregar Paso</span>
                 </button>
               </div>
@@ -265,7 +262,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
                         onClick={() => removeStep(index)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-1"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </button>
                     )}
                   </div>
@@ -277,7 +274,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Phone className="w-5 h-5 mr-2 text-red-500" />
+                  <PhoneIcon className="w-5 h-5 mr-2 text-red-500" />
                   Contactos de Emergencia
                 </h3>
                 <button
@@ -285,7 +282,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
                   onClick={() => appendContact({ name: '', phone: '', type: 'emergency' })}
                   className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center space-x-2"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   <span>Agregar Contacto</span>
                 </button>
               </div>
@@ -335,7 +332,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
                               onClick={() => removeContact(index)}
                               className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           )}
                         </div>
@@ -350,7 +347,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-medium text-gray-900 flex items-center">
-                  <Users className="w-5 h-5 mr-2 text-purple-500" />
+                  <UserGroupIcon className="w-5 h-5 mr-2 text-purple-500" />
                   Materiales Necesarios
                 </h3>
                 <button
@@ -358,7 +355,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
                   onClick={() => appendMaterial({ name: '' })}
                   className="px-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center space-x-2"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   <span>Agregar Material</span>
                 </button>
               </div>
@@ -379,7 +376,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
                         onClick={() => removeMaterial(index)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <TrashIcon className="w-4 h-4" />
                       </button>
                     )}
                   </div>
@@ -390,7 +387,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
             {/* Advertencia */}
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
+                <ExclamationTriangleIcon className="w-5 h-5 text-yellow-600 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-yellow-900 mb-1">
                     Importante
@@ -423,7 +420,7 @@ const ProtocolEditor = ({ protocol, onClose, onSave }) => {
               onClick={handleSubmit(onSubmit)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
             >
-              <Save className="w-4 h-4" />
+              <DocumentCheckIcon className="w-4 h-4" />
               <span>{protocol ? 'Actualizar' : 'Guardar'} Protocolo</span>
             </button>
           </div>

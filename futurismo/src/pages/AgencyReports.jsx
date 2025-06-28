@@ -1,20 +1,9 @@
 import { useState, useMemo } from 'react';
-import { 
-  BarChart3, 
-  TrendingUp, 
-  DollarSign, 
-  Users, 
-  Calendar,
-  Download,
-  Filter,
-  ChevronLeft,
-  ChevronRight,
-  PieChart
-} from 'lucide-react';
+import { ChartBarIcon, ArrowTrendingUpIcon, CurrencyDollarIcon, UserGroupIcon, CalendarIcon, ArrowDownTrayIcon, FunnelIcon, ChevronLeftIcon, ChevronRightIcon, ChartPieIcon } from '@heroicons/react/24/outline';
 import { format, addMonths, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { 
-  BarChart, 
+  BarChart as Chart, 
   Bar, 
   XAxis, 
   YAxis, 
@@ -22,7 +11,7 @@ import {
   Tooltip, 
   Legend, 
   ResponsiveContainer,
-  PieChart as RechartsPieChart,
+  PieChart,
   Pie,
   Cell,
   LineChart,
@@ -67,11 +56,12 @@ const AgencyReports = () => {
     if (reportType !== 'monthly' || !reportData.dailyData) return [];
     
     return reportData.dailyData.map(day => ({
-      day: format(new Date(day.date), 'd'),
+      day: format(new Date(day.date), 'd MMM', { locale: es }),
+      dayNumber: format(new Date(day.date), 'd'),
       date: day.date,
-      revenue: day.revenue,
-      reservations: day.reservations,
-      participants: day.participants
+      revenue: day.revenue || 0,
+      reservations: day.reservations || 0,
+      participants: day.participants || 0
     }));
   }, [reportData, reportType]);
 
@@ -118,7 +108,7 @@ const AgencyReports = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <BarChart3 className="w-8 h-8 mr-3 text-green-500" />
+            <ChartBarIcon className="w-8 h-8 mr-3 text-green-500" />
             Reportes de Ventas
           </h1>
           <p className="text-gray-600 mt-1">
@@ -128,7 +118,7 @@ const AgencyReports = () => {
 
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2">
-            <Filter className="w-4 h-4 text-gray-500" />
+            <FunnelIcon className="w-4 h-4 text-gray-500" />
             <select
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
@@ -143,7 +133,7 @@ const AgencyReports = () => {
             onClick={exportReport}
             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
           >
-            <Download className="w-4 h-4" />
+            <ArrowDownTrayIcon className="w-4 h-4" />
             <span>Exportar</span>
           </button>
         </div>
@@ -156,7 +146,7 @@ const AgencyReports = () => {
             onClick={() => navigateDate('prev')}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeftIcon className="w-5 h-5" />
           </button>
           
           <h2 className="text-xl font-semibold capitalize">
@@ -170,7 +160,7 @@ const AgencyReports = () => {
             onClick={() => navigateDate('next')}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRightIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -178,10 +168,10 @@ const AgencyReports = () => {
       {/* Tarjetas de resumen */}
       {reportType === 'monthly' && reportData.summary && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-blue-600" />
+                <CalendarIcon className="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
@@ -192,10 +182,10 @@ const AgencyReports = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-green-600" />
+                <CurrencyDollarIcon className="w-6 h-6 text-green-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
@@ -206,10 +196,10 @@ const AgencyReports = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-purple-600" />
+                <UserGroupIcon className="w-6 h-6 text-purple-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
@@ -220,10 +210,10 @@ const AgencyReports = () => {
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-yellow-600" />
+                <ArrowTrendingUpIcon className="w-6 h-6 text-yellow-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold text-gray-900">
@@ -239,39 +229,63 @@ const AgencyReports = () => {
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Gráfico principal */}
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">
               {reportType === 'monthly' ? 'Ventas Diarias' : 'Ventas Mensuales'}
             </h3>
-            {reportType === 'monthly' && (
-              <select
-                value={chartType}
-                onChange={(e) => setChartType(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-1 text-sm"
-              >
-                <option value="revenue">Ingresos</option>
-                <option value="reservations">Reservas</option>
-                <option value="participants">Turistas</option>
-              </select>
-            )}
+            <div className="flex items-center space-x-2">
+              {reportType === 'monthly' && (
+                <>
+                  {chartType === 'revenue' && <CurrencyDollarIcon className="w-5 h-5 text-purple-600" />}
+                  {chartType === 'reservations' && <CalendarIcon className="w-5 h-5 text-blue-600" />}
+                  {chartType === 'participants' && <UserGroupIcon className="w-5 h-5 text-green-600" />}
+                  <select
+                    value={chartType}
+                    onChange={(e) => setChartType(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-1 text-sm bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="revenue">Ingresos</option>
+                    <option value="reservations">Reservas</option>
+                    <option value="participants">Turistas</option>
+                  </select>
+                </>
+              )}
+              {reportType === 'yearly' && <ChartBarIcon className="w-5 h-5 text-blue-600" />}
+            </div>
           </div>
           
-          <ResponsiveContainer width="100%" height={300}>
-            {reportType === 'monthly' ? (
-              <BarChart data={dailyChartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value, name) => [
-                    name === 'revenue' ? formatCurrency(value) : value,
-                    name === 'revenue' ? 'Ingresos' : 
-                    name === 'reservations' ? 'Reservas' : 'Turistas'
-                  ]}
-                />
-                <Bar dataKey={chartType} fill="#3B82F6" />
-              </BarChart>
+          <div className="h-48">
+            {reportType === 'monthly' && dailyChartData.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                <ChartBarIcon className="w-12 h-12 mb-3 text-gray-300" />
+                <p className="text-sm font-medium">No hay datos de ventas para este período</p>
+                <p className="text-xs mt-1 text-gray-400">Las ventas aparecerán aquí cuando se registren reservas</p>
+              </div>
+            ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              {reportType === 'monthly' ? (
+                <Chart data={dailyChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="day" 
+                    tick={{ fontSize: 12 }}
+                  />
+                  <YAxis tick={{ fontSize: 12 }} />
+                  <Tooltip 
+                    formatter={(value) => [
+                      chartType === 'revenue' ? formatCurrency(value) : value,
+                      chartType === 'revenue' ? 'Ingresos' : 
+                      chartType === 'reservations' ? 'Reservas' : 'Turistas'
+                    ]}
+                    labelStyle={{ color: '#374151' }}
+                  />
+                  <Bar 
+                    dataKey={chartType} 
+                    fill={chartType === 'revenue' ? '#8B5CF6' : chartType === 'reservations' ? '#3B82F6' : '#10B981'}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </Chart>
             ) : (
               <LineChart data={yearlyChartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -287,19 +301,23 @@ const AgencyReports = () => {
                 <Line type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={2} />
                 <Line type="monotone" dataKey="reservations" stroke="#3B82F6" strokeWidth={2} />
               </LineChart>
+              )}
+            </ResponsiveContainer>
             )}
-          </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Gráfico de distribución por servicios (solo mensual) */}
         {reportType === 'monthly' && serviceChartData.length > 0 && (
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Distribución por Servicios
-            </h3>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Distribución por Servicios</h3>
+              <ChartPieIcon className="w-5 h-5 text-green-600" />
+            </div>
             
-            <ResponsiveContainer width="100%" height={300}>
-              <RechartsPieChart>
+            <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
                 <Pie
                   dataKey="revenue"
                   data={serviceChartData}
@@ -313,15 +331,16 @@ const AgencyReports = () => {
                   ))}
                 </Pie>
                 <Tooltip formatter={(value) => [formatCurrency(value), 'Ingresos']} />
-              </RechartsPieChart>
+              </PieChart>
             </ResponsiveContainer>
+            </div>
           </div>
         )}
       </div>
 
       {/* Tabla detallada por servicios */}
       {reportType === 'monthly' && serviceChartData.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white rounded-lg shadow-lg">
           <div className="p-6 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">
               Detalle por Tipo de Servicio

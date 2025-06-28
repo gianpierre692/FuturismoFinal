@@ -3,7 +3,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { TrendingUp, TrendingDown, Calendar, Filter } from 'lucide-react';
+import { ArrowTrendingUpIcon, ArrowTrendingDownIcon, CalendarIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 
 const ServiceChart = () => {
@@ -138,9 +138,9 @@ const ServiceChart = () => {
               kpiData.totalReservas.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.totalReservas.crecimiento >= 0 ? (
-                <TrendingUp className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
               ) : (
-                <TrendingDown className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
               )}
               {Math.abs(kpiData.totalReservas.crecimiento)}%
             </div>
@@ -158,9 +158,9 @@ const ServiceChart = () => {
               kpiData.totalTuristas.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.totalTuristas.crecimiento >= 0 ? (
-                <TrendingUp className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
               ) : (
-                <TrendingDown className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
               )}
               {Math.abs(kpiData.totalTuristas.crecimiento)}%
             </div>
@@ -178,9 +178,9 @@ const ServiceChart = () => {
               kpiData.ingresosTotales.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.ingresosTotales.crecimiento >= 0 ? (
-                <TrendingUp className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
               ) : (
-                <TrendingDown className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
               )}
               {Math.abs(kpiData.ingresosTotales.crecimiento)}%
             </div>
@@ -200,9 +200,9 @@ const ServiceChart = () => {
               kpiData.tasaOcupacion.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.tasaOcupacion.crecimiento >= 0 ? (
-                <TrendingUp className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
               ) : (
-                <TrendingDown className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
               )}
               {Math.abs(kpiData.tasaOcupacion.crecimiento)}%
             </div>

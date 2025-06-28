@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { 
-  User, Phone, Mail, MapPin, Clock, Battery, Signal, 
-  Navigation, AlertTriangle, CheckCircle, XCircle 
-} from 'lucide-react';
+import { UserIcon, PhoneIcon, EnvelopeIcon, MapPinIcon, ClockIcon, BoltIcon, SignalIcon, MapIcon, ExclamationTriangleIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 
 const GuideTracker = ({ guide }) => {
@@ -39,7 +36,7 @@ const GuideTracker = ({ guide }) => {
         type: 'checkpoint',
         message: 'Llegó a Plaza de Armas',
         time: new Date(Date.now() - 1800000),
-        icon: CheckCircle,
+        icon: CheckCircleIcon,
         color: 'text-green-600'
       },
       {
@@ -47,7 +44,7 @@ const GuideTracker = ({ guide }) => {
         type: 'delay',
         message: 'Retraso de 10 minutos por tráfico',
         time: new Date(Date.now() - 2700000),
-        icon: AlertTriangle,
+        icon: ExclamationTriangleIcon,
         color: 'text-yellow-600'
       },
       {
@@ -55,7 +52,7 @@ const GuideTracker = ({ guide }) => {
         type: 'start',
         message: 'Inició tour City Tour Lima',
         time: new Date(Date.now() - 3600000),
-        icon: Navigation,
+        icon: MapIcon,
         color: 'text-blue-600'
       }
     ]
@@ -97,11 +94,11 @@ const GuideTracker = ({ guide }) => {
               <h3 className="text-xl font-semibold">{mockGuide.name}</h3>
               <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
                 <div className="flex items-center gap-1">
-                  <Phone className="w-4 h-4" />
+                  <PhoneIcon className="w-4 h-4" />
                   <span>{mockGuide.phone}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Mail className="w-4 h-4" />
+                  <EnvelopeIcon className="w-4 h-4" />
                   <span>{mockGuide.email}</span>
                 </div>
               </div>
@@ -112,14 +109,14 @@ const GuideTracker = ({ guide }) => {
           <div className="flex items-center gap-6">
             <div className="text-center">
               <div className={`flex items-center gap-1 ${getBatteryColor(mockGuide.device.battery)}`}>
-                <Battery className="w-5 h-5" />
+                <BoltIcon className="w-5 h-5" />
                 <span className="font-semibold">{mockGuide.device.battery}%</span>
               </div>
               <p className="text-xs text-gray-500 mt-1">Batería</p>
             </div>
             <div className="text-center">
               <div className={`flex items-center gap-1 ${getSignalIcon(mockGuide.device.signal)}`}>
-                <Signal className="w-5 h-5" />
+                <SignalIcon className="w-5 h-5" />
                 <span className="font-semibold capitalize">{mockGuide.device.signal}</span>
               </div>
               <p className="text-xs text-gray-500 mt-1">Señal</p>
@@ -136,11 +133,11 @@ const GuideTracker = ({ guide }) => {
                 <p className="text-lg font-semibold text-primary-800">{mockGuide.currentTour.name}</p>
                 <div className="flex items-center gap-4 mt-2 text-sm text-primary-700">
                   <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
+                    <ClockIcon className="w-4 h-4" />
                     <span>Inicio: {formatters.formatTime(mockGuide.currentTour.startTime)}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <User className="w-4 h-4" />
+                    <UserIcon className="w-4 h-4" />
                     <span>{mockGuide.currentTour.tourists} turistas</span>
                   </div>
                 </div>
@@ -229,21 +226,21 @@ const GuideTracker = ({ guide }) => {
                 <div className="flex items-center justify-between">
                   <span className="text-sm">GPS</span>
                   <span className="flex items-center gap-1 text-sm font-medium text-green-600">
-                    <CheckCircle className="w-4 h-4" />
+                    <CheckCircleIcon className="w-4 h-4" />
                     Activo
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Conexión a Internet</span>
                   <span className="flex items-center gap-1 text-sm font-medium text-green-600">
-                    <CheckCircle className="w-4 h-4" />
+                    <CheckCircleIcon className="w-4 h-4" />
                     Conectado
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Modo ahorro de batería</span>
                   <span className="flex items-center gap-1 text-sm font-medium text-gray-600">
-                    <XCircle className="w-4 h-4" />
+                    <XCircleIcon className="w-4 h-4" />
                     Desactivado
                   </span>
                 </div>

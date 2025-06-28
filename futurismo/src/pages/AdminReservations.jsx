@@ -1,22 +1,5 @@
 import { useState, useMemo } from 'react';
-import { 
-  Calendar,
-  Clock,
-  Users,
-  DollarSign,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Filter,
-  Search,
-  Eye,
-  Edit,
-  Star,
-  Phone,
-  Mail,
-  MapPin,
-  User
-} from 'lucide-react';
+import { CalendarIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, CheckCircleIcon, XCircleIcon, ExclamationTriangleIcon, FunnelIcon, MagnifyingGlassIcon, EyeIcon, PencilIcon, StarIcon, PhoneIcon, EnvelopeIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import useAgencyStore from '../stores/agencyStore';
@@ -67,13 +50,13 @@ const AdminReservations = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'confirmed':
-        return <CheckCircle className="w-4 h-4" />;
+        return <CheckCircleIcon className="w-4 h-4" />;
       case 'pending':
-        return <AlertCircle className="w-4 h-4" />;
+        return <ExclamationTriangleIcon className="w-4 h-4" />;
       case 'cancelled':
-        return <XCircle className="w-4 h-4" />;
+        return <XCircleIcon className="w-4 h-4" />;
       default:
-        return <Clock className="w-4 h-4" />;
+        return <ClockIcon className="w-4 h-4" />;
     }
   };
 
@@ -128,7 +111,7 @@ const AdminReservations = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Calendar className="w-8 h-8 mr-3 text-blue-500" />
+            <CalendarIcon className="w-8 h-8 mr-3 text-blue-500" />
             Gestión de Reservas
           </h1>
           <p className="text-gray-600 mt-1">
@@ -142,7 +125,7 @@ const AdminReservations = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-blue-600" />
+              <CalendarIcon className="w-6 h-6 text-blue-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
@@ -154,7 +137,7 @@ const AdminReservations = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <AlertCircle className="w-6 h-6 text-yellow-600" />
+              <ExclamationTriangleIcon className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
@@ -166,7 +149,7 @@ const AdminReservations = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-green-600" />
+              <CheckCircleIcon className="w-6 h-6 text-green-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{stats.confirmed}</p>
@@ -178,7 +161,7 @@ const AdminReservations = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <XCircle className="w-6 h-6 text-red-600" />
+              <XCircleIcon className="w-6 h-6 text-red-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{stats.cancelled}</p>
@@ -193,7 +176,7 @@ const AdminReservations = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Buscar por cliente, servicio o ID..."
@@ -204,7 +187,7 @@ const AdminReservations = () => {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <FunnelIcon className="w-4 h-4 text-gray-500" />
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -273,23 +256,23 @@ const AdminReservations = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2 text-sm text-gray-900">
-                      <Calendar className="w-4 h-4" />
+                      <CalendarIcon className="w-4 h-4" />
                       <span>{format(new Date(reservation.date), 'd/MM/yyyy')}</span>
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-gray-500">
-                      <Clock className="w-4 h-4" />
+                      <ClockIcon className="w-4 h-4" />
                       <span>{reservation.time}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-1 text-sm text-gray-900">
-                      <Users className="w-4 h-4" />
+                      <UserGroupIcon className="w-4 h-4" />
                       <span>{reservation.participants}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-1 text-sm font-medium text-gray-900">
-                      <DollarSign className="w-4 h-4" />
+                      <CurrencyDollarIcon className="w-4 h-4" />
                       <span>S/. {reservation.totalAmount}</span>
                     </div>
                   </td>
@@ -309,7 +292,7 @@ const AdminReservations = () => {
                         className="text-blue-600 hover:text-blue-900"
                         title="Ver detalles"
                       >
-                        <Eye className="w-4 h-4" />
+                        <EyeIcon className="w-4 h-4" />
                       </button>
                       
                       {reservation.status === 'pending' && (
@@ -319,21 +302,21 @@ const AdminReservations = () => {
                             className="text-green-600 hover:text-green-900"
                             title="Confirmar reserva"
                           >
-                            <CheckCircle className="w-4 h-4" />
+                            <CheckCircleIcon className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleStatusChange(reservation.id, 'cancelled')}
                             className="text-red-600 hover:text-red-900"
                             title="Cancelar reserva"
                           >
-                            <XCircle className="w-4 h-4" />
+                            <XCircleIcon className="w-4 h-4" />
                           </button>
                         </>
                       )}
                       
                       {reservation.status === 'confirmed' && (
                         <div className="flex items-center space-x-1 text-yellow-600" title="Puntos otorgados">
-                          <Star className="w-4 h-4" />
+                          <StarIcon className="w-4 h-4" />
                           <span className="text-xs">
                             {actions.calculatePointsForReservation(reservation)}
                           </span>
@@ -348,7 +331,7 @@ const AdminReservations = () => {
 
           {filteredReservations.length === 0 && (
             <div className="text-center py-8">
-              <Calendar className="mx-auto h-12 w-12 text-gray-400" />
+              <CalendarIcon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">
                 No se encontraron reservas
               </h3>
@@ -373,7 +356,7 @@ const AdminReservations = () => {
                   onClick={closeModal}
                   className="text-gray-400 hover:text-gray-600"
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircleIcon className="w-6 h-6" />
                 </button>
               </div>
 
@@ -424,7 +407,7 @@ const AdminReservations = () => {
                       Fecha
                     </label>
                     <div className="flex items-center space-x-2">
-                      <Calendar className="w-4 h-4 text-gray-500" />
+                      <CalendarIcon className="w-4 h-4 text-gray-500" />
                       <span className="text-sm text-gray-900">
                         {format(new Date(selectedReservation.date), 'd \'de\' MMMM \'de\' yyyy', { locale: es })}
                       </span>
@@ -436,7 +419,7 @@ const AdminReservations = () => {
                       Hora
                     </label>
                     <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-gray-500" />
+                      <ClockIcon className="w-4 h-4 text-gray-500" />
                       <span className="text-sm text-gray-900">{selectedReservation.time}</span>
                     </div>
                   </div>
@@ -449,7 +432,7 @@ const AdminReservations = () => {
                       Participantes
                     </label>
                     <div className="flex items-center space-x-2">
-                      <Users className="w-4 h-4 text-gray-500" />
+                      <UserGroupIcon className="w-4 h-4 text-gray-500" />
                       <span className="text-sm text-gray-900">{selectedReservation.participants} personas</span>
                     </div>
                   </div>
@@ -459,7 +442,7 @@ const AdminReservations = () => {
                       Monto Total
                     </label>
                     <div className="flex items-center space-x-2">
-                      <DollarSign className="w-4 h-4 text-gray-500" />
+                      <CurrencyDollarIcon className="w-4 h-4 text-gray-500" />
                       <span className="text-lg font-semibold text-gray-900">S/. {selectedReservation.totalAmount}</span>
                     </div>
                   </div>
@@ -472,7 +455,7 @@ const AdminReservations = () => {
                       Guía Asignado
                     </label>
                     <div className="flex items-center space-x-2">
-                      <User className="w-4 h-4 text-gray-500" />
+                      <UserIcon className="w-4 h-4 text-gray-500" />
                       <span className="text-sm text-gray-900">{selectedReservation.guideAssigned}</span>
                     </div>
                   </div>
@@ -482,7 +465,7 @@ const AdminReservations = () => {
                 {selectedReservation.status === 'pending' && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                     <div className="flex items-center space-x-2">
-                      <Star className="w-5 h-5 text-yellow-600" />
+                      <StarIcon className="w-5 h-5 text-yellow-600" />
                       <span className="text-sm font-medium text-yellow-800">
                         Al confirmar esta reserva, la agencia ganará {actions.calculatePointsForReservation(selectedReservation)} puntos
                       </span>
@@ -494,7 +477,7 @@ const AdminReservations = () => {
                 {selectedReservation.status === 'confirmed' && (
                   <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                     <div className="flex items-center space-x-2">
-                      <Star className="w-5 h-5 text-green-600" />
+                      <StarIcon className="w-5 h-5 text-green-600" />
                       <span className="text-sm font-medium text-green-800">
                         La agencia ganó {actions.calculatePointsForReservation(selectedReservation)} puntos por esta reserva
                       </span>
@@ -512,7 +495,7 @@ const AdminReservations = () => {
                       }}
                       className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center space-x-2"
                     >
-                      <CheckCircle className="w-4 h-4" />
+                      <CheckCircleIcon className="w-4 h-4" />
                       <span>Confirmar Reserva</span>
                     </button>
                     
@@ -523,7 +506,7 @@ const AdminReservations = () => {
                       }}
                       className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center space-x-2"
                     >
-                      <XCircle className="w-4 h-4" />
+                      <XCircleIcon className="w-4 h-4" />
                       <span>Cancelar Reserva</span>
                     </button>
                   </div>

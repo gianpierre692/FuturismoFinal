@@ -1,8 +1,4 @@
-import { 
-  Calendar, User, DollarSign, MapPin, Clock, 
-  CheckCircle, XCircle, AlertCircle, MessageSquare,
-  TrendingUp, Users, Star
-} from 'lucide-react';
+import { CalendarIcon, UserIcon, CurrencyDollarIcon, MapPinIcon, ClockIcon, CheckCircleIcon, XCircleIcon, ExclamationTriangleIcon, ChatBubbleLeftRightIcon, ArrowTrendingUpIcon, UserGroupIcon, StarIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 
 const RecentActivity = () => {
@@ -15,7 +11,7 @@ const RecentActivity = () => {
       description: 'City Tour Lima para 4 personas',
       user: 'María García',
       time: new Date(Date.now() - 600000), // 10 minutos atrás
-      icon: Calendar,
+      icon: CalendarIcon,
       iconColor: 'text-blue-600',
       iconBg: 'bg-blue-100'
     },
@@ -26,7 +22,7 @@ const RecentActivity = () => {
       description: '$260 - Tour Gastronómico Miraflores',
       user: 'Juan Pérez',
       time: new Date(Date.now() - 1800000), // 30 minutos atrás
-      icon: DollarSign,
+      icon: CurrencyDollarIcon,
       iconColor: 'text-green-600',
       iconBg: 'bg-green-100'
     },
@@ -37,7 +33,7 @@ const RecentActivity = () => {
       description: 'Islas Palomino - Guía: Carlos Mendoza',
       user: '12 turistas',
       time: new Date(Date.now() - 3600000), // 1 hora atrás
-      icon: MapPin,
+      icon: MapPinIcon,
       iconColor: 'text-purple-600',
       iconBg: 'bg-purple-100'
     },
@@ -48,7 +44,7 @@ const RecentActivity = () => {
       description: 'Excelente servicio, muy recomendado',
       user: 'Ana López',
       time: new Date(Date.now() - 7200000), // 2 horas atrás
-      icon: Star,
+      icon: StarIcon,
       iconColor: 'text-yellow-600',
       iconBg: 'bg-yellow-100'
     },
@@ -59,7 +55,7 @@ const RecentActivity = () => {
       description: 'Pachacámac y Barranco - 2 personas',
       user: 'Pedro Martínez',
       time: new Date(Date.now() - 10800000), // 3 horas atrás
-      icon: XCircle,
+      icon: XCircleIcon,
       iconColor: 'text-red-600',
       iconBg: 'bg-red-100'
     },
@@ -70,7 +66,7 @@ const RecentActivity = () => {
       description: '¿Incluye almuerzo el tour?',
       user: 'Luis Rodríguez',
       time: new Date(Date.now() - 14400000), // 4 horas atrás
-      icon: MessageSquare,
+      icon: ChatBubbleLeftRightIcon,
       iconColor: 'text-indigo-600',
       iconBg: 'bg-indigo-100'
     },
@@ -81,7 +77,7 @@ const RecentActivity = () => {
       description: 'City Tour Lima - Sin incidentes',
       user: 'Guía: María Sánchez',
       time: new Date(Date.now() - 18000000), // 5 horas atrás
-      icon: CheckCircle,
+      icon: CheckCircleIcon,
       iconColor: 'text-green-600',
       iconBg: 'bg-green-100'
     },
@@ -92,7 +88,7 @@ const RecentActivity = () => {
       description: 'Tour Machu Picchu casi lleno (90%)',
       user: 'Sistema',
       time: new Date(Date.now() - 21600000), // 6 horas atrás
-      icon: AlertCircle,
+      icon: ExclamationTriangleIcon,
       iconColor: 'text-orange-600',
       iconBg: 'bg-orange-100'
     }
@@ -136,21 +132,21 @@ const RecentActivity = () => {
         <div className="grid grid-cols-3 gap-4 mt-4">
           <div className="text-center p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-center gap-1 text-green-600">
-              <TrendingUp className="w-4 h-4" />
+              <ArrowTrendingUpIcon className="w-4 h-4" />
               <span className="text-lg font-semibold">+15%</span>
             </div>
             <p className="text-xs text-gray-600 mt-1">vs. ayer</p>
           </div>
           <div className="text-center p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-center gap-1 text-blue-600">
-              <Users className="w-4 h-4" />
+              <UserGroupIcon className="w-4 h-4" />
               <span className="text-lg font-semibold">84</span>
             </div>
             <p className="text-xs text-gray-600 mt-1">turistas hoy</p>
           </div>
           <div className="text-center p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-center gap-1 text-purple-600">
-              <Star className="w-4 h-4" />
+              <StarIcon className="w-4 h-4" />
               <span className="text-lg font-semibold">4.8</span>
             </div>
             <p className="text-xs text-gray-600 mt-1">rating promedio</p>

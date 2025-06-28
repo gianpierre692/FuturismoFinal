@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, Loader2, Building2, Map, Shield, UserCheck } from 'lucide-react';
+import { EyeIcon, EyeSlashIcon, ArrowPathIcon, BuildingOffice2Icon, MapIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
-// Store y validación
+// BuildingStorefrontIcon y validación
 import useAuthStore from '../stores/authStore';
 import { loginSchema } from '../utils/validators';
 
@@ -100,9 +100,9 @@ const Login = () => {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
+                    <EyeSlashIcon className="w-5 h-5" />
                   ) : (
-                    <Eye className="w-5 h-5" />
+                    <EyeIcon className="w-5 h-5" />
                   )}
                 </button>
               </div>
@@ -135,7 +135,7 @@ const Login = () => {
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  <ArrowPathIcon className="w-5 h-5 mr-2 animate-spin" />
                   Iniciando sesión...
                 </>
               ) : (
@@ -164,7 +164,7 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-primary-600" />
+                      <BuildingOffice2Icon className="w-4 h-4 text-primary-600" />
                       Agencia de Viajes
                     </p>
                     <p className="text-sm text-gray-600">agencia@test.com</p>
@@ -189,7 +189,7 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
-                      <Map className="w-4 h-4 text-secondary-600" />
+                      <MapIcon className="w-4 h-4 text-secondary-600" />
                       Guía Turístico
                     </p>
                     <p className="text-sm text-gray-600">guia@test.com</p>
@@ -214,7 +214,7 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
-                      <UserCheck className="w-4 h-4 text-green-600" />
+                      <UserCircleIcon className="w-4 h-4 text-green-600" />
                       Guía Freelance
                     </p>
                     <p className="text-sm text-gray-600">freelance@test.com</p>
@@ -239,7 +239,7 @@ const Login = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-gray-600" />
+                      <ShieldCheckIcon className="w-4 h-4 text-gray-600" />
                       Administrador
                     </p>
                     <p className="text-sm text-gray-600">admin@futurismo.com</p>

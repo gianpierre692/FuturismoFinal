@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { 
-  Shield, Package, Settings, Users, AlertTriangle,
-  FileText, Download, Plus, Edit, Trash2, Search,
-  Filter, CheckCircle, Phone, BarChart3, Eye
-} from 'lucide-react';
+import { ShieldCheckIcon, ArchiveBoxIcon, CogIcon, UserGroupIcon, ExclamationTriangleIcon, DocumentTextIcon, ArrowDownTrayIcon, PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon, FunnelIcon, CheckCircleIcon, PhoneIcon, ChartBarIcon, EyeIcon } from '@heroicons/react/24/outline';
 import useEmergencyStore from '../stores/emergencyStore';
 import ProtocolEditor from '../components/emergency/ProtocolEditor';
 import MaterialsManager from '../components/emergency/MaterialsManager';
@@ -110,7 +106,7 @@ const AdminEmergency = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Shield className="w-8 h-8 mr-3 text-red-500" />
+            <ShieldCheckIcon className="w-8 h-8 mr-3 text-red-500" />
             Administración de Emergencias
           </h1>
           <p className="text-gray-600 mt-1">
@@ -123,7 +119,7 @@ const AdminEmergency = () => {
             onClick={handleDownloadGuideKit}
             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center space-x-2"
           >
-            <Download className="w-4 h-4" />
+            <ArrowDownTrayIcon className="w-4 h-4" />
             <span>Kit Completo</span>
           </button>
 
@@ -131,7 +127,7 @@ const AdminEmergency = () => {
             onClick={handleDownloadAllProtocols}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <FileText className="w-4 h-4" />
+            <DocumentTextIcon className="w-4 h-4" />
             <span>Manual PDF</span>
           </button>
         </div>
@@ -148,7 +144,7 @@ const AdminEmergency = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <BarChart3 className="w-4 h-4 inline mr-2" />
+            <ChartBarIcon className="w-4 h-4 inline mr-2" />
             Resumen General
           </button>
           
@@ -160,7 +156,7 @@ const AdminEmergency = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <Shield className="w-4 h-4 inline mr-2" />
+            <ShieldCheckIcon className="w-4 h-4 inline mr-2" />
             Protocolos ({protocols.length})
           </button>
           
@@ -172,7 +168,7 @@ const AdminEmergency = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <Package className="w-4 h-4 inline mr-2" />
+            <ArchiveBoxIcon className="w-4 h-4 inline mr-2" />
             Materiales ({materials.length})
           </button>
           
@@ -184,7 +180,7 @@ const AdminEmergency = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <BarChart3 className="w-4 h-4 inline mr-2" />
+            <ChartBarIcon className="w-4 h-4 inline mr-2" />
             Analíticas
           </button>
         </nav>
@@ -198,7 +194,7 @@ const AdminEmergency = () => {
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-100 rounded-lg">
-                  <Shield className="w-6 h-6 text-blue-600" />
+                  <ShieldCheckIcon className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Total Protocolos</p>
@@ -210,7 +206,7 @@ const AdminEmergency = () => {
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
               <div className="flex items-center">
                 <div className="p-2 bg-red-100 rounded-lg">
-                  <AlertTriangle className="w-6 h-6 text-red-600" />
+                  <ExclamationTriangleIcon className="w-6 h-6 text-red-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Alta Prioridad</p>
@@ -222,7 +218,7 @@ const AdminEmergency = () => {
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
               <div className="flex items-center">
                 <div className="p-2 bg-purple-100 rounded-lg">
-                  <Package className="w-6 h-6 text-purple-600" />
+                  <ArchiveBoxIcon className="w-6 h-6 text-purple-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Total Materiales</p>
@@ -234,7 +230,7 @@ const AdminEmergency = () => {
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
               <div className="flex items-center">
                 <div className="p-2 bg-green-100 rounded-lg">
-                  <CheckCircle className="w-6 h-6 text-green-600" />
+                  <CheckCircleIcon className="w-6 h-6 text-green-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Obligatorios</p>
@@ -246,7 +242,7 @@ const AdminEmergency = () => {
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
               <div className="flex items-center">
                 <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Settings className="w-6 h-6 text-yellow-600" />
+                  <CogIcon className="w-6 h-6 text-yellow-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Categorías</p>
@@ -265,7 +261,7 @@ const AdminEmergency = () => {
                 className="p-4 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors text-left"
               >
                 <div className="flex items-center space-x-3">
-                  <Plus className="w-6 h-6 text-green-600" />
+                  <PlusIcon className="w-6 h-6 text-green-600" />
                   <div>
                     <h4 className="font-medium text-green-900">Nuevo Protocolo</h4>
                     <p className="text-sm text-green-700">Crear protocolo de emergencia</p>
@@ -278,7 +274,7 @@ const AdminEmergency = () => {
                 className="p-4 bg-purple-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors text-left"
               >
                 <div className="flex items-center space-x-3">
-                  <Package className="w-6 h-6 text-purple-600" />
+                  <ArchiveBoxIcon className="w-6 h-6 text-purple-600" />
                   <div>
                     <h4 className="font-medium text-purple-900">Gestionar Materiales</h4>
                     <p className="text-sm text-purple-700">Administrar equipos necesarios</p>
@@ -291,7 +287,7 @@ const AdminEmergency = () => {
                 className="p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors text-left"
               >
                 <div className="flex items-center space-x-3">
-                  <Download className="w-6 h-6 text-blue-600" />
+                  <ArrowDownTrayIcon className="w-6 h-6 text-blue-600" />
                   <div>
                     <h4 className="font-medium text-blue-900">Generar Manual</h4>
                     <p className="text-sm text-blue-700">Descargar manual completo</p>
@@ -340,7 +336,7 @@ const AdminEmergency = () => {
                           }}
                           className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         >
-                          <Edit className="w-4 h-4" />
+                          <PencilIcon className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -359,7 +355,7 @@ const AdminEmergency = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between space-y-3 md:space-y-0">
               <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Buscar protocolos..."
@@ -370,7 +366,7 @@ const AdminEmergency = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Filter className="w-4 h-4 text-gray-500" />
+                  <FunnelIcon className="w-4 h-4 text-gray-500" />
                   <select
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
@@ -390,7 +386,7 @@ const AdminEmergency = () => {
                 onClick={() => setIsEditingProtocol(true)}
                 className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
               >
-                <Plus className="w-4 h-4" />
+                <PlusIcon className="w-4 h-4" />
                 <span>Nuevo Protocolo</span>
               </button>
             </div>
@@ -471,7 +467,7 @@ const AdminEmergency = () => {
                               className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Editar protocolo"
                             >
-                              <Edit className="w-4 h-4" />
+                              <PencilIcon className="w-4 h-4" />
                             </button>
                             
                             <button
@@ -483,7 +479,7 @@ const AdminEmergency = () => {
                               className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                               title="Eliminar protocolo"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <TrashIcon className="w-4 h-4" />
                             </button>
                           </div>
                         </td>

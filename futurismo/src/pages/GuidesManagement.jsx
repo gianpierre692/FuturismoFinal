@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { 
-  Users, Plus, Search, Filter, Edit, Eye, Trash2, 
-  Globe, GraduationCap, Award, Phone, Mail, MapPin
-} from 'lucide-react';
+import { UserGroupIcon, PlusIcon, MagnifyingGlassIcon, FunnelIcon, PencilIcon, EyeIcon, TrashIcon, GlobeAltIcon, AcademicCapIcon, TrophyIcon, PhoneIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import useGuidesStore from '../stores/guidesStore';
 import GuideForm from '../components/guides/GuideForm';
 import GuideProfile from '../components/guides/GuideProfile';
@@ -126,7 +123,7 @@ const GuidesManagement = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Users className="w-8 h-8 mr-3 text-blue-500" />
+            <UserGroupIcon className="w-8 h-8 mr-3 text-blue-500" />
             Gestión de Guías
           </h1>
           <p className="text-gray-600 mt-1">
@@ -139,7 +136,7 @@ const GuidesManagement = () => {
             onClick={handleAddGuide}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             <span>Nuevo Guía</span>
           </button>
         </div>
@@ -151,7 +148,7 @@ const GuidesManagement = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-blue-50 p-4 rounded-lg">
             <div className="flex items-center space-x-3">
-              <Users className="w-8 h-8 text-blue-600" />
+              <UserGroupIcon className="w-8 h-8 text-blue-600" />
               <div>
                 <p className="text-2xl font-bold text-blue-600">{guides.length}</p>
                 <p className="text-sm text-blue-700">Total Guías</p>
@@ -161,7 +158,7 @@ const GuidesManagement = () => {
           
           <div className="bg-green-50 p-4 rounded-lg">
             <div className="flex items-center space-x-3">
-              <Award className="w-8 h-8 text-green-600" />
+              <TrophyIcon className="w-8 h-8 text-green-600" />
               <div>
                 <p className="text-2xl font-bold text-green-600">{guides.filter(g => g.guideType === 'planta').length}</p>
                 <p className="text-sm text-green-700">Guías de Planta</p>
@@ -171,7 +168,7 @@ const GuidesManagement = () => {
           
           <div className="bg-yellow-50 p-4 rounded-lg">
             <div className="flex items-center space-x-3">
-              <Globe className="w-8 h-8 text-yellow-600" />
+              <GlobeAltIcon className="w-8 h-8 text-yellow-600" />
               <div>
                 <p className="text-2xl font-bold text-yellow-600">{guides.filter(g => g.guideType === 'freelance').length}</p>
                 <p className="text-sm text-yellow-700">Freelance</p>
@@ -181,7 +178,7 @@ const GuidesManagement = () => {
           
           <div className="bg-purple-50 p-4 rounded-lg">
             <div className="flex items-center space-x-3">
-              <GraduationCap className="w-8 h-8 text-purple-600" />
+              <AcademicCapIcon className="w-8 h-8 text-purple-600" />
               <div>
                 <p className="text-2xl font-bold text-purple-600">{languages.length}</p>
                 <p className="text-sm text-purple-700">Idiomas</p>
@@ -196,7 +193,7 @@ const GuidesManagement = () => {
         <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Buscar por nombre, email o DNI..."
@@ -209,7 +206,7 @@ const GuidesManagement = () => {
 
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <FunnelIcon className="w-4 h-4 text-gray-500" />
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
@@ -248,7 +245,7 @@ const GuidesManagement = () => {
       {/* Lista de guías */}
       {filteredGuides.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <Users className="mx-auto h-12 w-12 text-gray-400" />
+          <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">
             No se encontraron guías
           </h3>
@@ -285,7 +282,7 @@ const GuidesManagement = () => {
                           {guide?.guideType === 'planta' ? 'Planta' : 'Freelance'}
                         </span>
                         <div className="flex items-center space-x-1">
-                          <Award className="w-3 h-3 text-yellow-500" />
+                          <TrophyIcon className="w-3 h-3 text-yellow-500" />
                           <span className="text-xs text-gray-600">{guide?.stats?.rating || 0}/5</span>
                         </div>
                       </div>
@@ -296,15 +293,15 @@ const GuidesManagement = () => {
                 {/* Información de contacto */}
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Mail className="w-4 h-4" />
+                    <EnvelopeIcon className="w-4 h-4" />
                     <span className="truncate">{guide?.email || 'Sin email'}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Phone className="w-4 h-4" />
+                    <PhoneIcon className="w-4 h-4" />
                     <span>{guide?.phone || 'Sin teléfono'}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <MapPin className="w-4 h-4" />
+                    <MapPinIcon className="w-4 h-4" />
                     <span className="truncate">{guide?.address || 'Sin dirección'}</span>
                   </div>
                 </div>
@@ -371,7 +368,7 @@ const GuidesManagement = () => {
                     onClick={() => handleViewProfile(guide)}
                     className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
                   >
-                    <Eye className="w-4 h-4" />
+                    <EyeIcon className="w-4 h-4" />
                     <span>Ver Perfil</span>
                   </button>
                   
@@ -380,7 +377,7 @@ const GuidesManagement = () => {
                     className="px-3 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
                     title="Editar guía"
                   >
-                    <Edit className="w-4 h-4" />
+                    <PencilIcon className="w-4 h-4" />
                   </button>
                   
                   <button
@@ -388,7 +385,7 @@ const GuidesManagement = () => {
                     className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                     title="Eliminar guía"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <TrashIcon className="w-4 h-4" />
                   </button>
                 </div>
               </div>

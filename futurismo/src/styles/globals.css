@@ -1,8 +1,6 @@
 /* Importar estilos de librerías externas */
-@import 'leaflet/dist/leaflet.css';
 @import 'react-datepicker/dist/react-datepicker.css';
 @import 'react-loading-skeleton/dist/skeleton.css';
-@import 'react-image-gallery/styles/css/image-gallery.css';
 
 @tailwind base;
 @tailwind components;

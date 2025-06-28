@@ -1,17 +1,5 @@
 import { useState } from 'react';
-import { 
-  Star, 
-  TrendingUp, 
-  Trophy,
-  Gift,
-  History,
-  Calendar,
-  User,
-  CreditCard,
-  Filter,
-  Download,
-  Award
-} from 'lucide-react';
+import { StarIcon, ArrowTrendingUpIcon, TrophyIcon, GiftIcon, CalendarIcon, UserIcon, CreditCardIcon, FunnelIcon, ArrowDownTrayIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import useAgencyStore from '../stores/agencyStore';
@@ -29,8 +17,8 @@ const AgencyPoints = () => {
 
   const getTransactionIcon = (type) => {
     return type === 'earned' ? 
-      <Star className="w-4 h-4 text-green-600" /> : 
-      <Gift className="w-4 h-4 text-red-600" />;
+      <StarIcon className="w-4 h-4 text-green-600" /> : 
+      <GiftIcon className="w-4 h-4 text-red-600" />;
   };
 
   const getTransactionColor = (type) => {
@@ -50,7 +38,7 @@ const AgencyPoints = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Star className="w-8 h-8 mr-3 text-yellow-500" />
+            <StarIcon className="w-8 h-8 mr-3 text-yellow-500" />
             Sistema de Puntos
           </h1>
           <p className="text-gray-600 mt-1">
@@ -62,7 +50,7 @@ const AgencyPoints = () => {
           onClick={exportHistory}
           className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2"
         >
-          <Download className="w-4 h-4" />
+          <ArrowDownTrayIcon className="w-4 h-4" />
           <span>Exportar</span>
         </button>
       </div>
@@ -71,7 +59,7 @@ const AgencyPoints = () => {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0">
-            <Award className="w-6 h-6 text-blue-600" />
+            <TrophyIcon className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <h3 className="text-sm font-medium text-blue-800">Sistema de Puntos Automático</h3>
@@ -91,7 +79,7 @@ const AgencyPoints = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <Star className="w-6 h-6 text-yellow-600" />
+              <StarIcon className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -105,7 +93,7 @@ const AgencyPoints = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-green-600" />
+              <ArrowTrendingUpIcon className="w-6 h-6 text-green-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -119,7 +107,7 @@ const AgencyPoints = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <Gift className="w-6 h-6 text-red-600" />
+              <GiftIcon className="w-6 h-6 text-red-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -133,7 +121,7 @@ const AgencyPoints = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Trophy className="w-6 h-6 text-purple-600" />
+              <TrophyIcon className="w-6 h-6 text-purple-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -152,12 +140,12 @@ const AgencyPoints = () => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-              <History className="w-5 h-5 mr-2 text-blue-500" />
+              <ClockIcon className="w-5 h-5 mr-2 text-blue-500" />
               Historial de Transacciones
             </h3>
             
             <div className="flex items-center space-x-3">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <FunnelIcon className="w-4 h-4 text-gray-500" />
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
@@ -174,7 +162,7 @@ const AgencyPoints = () => {
         <div className="p-6">
           {filteredHistory.length === 0 ? (
             <div className="text-center py-8">
-              <History className="mx-auto h-12 w-12 text-gray-400" />
+              <ClockIcon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">
                 No hay transacciones
               </h3>
@@ -203,13 +191,13 @@ const AgencyPoints = () => {
                         </h4>
                         <div className="flex items-center space-x-3 text-sm text-gray-600">
                           <div className="flex items-center space-x-1">
-                            <Calendar className="w-4 h-4" />
+                            <CalendarIcon className="w-4 h-4" />
                             <span>
                               {format(new Date(transaction.createdAt), 'd \'de\' MMMM \'de\' yyyy', { locale: es })}
                             </span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <User className="w-4 h-4" />
+                            <UserIcon className="w-4 h-4" />
                             <span>
                               {transaction.processedBy === 'manual' ? 'Manual' : 'Sistema'}
                             </span>
@@ -229,7 +217,7 @@ const AgencyPoints = () => {
                   {transaction.relatedReservation && (
                     <div className="mt-3 pt-3 border-t border-gray-100">
                       <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <CreditCard className="w-4 h-4" />
+                        <CreditCardIcon className="w-4 h-4" />
                         <span>Relacionado con reserva: {transaction.relatedReservation}</span>
                       </div>
                     </div>

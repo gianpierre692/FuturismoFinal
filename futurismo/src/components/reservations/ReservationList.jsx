@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { 
-  Calendar, Clock, Users, MapPin, DollarSign, 
-  MoreVertical, Eye, Edit, Trash, FileText,
-  Search, Filter, Download, ChevronLeft, ChevronRight
-} from 'lucide-react';
+import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, FunnelIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 import { useReservationsStore } from '../../stores/reservationsStore';
 import { useAuthStore } from '../../stores/authStore';
 import ReservationDetail from './ReservationDetail';
+import ExportModal from '../common/ExportModal';
+import exportService from '../../services/exportService';
 
 const ReservationList = () => {
   const { reservations } = useReservationsStore();
@@ -18,6 +16,7 @@ const ReservationList = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [showActions, setShowActions] = useState(null);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   const itemsPerPage = 10;
 
@@ -133,6 +132,15 @@ const ReservationList = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedReservations = filteredReservations.slice(startIndex, startIndex + itemsPerPage);
 
+  // Estadísticas para el modal de exportación
+  const exportStats = {
+    totalReservations: filteredReservations.length,
+    totalTourists: filteredReservations.reduce((sum, res) => sum + res.adults + res.children, 0),
+    totalRevenue: filteredReservations.reduce((sum, res) => sum + res.total, 0),
+    avgTicket: filteredReservations.length > 0 ? 
+      filteredReservations.reduce((sum, res) => sum + res.total, 0) / filteredReservations.length : 0
+  };
+
   const handleViewDetail = (reservation) => {
     setSelectedReservation(reservation);
     setShowDetail(true);
@@ -154,8 +162,49 @@ const ReservationList = () => {
   };
 
   const handleExport = () => {
-    // Implementar exportación
-    console.log('Exportar reservaciones');
+    // Verificar si hay datos para exportar
+    if (filteredReservations.length === 0) {
+      alert('⚠️ No hay reservas para exportar con el filtro actual.');
+      return;
+    }
+    
+    // Abrir el modal de exportación
+    setShowExportModal(true);
+  };
+
+  const handleModalExport = async (format) => {
+    try {
+      // Mapear el filtro actual al formato del servicio
+      let filterStatus = 'all';
+      if (statusFilter !== 'all') {
+        filterStatus = statusFilter;
+      }
+      
+      // Exportar usando el servicio
+      exportService.exportData(format, filterStatus);
+      
+      // Obtener estadísticas para el mensaje
+      const stats = exportService.getFilteredStats(filterStatus);
+      const statusLabel = filterStatus === 'all' ? 'Todas las reservas' : 
+                         filterStatus === 'confirmada' ? 'Solo confirmadas' :
+                         filterStatus === 'pendiente' ? 'Solo pendientes' :
+                         filterStatus === 'cancelada' ? 'Solo canceladas' : 'Reservas filtradas';
+      
+      // Mostrar mensaje de éxito
+      setTimeout(() => {
+        alert(`✅ ¡Exportación completada exitosamente!\n\n` +
+              `📊 Datos exportados:\n` +
+              `• ${stats.totalReservations} reservas (${statusLabel})\n` +
+              `• ${stats.totalTourists} turistas\n` +
+              `• $${stats.totalRevenue.toLocaleString()} en ingresos\n` +
+              `• Formato: ${format.toUpperCase()}\n\n` +
+              `📁 El archivo se descargó automáticamente.`);
+      }, 300);
+      
+    } catch (error) {
+      console.error('Error al exportar reservas:', error);
+      throw new Error(`Error al exportar: ${error.message}`);
+    }
   };
 
   return (
@@ -166,7 +215,7 @@ const ReservationList = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-between">
             <div className="flex-1 max-w-md">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder="Buscar por tour, cliente o código..."
@@ -192,10 +241,11 @@ const ReservationList = () => {
 
               <button 
                 onClick={handleExport}
-                className="btn btn-outline flex items-center gap-2"
+                className="btn btn-outline flex items-center gap-2 hover:bg-primary-50 hover:border-primary-500"
+                title="Exportar reservas filtradas en Excel, PDF o CSV"
               >
-                <Download className="w-4 h-4" />
-                Exportar
+                <ArrowDownTrayIcon className="w-4 h-4" />
+                Exportar ({filteredReservations.length})
               </button>
             </div>
           </div>
@@ -247,18 +297,18 @@ const ReservationList = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm">
                       <div className="flex items-center gap-1 text-gray-900">
-                        <Calendar className="w-4 h-4" />
+                        <CalendarIcon className="w-4 h-4" />
                         {formatters.formatDate(reservation.date)}
                       </div>
                       <div className="flex items-center gap-1 text-gray-500">
-                        <Clock className="w-4 h-4" />
+                        <ClockIcon className="w-4 h-4" />
                         {reservation.time}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-1 text-sm">
-                      <Users className="w-4 h-4 text-gray-400" />
+                      <UserGroupIcon className="w-4 h-4 text-gray-400" />
                       <span>
                         {reservation.adults}
                         {reservation.children > 0 && ` + ${reservation.children}`}
@@ -286,7 +336,7 @@ const ReservationList = () => {
                         onClick={() => setShowActions(showActions === reservation.id ? null : reservation.id)}
                         className="text-gray-400 hover:text-gray-600"
                       >
-                        <MoreVertical className="w-5 h-5" />
+                        <EllipsisVerticalIcon className="w-5 h-5" />
                       </button>
 
                       {showActions === reservation.id && (
@@ -295,7 +345,7 @@ const ReservationList = () => {
                             onClick={() => handleViewDetail(reservation)}
                             className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
-                            <Eye className="w-4 h-4" />
+                            <EyeIcon className="w-4 h-4" />
                             Ver Detalles
                           </button>
                           {/* Solo agencias pueden editar sus propias reservas */}
@@ -305,13 +355,13 @@ const ReservationList = () => {
                                 onClick={() => handleEdit(reservation)}
                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               >
-                                <Edit className="w-4 h-4" />
+                                <PencilIcon className="w-4 h-4" />
                                 Editar
                               </button>
                               <button
                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               >
-                                <FileText className="w-4 h-4" />
+                                <DocumentTextIcon className="w-4 h-4" />
                                 Generar Voucher
                               </button>
                             </>
@@ -352,7 +402,7 @@ const ReservationList = () => {
                   disabled={currentPage === 1}
                   className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeftIcon className="w-4 h-4" />
                 </button>
                 
                 {[...Array(totalPages)].map((_, index) => (
@@ -374,7 +424,7 @@ const ReservationList = () => {
                   disabled={currentPage === totalPages}
                   className="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRightIcon className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -392,6 +442,16 @@ const ReservationList = () => {
           }}
         />
       )}
+
+      {/* Modal de exportación */}
+      <ExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        onExport={handleModalExport}
+        reservationCount={filteredReservations.length}
+        filterStatus={statusFilter}
+        stats={exportStats}
+      />
     </>
   );
 };

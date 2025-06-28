@@ -1,7 +1,4 @@
-import { 
-  X, Download, Edit, Phone, Clock, AlertTriangle,
-  CheckCircle, Users, Shield, ArrowLeft
-} from 'lucide-react';
+import { XMarkIcon, ArrowDownTrayIcon, PencilIcon, PhoneIcon, ClockIcon, ExclamationTriangleIcon, CheckCircleIcon, UserGroupIcon, ShieldCheckIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { useAuthStore } from '../../stores/authStore';
 
 const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
@@ -42,7 +39,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
               onClick={onClose}
               className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeftIcon className="w-5 h-5" />
             </button>
             
             <div className="flex items-center space-x-3">
@@ -70,7 +67,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
               onClick={onDownload}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
             >
-              <Download className="w-4 h-4" />
+              <ArrowDownTrayIcon className="w-4 h-4" />
               <span>Descargar PDF</span>
             </button>
             
@@ -79,7 +76,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
                 onClick={onEdit}
                 className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors flex items-center space-x-2"
               >
-                <Edit className="w-4 h-4" />
+                <PencilIcon className="w-4 h-4" />
                 <span>Editar</span>
               </button>
             )}
@@ -88,7 +85,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5" />
+              <XMarkIcon className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -99,7 +96,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
             {/* Descripción */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h3 className="text-lg font-medium text-blue-900 mb-2 flex items-center">
-                <Shield className="w-5 h-5 mr-2" />
+                <ShieldCheckIcon className="w-5 h-5 mr-2" />
                 Descripción del Protocolo
               </h3>
               <p className="text-blue-800">{protocol.description}</p>
@@ -111,7 +108,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
             {/* Pasos del protocolo */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
+                <CheckCircleIcon className="w-5 h-5 mr-2 text-green-500" />
                 Pasos a Seguir
               </h3>
               
@@ -135,7 +132,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
             {/* Contactos de emergencia */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <Phone className="w-5 h-5 mr-2 text-red-500" />
+                <PhoneIcon className="w-5 h-5 mr-2 text-red-500" />
                 Contactos de Emergencia
               </h3>
               
@@ -163,7 +160,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
                         className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                         title="Llamar ahora"
                       >
-                        <Phone className="w-4 h-4" />
+                        <PhoneIcon className="w-4 h-4" />
                       </a>
                     </div>
                   </div>
@@ -175,7 +172,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
             {protocol.content.materials && protocol.content.materials.length > 0 && (
               <div>
                 <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                  <Users className="w-5 h-5 mr-2 text-purple-500" />
+                  <UserGroupIcon className="w-5 h-5 mr-2 text-purple-500" />
                   Materiales Necesarios
                 </h3>
                 
@@ -186,7 +183,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
                         key={index}
                         className="flex items-center space-x-2 text-purple-800"
                       >
-                        <CheckCircle className="w-4 h-4 text-purple-600" />
+                        <CheckCircleIcon className="w-4 h-4 text-purple-600" />
                         <span>{material}</span>
                       </div>
                     ))}
@@ -198,7 +195,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
             {/* Advertencias importantes */}
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <AlertTriangle className="w-6 h-6 text-yellow-600 mt-0.5" />
+                <ExclamationTriangleIcon className="w-6 h-6 text-yellow-600 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-yellow-900 mb-2">
                     Recordatorios Importantes
@@ -249,7 +246,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
         {/* Footer */}
         <div className="flex items-center justify-between p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Clock className="w-4 h-4" />
+            <ClockIcon className="w-4 h-4" />
             <span>Protocolo actualizado el {protocol.lastUpdated}</span>
           </div>
           
@@ -264,7 +261,7 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
               onClick={onDownload}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
             >
-              <Download className="w-4 h-4" />
+              <ArrowDownTrayIcon className="w-4 h-4" />
               <span>Descargar PDF</span>
             </button>
           </div>

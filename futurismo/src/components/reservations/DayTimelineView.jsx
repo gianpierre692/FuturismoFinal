@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Clock, Users, MapPin, Phone, Eye } from 'lucide-react';
+import { ClockIcon, UserGroupIcon, MapPinIcon, PhoneIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { format, addHours, startOfDay, isSameHour } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -84,18 +84,18 @@ const DayTimelineView = ({ date, reservations, onViewReservation }) => {
                               <h4 className="font-semibold text-sm" style={{ color: reservation.color }}>
                                 {reservation.time} - {reservation.tourName}
                               </h4>
-                              <Eye className="w-4 h-4 text-gray-400" />
+                              <EyeIcon className="w-4 h-4 text-gray-400" />
                             </div>
                             <p className="text-xs text-gray-700 font-medium mb-2">
                               {reservation.clientName}
                             </p>
                             <div className="flex items-center gap-3 text-xs text-gray-600">
                               <span className="flex items-center gap-1">
-                                <Users className="w-3 h-3" />
+                                <UserGroupIcon className="w-3 h-3" />
                                 {reservation.adults + (reservation.children || 0)} pax
                               </span>
                               <span className="flex items-center gap-1">
-                                <MapPin className="w-3 h-3" />
+                                <MapPinIcon className="w-3 h-3" />
                                 {reservation.pickup || 'Por definir'}
                               </span>
                               {reservation.guide && (
@@ -115,7 +115,7 @@ const DayTimelineView = ({ date, reservations, onViewReservation }) => {
                             </span>
                             {reservation.phone && (
                               <button className="flex items-center gap-1 text-xs text-primary-600 hover:text-primary-700">
-                                <Phone className="w-3 h-3" />
+                                <PhoneIcon className="w-3 h-3" />
                                 Contactar
                               </button>
                             )}

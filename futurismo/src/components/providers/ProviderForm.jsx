@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { 
-  X, Save, Building2, Phone, Mail, MapPin, 
-  Star, Users, DollarSign, Tag, Plus, Minus
-} from 'lucide-react';
+import { XMarkIcon, DocumentCheckIcon, BuildingOffice2Icon, PhoneIcon, EnvelopeIcon, MapPinIcon, StarIcon, UserGroupIcon, CurrencyDollarIcon, TagIcon, PlusIcon, MinusIcon } from '@heroicons/react/24/outline';
 import useProvidersStore from '../../stores/providersStore';
 
 // Esquema de validación
@@ -143,7 +140,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -220,7 +217,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                     {...register('rating')}
                     className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
-                  <Star className="w-4 h-4 text-yellow-400" />
+                  <StarIcon className="w-4 h-4 text-yellow-400" />
                   <span className="text-sm text-gray-600">/5</span>
                 </div>
                 {errors.rating && (
@@ -232,7 +229,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
             {/* Información de contacto */}
             <div className="border-t pt-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <Phone className="w-5 h-5 mr-2 text-blue-500" />
+                <PhoneIcon className="w-5 h-5 mr-2 text-blue-500" />
                 Información de Contacto
               </h3>
               
@@ -302,7 +299,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
             {/* Precios y capacidad */}
             <div className="border-t pt-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <DollarSign className="w-5 h-5 mr-2 text-green-500" />
+                <CurrencyDollarIcon className="w-5 h-5 mr-2 text-green-500" />
                 Precios y Capacidad
               </h3>
               
@@ -361,7 +358,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
             {/* Servicios */}
             <div className="border-t pt-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <Tag className="w-5 h-5 mr-2 text-purple-500" />
+                <TagIcon className="w-5 h-5 mr-2 text-purple-500" />
                 Servicios Ofrecidos
               </h3>
               
@@ -381,7 +378,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                         onClick={() => handleRemoveService(index)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
-                        <Minus className="w-4 h-4" />
+                        <MinusIcon className="w-4 h-4" />
                       </button>
                     )}
                   </div>
@@ -392,7 +389,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                   onClick={handleAddService}
                   className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
                 >
-                  <Plus className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   <span>Agregar servicio</span>
                 </button>
               </div>
@@ -425,7 +422,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                           onClick={handleAddSpecialty}
                           className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                         >
-                          <Plus className="w-4 h-4" />
+                          <PlusIcon className="w-4 h-4" />
                         </button>
                       </div>
                       
@@ -441,7 +438,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                               onClick={() => handleRemoveSpecialty(index)}
                               className="ml-1 text-blue-600 hover:text-blue-800"
                             >
-                              <X className="w-3 h-3" />
+                              <XMarkIcon className="w-3 h-3" />
                             </button>
                           </span>
                         ))}
@@ -471,7 +468,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                           onClick={handleAddLanguage}
                           className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                         >
-                          <Plus className="w-4 h-4" />
+                          <PlusIcon className="w-4 h-4" />
                         </button>
                       </div>
                       
@@ -487,7 +484,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
                               onClick={() => handleRemoveLanguage(index)}
                               className="ml-1 text-green-600 hover:text-green-800"
                             >
-                              <X className="w-3 h-3" />
+                              <XMarkIcon className="w-3 h-3" />
                             </button>
                           </span>
                         ))}
@@ -513,7 +510,7 @@ const ProviderForm = ({ provider, onSave, onCancel }) => {
             onClick={handleSubmit(onSubmit)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <Save className="w-4 h-4" />
+            <DocumentCheckIcon className="w-4 h-4" />
             <span>{provider ? 'Actualizar' : 'Guardar'} Proveedor</span>
           </button>
         </div>

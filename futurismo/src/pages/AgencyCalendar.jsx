@@ -1,19 +1,19 @@
 import { useState, useMemo } from 'react';
 import { 
-  Calendar as CalendarIcon, 
-  ChevronLeft, 
-  ChevronRight, 
-  Plus,
-  Eye,
-  Filter,
-  Users,
-  DollarSign,
-  Clock,
-  MapPin,
-  CheckCircle,
-  AlertCircle,
-  XCircle
-} from 'lucide-react';
+  CalendarIcon, 
+  ChevronLeftIcon, 
+  ChevronRightIcon, 
+  PlusIcon,
+  EyeIcon,
+  FunnelIcon,
+  UserGroupIcon,
+  CurrencyDollarIcon,
+  ClockIcon,
+  MapPinIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  XCircleIcon
+} from '@heroicons/react/24/outline';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, getDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import useAgencyStore from '../stores/agencyStore';
@@ -92,13 +92,13 @@ const AgencyCalendar = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'confirmed':
-        return <CheckCircle className="w-3 h-3" />;
+        return <CheckCircleIcon className="w-3 h-3" />;
       case 'pending':
-        return <AlertCircle className="w-3 h-3" />;
+        return <ExclamationTriangleIcon className="w-3 h-3" />;
       case 'cancelled':
-        return <XCircle className="w-3 h-3" />;
+        return <XCircleIcon className="w-3 h-3" />;
       default:
-        return <Clock className="w-3 h-3" />;
+        return <ClockIcon className="w-3 h-3" />;
     }
   };
 
@@ -123,7 +123,7 @@ const AgencyCalendar = () => {
 
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2">
-            <Filter className="w-4 h-4 text-gray-500" />
+            <FunnelIcon className="w-4 h-4 text-gray-500" />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
@@ -140,7 +140,7 @@ const AgencyCalendar = () => {
             onClick={() => setShowReservationModal(true)}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             <span>Nueva Reserva</span>
           </button>
         </div>
@@ -154,7 +154,7 @@ const AgencyCalendar = () => {
               onClick={() => navigateMonth('prev')}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeftIcon className="w-5 h-5" />
             </button>
             <h2 className="text-xl font-semibold capitalize">
               {format(currentDate, 'MMMM yyyy', { locale: es })}
@@ -163,7 +163,7 @@ const AgencyCalendar = () => {
               onClick={() => navigateMonth('next')}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRightIcon className="w-5 h-5" />
             </button>
           </div>
 
@@ -277,7 +277,7 @@ const AgencyCalendar = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-6 h-6 text-green-600" />
+              <CurrencyDollarIcon className="w-6 h-6 text-green-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -291,7 +291,7 @@ const AgencyCalendar = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-purple-600" />
+              <UserGroupIcon className="w-6 h-6 text-purple-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -305,7 +305,7 @@ const AgencyCalendar = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <CheckCircle className="w-6 h-6 text-yellow-600" />
+              <CheckCircleIcon className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
@@ -368,19 +368,19 @@ const AgencyCalendar = () => {
                           
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                             <div className="flex items-center space-x-2">
-                              <Users className="w-4 h-4" />
+                              <UserGroupIcon className="w-4 h-4" />
                               <span>{reservation.clientName}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <Clock className="w-4 h-4" />
+                              <ClockIcon className="w-4 h-4" />
                               <span>{reservation.time}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <Users className="w-4 h-4" />
+                              <UserGroupIcon className="w-4 h-4" />
                               <span>{reservation.participants} personas</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <DollarSign className="w-4 h-4" />
+                              <CurrencyDollarIcon className="w-4 h-4" />
                               <span>S/. {reservation.totalAmount}</span>
                             </div>
                           </div>
@@ -394,7 +394,7 @@ const AgencyCalendar = () => {
                         
                         <div className="flex items-center space-x-2">
                           <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                            <Eye className="w-4 h-4" />
+                            <EyeIcon className="w-4 h-4" />
                           </button>
                         </div>
                       </div>

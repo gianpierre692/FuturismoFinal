@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { 
-  X, Plus, Edit, Trash2, Save, Package, 
-  CheckCircle, AlertTriangle, Search, Filter,
-  Eye, Download, Printer, Share2, Copy
-} from 'lucide-react';
+import { XMarkIcon, PlusIcon, PencilIcon, TrashIcon, DocumentCheckIcon, ArchiveBoxIcon, CheckCircleIcon, ExclamationTriangleIcon, MagnifyingGlassIcon, FunnelIcon, EyeIcon, ArrowDownTrayIcon, PrinterIcon, ShareIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import { useForm, useFieldArray } from 'react-hook-form';
 import useEmergencyStore from '../../stores/emergencyStore';
 
@@ -73,7 +69,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
               onClick={onCancel}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5" />
+              <XMarkIcon className="w-5 h-5" />
             </button>
           </div>
 
@@ -139,7 +135,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                     onClick={() => appendItem({ name: '' })}
                     className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
                   >
-                    <Plus className="w-4 h-4" />
+                    <PlusIcon className="w-4 h-4" />
                     <span>Agregar Elemento</span>
                   </button>
                 </div>
@@ -160,7 +156,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                           onClick={() => removeItem(index)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       )}
                     </div>
@@ -181,7 +177,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
               onClick={handleSubmit(onSubmit)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
             >
-              <Save className="w-4 h-4" />
+              <DocumentCheckIcon className="w-4 h-4" />
               <span>Guardar</span>
             </button>
           </div>
@@ -405,7 +401,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Package className="w-8 h-8 mr-3 text-purple-500" />
+            <ArchiveBoxIcon className="w-8 h-8 mr-3 text-purple-500" />
             Gestión de Materiales
           </h1>
           <p className="text-gray-600 mt-1">
@@ -419,7 +415,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
               onClick={() => setIsEditing(true)}
               className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center space-x-2"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               <span>Nuevo Material</span>
             </button>
           )}
@@ -428,7 +424,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
             onClick={() => handlePrintAllMandatory()}
             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
           >
-            <Printer className="w-4 h-4" />
+            <PrinterIcon className="w-4 h-4" />
             <span>Imprimir Obligatorios</span>
           </button>
 
@@ -436,7 +432,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
             onClick={() => handleCopyAllMandatory()}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <Copy className="w-4 h-4" />
+            <DocumentDuplicateIcon className="w-4 h-4" />
             <span>Copiar Obligatorios</span>
           </button>
           
@@ -455,7 +451,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-blue-50 p-4 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors" onClick={() => setFilterCategory('')}>
             <div className="flex items-center space-x-3">
-              <Package className="w-8 h-8 text-blue-600" />
+              <ArchiveBoxIcon className="w-8 h-8 text-blue-600" />
               <div>
                 <p className="text-2xl font-bold text-blue-600">{materials.length}</p>
                 <p className="text-sm text-blue-700">Total Materiales</p>
@@ -469,7 +465,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
             setSearchQuery('');
           }}>
             <div className="flex items-center space-x-3">
-              <AlertTriangle className="w-8 h-8 text-red-600" />
+              <ExclamationTriangleIcon className="w-8 h-8 text-red-600" />
               <div>
                 <p className="text-2xl font-bold text-red-600">{materials.filter(m => m.mandatory).length}</p>
                 <p className="text-sm text-red-700">Obligatorios</p>
@@ -479,7 +475,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
           
           <div className="bg-green-50 p-4 rounded-lg cursor-pointer hover:bg-green-100 transition-colors" onClick={() => setFilterCategory('')}>
             <div className="flex items-center space-x-3">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+              <CheckCircleIcon className="w-8 h-8 text-green-600" />
               <div>
                 <p className="text-2xl font-bold text-green-600">{categories.length}</p>
                 <p className="text-sm text-green-700">Categorías</p>
@@ -489,7 +485,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
           
           <div className="bg-purple-50 p-4 rounded-lg cursor-pointer hover:bg-purple-100 transition-colors" onClick={() => setFilterCategory('')}>
             <div className="flex items-center space-x-3">
-              <Filter className="w-8 h-8 text-purple-600" />
+              <FunnelIcon className="w-8 h-8 text-purple-600" />
               <div>
                 <p className="text-2xl font-bold text-purple-600">{filteredMaterials.length}</p>
                 <p className="text-sm text-purple-700">Filtrados</p>
@@ -504,7 +500,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
         <div className="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Buscar materiales..."
@@ -517,7 +513,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
 
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+              <FunnelIcon className="w-4 h-4 text-gray-500" />
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
@@ -551,7 +547,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
       {/* Lista de materiales */}
       {filteredMaterials.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <Package className="mx-auto h-12 w-12 text-gray-400" />
+          <ArchiveBoxIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">
             No se encontraron materiales
           </h3>
@@ -614,7 +610,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                     <div className={`${expandedMaterial?.id === material.id ? 'max-h-64' : 'max-h-32'} overflow-y-auto transition-all duration-200`}>
                       {(expandedMaterial?.id === material.id ? material.items : material.items.slice(0, 4)).map((item, index) => (
                         <div key={index} className="flex items-center space-x-2 text-sm text-gray-600 mb-1">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
+                          <CheckCircleIcon className="w-3 h-3 text-green-500" />
                           <span className="line-clamp-1">{item}</span>
                         </div>
                       ))}
@@ -637,7 +633,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                           }}
                           className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
                         >
-                          <Edit className="w-4 h-4" />
+                          <PencilIcon className="w-4 h-4" />
                           <span>Editar</span>
                         </button>
                         
@@ -649,7 +645,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                           className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                           title="Eliminar material"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       </>
                     ) : (
@@ -662,7 +658,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                           className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                           title="Copiar lista al portapapeles"
                         >
-                          <Copy className="w-4 h-4" />
+                          <DocumentDuplicateIcon className="w-4 h-4" />
                         </button>
                         
                         <button
@@ -673,7 +669,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                           className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                           title="Imprimir lista"
                         >
-                          <Printer className="w-4 h-4" />
+                          <PrinterIcon className="w-4 h-4" />
                         </button>
                         
                         <button
@@ -683,7 +679,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
                           }}
                           className="flex-1 px-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center justify-center space-x-2"
                         >
-                          <Eye className="w-4 h-4" />
+                          <EyeIcon className="w-4 h-4" />
                           <span>{expandedMaterial?.id === material.id ? 'Colapsar' : 'Ver detalle'}</span>
                         </button>
                       </>
@@ -699,7 +695,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
       {/* Resumen de materiales obligatorios */}
       <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
         <div className="flex items-start space-x-3">
-          <AlertTriangle className="w-6 h-6 text-yellow-600 mt-0.5" />
+          <ExclamationTriangleIcon className="w-6 h-6 text-yellow-600 mt-0.5" />
           <div>
             <h3 className="font-medium text-yellow-900 mb-2">
               Materiales Obligatorios
@@ -710,7 +706,7 @@ const MaterialsManager = ({ onClose, isAdmin = false }) => {
             <div className="space-y-1">
               {filteredMaterials.filter(m => m.mandatory).map(material => (
                 <div key={material.id} className="flex items-center space-x-2 text-yellow-800">
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircleIcon className="w-4 h-4" />
                   <span className="font-medium">{material.name}</span>
                   <span className="text-sm">({material.items.length} elementos)</span>
                 </div>

@@ -1,9 +1,5 @@
 import { useState, useMemo } from 'react';
-import { 
-  MapPin, Plus, Search, Filter, Grid, List, 
-  Building2, Phone, Mail, Star, Users, 
-  Clock, Calendar, FileText
-} from 'lucide-react';
+import { MapPinIcon, PlusIcon, MagnifyingGlassIcon, FunnelIcon, Squares2X2Icon, ListBulletIcon, BuildingOffice2Icon, PhoneIcon, EnvelopeIcon, StarIcon, UserGroupIcon, ClockIcon, CalendarIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 import useProvidersStore from '../../stores/providersStore';
 import ProviderCard from './ProviderCard';
 import ProviderForm from './ProviderForm';
@@ -91,7 +87,7 @@ const ProvidersManager = () => {
             onClick={() => setShowAssignment(true)}
             className="btn btn-outline flex items-center space-x-2"
           >
-            <Calendar className="w-4 h-4" />
+            <CalendarIcon className="w-4 h-4" />
             <span>Asignar a Tour</span>
           </button>
           
@@ -99,7 +95,7 @@ const ProvidersManager = () => {
             onClick={handleAddProvider}
             className="btn btn-primary flex items-center space-x-2"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             <span>Nuevo Proveedor</span>
           </button>
         </div>
@@ -111,7 +107,7 @@ const ProvidersManager = () => {
           {/* Búsqueda */}
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Buscar proveedores..."
@@ -158,21 +154,21 @@ const ProvidersManager = () => {
               className={`p-1.5 rounded ${viewMode === 'tree' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               title="Vista árbol"
             >
-              <Building2 className="w-4 h-4" />
+              <BuildingOffice2Icon className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('grid')}
               className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               title="Vista cuadrícula"
             >
-              <Grid className="w-4 h-4" />
+              <Squares2X2Icon className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
               className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               title="Vista lista"
             >
-              <List className="w-4 h-4" />
+              <ListBulletIcon className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -187,7 +183,7 @@ const ProvidersManager = () => {
           </div>
         )}
 
-        {/* Lista/Grid de proveedores */}
+        {/* Lista/Squares2X2Icon de proveedores */}
         <div className="flex-1">
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -220,7 +216,7 @@ const ProvidersManager = () => {
 
           {filteredProviders.length === 0 && (
             <div className="text-center py-12">
-              <Building2 className="mx-auto h-12 w-12 text-gray-400" />
+              <BuildingOffice2Icon className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">
                 No se encontraron proveedores
               </h3>
@@ -232,7 +228,7 @@ const ProvidersManager = () => {
                   onClick={handleAddProvider}
                   className="btn btn-primary"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
+                  <PlusIcon className="w-4 h-4 mr-2" />
                   Agregar Proveedor
                 </button>
               </div>

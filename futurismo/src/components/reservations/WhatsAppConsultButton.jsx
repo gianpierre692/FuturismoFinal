@@ -1,4 +1,4 @@
-import { MessageCircle } from 'lucide-react';
+import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { generateWhatsAppURL } from '../../utils/formatters';
 
 const WhatsAppConsultButton = ({ 

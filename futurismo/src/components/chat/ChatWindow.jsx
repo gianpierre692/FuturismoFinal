@@ -1,9 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { 
-  Send, Paperclip, Smile, MoreVertical, Phone, Video, 
-  Info, Image as ImageIcon, FileText, MapPin, Clock,
-  Check, CheckCheck, X, Users
-} from 'lucide-react';
+import { PaperAirplaneIcon, PaperClipIcon, FaceSmileIcon, EllipsisVerticalIcon, PhoneIcon, VideoCameraIcon, InformationCircleIcon, PhotoIcon, DocumentTextIcon, MapPinIcon, ClockIcon, CheckIcon, XMarkIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 import { useAuthStore } from '../../stores/authStore';
 
@@ -205,7 +201,7 @@ const ChatWindow = ({ chat, onClose }) => {
             {msg.type === 'location' && (
               <div className="cursor-pointer">
                 <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-4 h-4" />
+                  <MapPinIcon className="w-4 h-4" />
                   <span className="font-medium text-sm">{msg.location.name}</span>
                 </div>
                 <p className="text-xs opacity-90">{msg.location.address}</p>
@@ -221,7 +217,7 @@ const ChatWindow = ({ chat, onClose }) => {
 
             {msg.type === 'document' && (
               <div className="flex items-center gap-3 cursor-pointer">
-                <FileText className="w-8 h-8" />
+                <DocumentTextIcon className="w-8 h-8" />
                 <div>
                   <p className="text-sm font-medium">{msg.document.name}</p>
                   <p className="text-xs opacity-90">{msg.document.size}</p>
@@ -247,9 +243,9 @@ const ChatWindow = ({ chat, onClose }) => {
               </span>
               {isCurrentUser && (
                 <span className="ml-1">
-                  {msg.status === 'sent' && <Check className="w-3 h-3" />}
-                  {msg.status === 'delivered' && <CheckCheck className="w-3 h-3" />}
-                  {msg.status === 'read' && <CheckCheck className="w-3 h-3 text-blue-300" />}
+                  {msg.status === 'sent' && <CheckIcon className="w-3 h-3" />}
+                  {msg.status === 'delivered' && <CheckIcon className="w-3 h-3" />}
+                  {msg.status === 'read' && <CheckIcon className="w-3 h-3 text-blue-300" />}
                 </span>
               )}
             </div>
@@ -265,7 +261,7 @@ const ChatWindow = ({ chat, onClose }) => {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <ChatBubbleLeftRightIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500">Selecciona una conversación para comenzar</p>
         </div>
       </div>
@@ -279,7 +275,7 @@ const ChatWindow = ({ chat, onClose }) => {
         <div className="flex items-center gap-3">
           {chat.type === 'group' ? (
             <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-              <Users className="w-5 h-5 text-primary-600" />
+              <UserGroupIcon className="w-5 h-5 text-primary-600" />
             </div>
           ) : (
             <div className="relative">
@@ -322,21 +318,21 @@ const ChatWindow = ({ chat, onClose }) => {
           {(user?.role === 'agency' || user?.role === 'admin') && (
             <>
               <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-                <Phone className="w-5 h-5" />
+                <PhoneIcon className="w-5 h-5" />
               </button>
               <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-                <Video className="w-5 h-5" />
+                <VideoCameraIcon className="w-5 h-5" />
               </button>
             </>
           )}
           <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-            <Info className="w-5 h-5" />
+            <InformationCircleIcon className="w-5 h-5" />
           </button>
           <button 
             onClick={onClose}
             className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg lg:hidden"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -368,7 +364,7 @@ const ChatWindow = ({ chat, onClose }) => {
             onClick={() => fileInputRef.current?.click()}
             className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
           >
-            <Paperclip className="w-5 h-5" />
+            <PaperClipIcon className="w-5 h-5" />
           </button>
           
           <input
@@ -411,7 +407,7 @@ const ChatWindow = ({ chat, onClose }) => {
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
           >
-            <Smile className="w-5 h-5" />
+            <FaceSmileIcon className="w-5 h-5" />
           </button>
 
           <button
@@ -419,7 +415,7 @@ const ChatWindow = ({ chat, onClose }) => {
             disabled={!message.trim()}
             className="p-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Send className="w-5 h-5" />
+            <PaperAirplaneIcon className="w-5 h-5" />
           </button>
         </div>
       </form>

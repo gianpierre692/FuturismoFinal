@@ -1,8 +1,4 @@
-import { 
-  X, Calendar, Clock, Users, MapPin, Phone, 
-  DollarSign, FileText, Download, Send, Edit, 
-  CheckCircle, AlertCircle, Building
-} from 'lucide-react';
+import { XMarkIcon, CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, PhoneIcon, CurrencyDollarIcon, DocumentTextIcon, ArrowDownTrayIcon, PaperAirplaneIcon, PencilIcon, CheckCircleIcon, ExclamationTriangleIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 
 const ReservationDetail = ({ reservation, onClose }) => {
@@ -59,7 +55,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
           >
-            <X className="w-6 h-6" />
+            <XMarkIcon className="w-6 h-6" />
           </button>
         </div>
 
@@ -88,11 +84,11 @@ const ReservationDetail = ({ reservation, onClose }) => {
                   <p className="text-sm text-gray-600">Fecha y Hora</p>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4 text-gray-500" />
+                      <CalendarIcon className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">{formatters.formatDate(reservation.date)}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4 text-gray-500" />
+                      <ClockIcon className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">{reservation.time}</span>
                     </div>
                   </div>
@@ -100,7 +96,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                 <div>
                   <p className="text-sm text-gray-600">Pasajeros</p>
                   <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4 text-gray-500" />
+                    <UserGroupIcon className="w-4 h-4 text-gray-500" />
                     <span className="font-medium">
                       {reservation.adults} adultos
                       {reservation.children > 0 && `, ${reservation.children} niños`}
@@ -110,7 +106,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                 <div>
                   <p className="text-sm text-gray-600">Lugar de Recojo</p>
                   <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4 text-gray-500" />
+                    <MapPinIcon className="w-4 h-4 text-gray-500" />
                     <span className="font-medium">{reservation.pickupLocation}</span>
                   </div>
                 </div>
@@ -120,7 +116,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
             {/* Información de los Grupos */}
             <div className="bg-blue-50 rounded-lg p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center">
-                <Users className="w-5 h-5 mr-2 text-blue-600" />
+                <UserGroupIcon className="w-5 h-5 mr-2 text-blue-600" />
                 Grupos de la Reserva ({(reservation.groups || []).length || 1})
               </h3>
               
@@ -130,7 +126,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                   {reservation.groups.map((group, index) => (
                     <div key={index} className="border border-blue-200 rounded-lg p-4 bg-white">
                       <h4 className="font-medium text-blue-900 mb-3 flex items-center">
-                        <User className="w-4 h-4 mr-2" />
+                        <UserIcon className="w-4 h-4 mr-2" />
                         Grupo #{index + 1}
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -141,7 +137,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                         <div>
                           <p className="text-sm text-gray-600">Teléfono</p>
                           <div className="flex items-center gap-1">
-                            <Phone className="w-4 h-4 text-gray-500" />
+                            <PhoneIcon className="w-4 h-4 text-gray-500" />
                             <span className="font-medium">{group.representativePhone}</span>
                           </div>
                         </div>
@@ -168,7 +164,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                   <div>
                     <p className="text-sm text-gray-600">Teléfono</p>
                     <div className="flex items-center gap-1">
-                      <Phone className="w-4 h-4 text-gray-500" />
+                      <PhoneIcon className="w-4 h-4 text-gray-500" />
                       <span className="font-medium">{reservation.representativePhone || reservation.clientPhone}</span>
                     </div>
                   </div>
@@ -186,7 +182,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
             {(reservation.groupMembers && reservation.groupMembers.length > 0) || (reservation.companions && reservation.companions.length > 0) && (
               <div className="bg-green-50 rounded-lg p-6">
                 <h3 className="font-semibold text-lg mb-4 flex items-center">
-                  <Users className="w-5 h-5 mr-2 text-green-600" />
+                  <UserGroupIcon className="w-5 h-5 mr-2 text-green-600" />
                   Integrantes del Grupo ({(reservation.groupMembers || reservation.companions || []).length})
                 </h3>
                 <div className="space-y-4">
@@ -195,7 +191,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                     return (
                       <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
                         <div className="flex items-center mb-3">
-                          <User className="w-4 h-4 mr-2 text-green-500" />
+                          <UserIcon className="w-4 h-4 mr-2 text-green-500" />
                           <h4 className="font-medium text-gray-900">
                             Integrante #{index + 1}
                             {isMinor && (
@@ -224,7 +220,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                             <div>
                               <p className="text-sm text-gray-600">Teléfono</p>
                               <div className="flex items-center gap-1">
-                                <Phone className="w-4 h-4 text-gray-500" />
+                                <PhoneIcon className="w-4 h-4 text-gray-500" />
                                 <span className="font-medium">{member.phone}</span>
                               </div>
                             </div>
@@ -267,7 +263,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
               {reservation.paymentStatus === 'pendiente' && (
                 <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <ExclamationTriangleIcon className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                     <div className="text-sm">
                       <p className="font-medium text-yellow-800">Pago Pendiente</p>
                       <p className="text-yellow-700 mt-1">
@@ -293,7 +289,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
               <div className="space-y-3">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <CheckCircleIcon className="w-4 h-4 text-green-600" />
                   </div>
                   <div>
                     <p className="text-sm font-medium">Reserva creada</p>
@@ -303,7 +299,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                 {reservation.status === 'confirmada' && (
                   <div className="flex gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="w-4 h-4 text-blue-600" />
+                      <CheckCircleIcon className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Reserva confirmada</p>
@@ -314,7 +310,7 @@ const ReservationDetail = ({ reservation, onClose }) => {
                 {reservation.paymentStatus === 'pagado' && (
                   <div className="flex gap-3">
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <DollarSign className="w-4 h-4 text-green-600" />
+                      <CurrencyDollarIcon className="w-4 h-4 text-green-600" />
                     </div>
                     <div>
                       <p className="text-sm font-medium">Pago confirmado</p>
@@ -334,14 +330,14 @@ const ReservationDetail = ({ reservation, onClose }) => {
               onClick={handleDownloadVoucher}
               className="btn btn-outline flex items-center gap-2"
             >
-              <Download className="w-4 h-4" />
+              <ArrowDownTrayIcon className="w-4 h-4" />
               Descargar Voucher
             </button>
             <button
               onClick={handleSendVoucher}
               className="btn btn-outline flex items-center gap-2"
             >
-              <Send className="w-4 h-4" />
+              <PaperAirplaneIcon className="w-4 h-4" />
               Enviar por Email
             </button>
           </div>
@@ -352,12 +348,12 @@ const ReservationDetail = ({ reservation, onClose }) => {
                 onClick={handleConfirmPayment}
                 className="btn btn-success flex items-center gap-2"
               >
-                <CheckCircle className="w-4 h-4" />
+                <CheckCircleIcon className="w-4 h-4" />
                 Confirmar Pago
               </button>
             )}
             <button className="btn btn-primary flex items-center gap-2">
-              <Edit className="w-4 h-4" />
+              <PencilIcon className="w-4 h-4" />
               Editar Reserva
             </button>
           </div>

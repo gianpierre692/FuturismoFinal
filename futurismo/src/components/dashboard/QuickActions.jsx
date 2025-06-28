@@ -1,7 +1,4 @@
-import { 
-  Plus, Calendar, Users, FileText, MessageSquare, 
-  Download, Settings, HelpCircle, Send, Map
-} from 'lucide-react';
+import { PlusIcon, CalendarIcon, UserGroupIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, ArrowDownTrayIcon, CogIcon, QuestionMarkCircleIcon, PaperAirplaneIcon, MapIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import { generateWhatsAppURL, canBookDirectly } from '../../utils/formatters';
@@ -18,7 +15,7 @@ const QuickActions = () => {
       id: 1,
       title: 'Nueva Reserva',
       description: 'Crear una nueva reserva de tour',
-      icon: Plus,
+      icon: PlusIcon,
       color: 'bg-primary-500 hover:bg-primary-600 text-white',
       onClick: () => navigate('/reservations')
     },
@@ -26,7 +23,7 @@ const QuickActions = () => {
       id: 2,
       title: 'Ver Calendario',
       description: 'Consultar disponibilidad',
-      icon: Calendar,
+      icon: CalendarIcon,
       color: 'bg-secondary-500 hover:bg-secondary-600 text-white',
       onClick: () => navigate('/reservations')
     },
@@ -34,7 +31,7 @@ const QuickActions = () => {
       id: 3,
       title: 'Monitoreo en Vivo',
       description: 'Ver tours activos',
-      icon: Map,
+      icon: MapIcon,
       color: 'bg-success-500 hover:bg-success-600 text-white',
       onClick: () => navigate('/monitoring')
     },
@@ -42,7 +39,7 @@ const QuickActions = () => {
       id: 4,
       title: 'Consultar Full Day',
       description: 'WhatsApp para tours después 5PM',
-      icon: MessageSquare,
+      icon: ChatBubbleLeftRightIcon,
       color: 'bg-green-500 hover:bg-green-600 text-white',
       onClick: () => {
         const currentHour = new Date().getHours();
@@ -57,7 +54,7 @@ const QuickActions = () => {
       id: 5,
       title: 'Generar Reporte',
       description: 'Exportar datos del mes',
-      icon: FileText,
+      icon: DocumentTextIcon,
       color: 'bg-indigo-500 hover:bg-indigo-600 text-white',
       onClick: () => navigate('/history')
     },
@@ -65,7 +62,7 @@ const QuickActions = () => {
       id: 6,
       title: 'Asignar Guía',
       description: 'Gestionar asignaciones',
-      icon: Users,
+      icon: UserGroupIcon,
       color: 'bg-gray-500 hover:bg-gray-600 text-white',
       onClick: () => navigate('/reservations')
     }
@@ -76,7 +73,7 @@ const QuickActions = () => {
           id: 1,
           title: 'Gestionar Usuarios',
           description: 'Administrar cuentas',
-          icon: Users,
+          icon: UserGroupIcon,
           color: 'bg-primary-500 hover:bg-primary-600 text-white',
           onClick: () => navigate('/users')
         },
@@ -84,7 +81,7 @@ const QuickActions = () => {
           id: 2,
           title: 'Configuración',
           description: 'Ajustes del sistema',
-          icon: Settings,
+          icon: CogIcon,
           color: 'bg-secondary-500 hover:bg-secondary-600 text-white',
           onClick: () => navigate('/settings')
         },
@@ -92,7 +89,7 @@ const QuickActions = () => {
           id: 3,
           title: 'Monitoreo Global',
           description: 'Ver todos los tours',
-          icon: Map,
+          icon: MapIcon,
           color: 'bg-success-500 hover:bg-success-600 text-white',
           onClick: () => navigate('/monitoring')
         },
@@ -100,7 +97,7 @@ const QuickActions = () => {
           id: 4,
           title: 'Reportes Generales',
           description: 'Análisis completo',
-          icon: FileText,
+          icon: DocumentTextIcon,
           color: 'bg-purple-500 hover:bg-purple-600 text-white',
           onClick: () => navigate('/history')
         },
@@ -108,7 +105,7 @@ const QuickActions = () => {
           id: 5,
           title: 'Comunicados',
           description: 'Enviar avisos masivos',
-          icon: MessageSquare,
+          icon: ChatBubbleLeftRightIcon,
           color: 'bg-indigo-500 hover:bg-indigo-600 text-white',
           onClick: () => navigate('/chat')
         },
@@ -116,7 +113,7 @@ const QuickActions = () => {
           id: 6,
           title: 'Respaldo',
           description: 'Backup del sistema',
-          icon: Download,
+          icon: ArrowDownTrayIcon,
           color: 'bg-gray-500 hover:bg-gray-600 text-white',
           onClick: () => console.log('Iniciar backup')
         }
@@ -138,11 +135,11 @@ const QuickActions = () => {
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold">Acciones Rápidas</h3>
         <button className="text-gray-400 hover:text-gray-600">
-          <Settings className="w-5 h-5" />
+          <CogIcon className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Grid de acciones */}
+      {/* Squares2X2Icon de acciones */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {actions.map((action) => (
           <button
@@ -169,7 +166,7 @@ const QuickActions = () => {
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-sm font-medium text-gray-700">Atajos de Teclado</h4>
           <button className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center gap-1">
-            <HelpCircle className="w-4 h-4" />
+            <QuestionMarkCircleIcon className="w-4 h-4" />
             Ver todos
           </button>
         </div>
@@ -223,7 +220,7 @@ const QuickActions = () => {
       {/* Notificación de actualización */}
       <div className="mt-6 p-4 bg-blue-50 rounded-lg">
         <div className="flex items-start gap-3">
-          <Send className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+          <PaperAirplaneIcon className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-blue-900">Nueva actualización disponible</p>
             <p className="text-xs text-blue-700 mt-1">

@@ -1,15 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { 
-  Menu, 
-  Bell, 
-  Search, 
-  ChevronDown,
-  LogOut,
-  User,
-  Settings
-} from 'lucide-react';
+import { Bars3Icon, BellIcon, MagnifyingGlassIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon } from '@heroicons/react/24/outline';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
 
@@ -55,13 +47,13 @@ const Header = ({ toggleSidebar }) => {
               onClick={toggleSidebar}
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden"
             >
-              <Menu className="w-5 h-5 text-gray-500" />
+              <Bars3Icon className="w-5 h-5 text-gray-500" />
             </button>
 
-            {/* Search bar */}
+            {/* MagnifyingGlassIcon bar */}
             <form onSubmit={handleSearch} className="ml-4 lg:ml-0">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -80,7 +72,7 @@ const Header = ({ toggleSidebar }) => {
               onClick={toggleVisibility}
               className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <Bell className="w-5 h-5 text-gray-500" />
+              <BellIcon className="w-5 h-5 text-gray-500" />
               {unreadCount > 0 && (
                 <span className="absolute top-0 right-0 -mt-1 -mr-1 px-2 py-1 text-xs text-white bg-red-500 rounded-full">
                   {unreadCount > 9 ? '9+' : unreadCount}
@@ -107,7 +99,7 @@ const Header = ({ toggleSidebar }) => {
                     {user?.role === 'admin' && '⚙️ Administrador'}
                   </p>
                 </div>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
+                <ChevronDownIcon className="w-4 h-4 text-gray-500" />
               </button>
 
               {/* Dropdown menu */}
@@ -120,7 +112,7 @@ const Header = ({ toggleSidebar }) => {
                     }}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                   >
-                    <User className="w-4 h-4 mr-3" />
+                    <UserIcon className="w-4 h-4 mr-3" />
                     Mi Perfil
                   </button>
                   <button
@@ -130,7 +122,7 @@ const Header = ({ toggleSidebar }) => {
                     }}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                   >
-                    <Settings className="w-4 h-4 mr-3" />
+                    <CogIcon className="w-4 h-4 mr-3" />
                     Configuración
                   </button>
                   <hr className="my-1" />
@@ -138,7 +130,7 @@ const Header = ({ toggleSidebar }) => {
                     onClick={handleLogout}
                     className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
                   >
-                    <LogOut className="w-4 h-4 mr-3" />
+                    <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
                     Cerrar sesión
                   </button>
                 </div>

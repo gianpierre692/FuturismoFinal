@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { 
-  CheckCircle, Circle, Clock, MapPin, Users, 
-  ChevronRight, AlertTriangle, Phone, MessageSquare 
-} from 'lucide-react';
+import { CheckCircleIcon, ClockIcon, MapPinIcon, UserGroupIcon, ChevronRightIcon, ExclamationTriangleIcon, PhoneIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 
 const TourProgress = ({ tourId }) => {
@@ -106,7 +103,7 @@ const TourProgress = ({ tourId }) => {
   const getStopIcon = (status) => {
     switch (status) {
       case 'completado':
-        return <CheckCircle className="w-6 h-6 text-green-600" />;
+        return <CheckCircleIcon className="w-6 h-6 text-green-600" />;
       case 'en_progreso':
         return <Circle className="w-6 h-6 text-blue-600 animate-pulse" />;
       case 'pendiente':
@@ -138,16 +135,16 @@ const TourProgress = ({ tourId }) => {
             <h3 className="text-xl font-semibold">{mockTour.name}</h3>
             <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
+                <ClockIcon className="w-4 h-4" />
                 <span>Inicio: {formatters.formatTime(mockTour.actualStartTime)}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Users className="w-4 h-4" />
+                <UserGroupIcon className="w-4 h-4" />
                 <span>{mockTour.tourists.present}/{mockTour.tourists.total} turistas</span>
               </div>
               {getEstimatedDelay() > 0 && (
                 <div className="flex items-center gap-1 text-yellow-600">
-                  <AlertTriangle className="w-4 h-4" />
+                  <ExclamationTriangleIcon className="w-4 h-4" />
                   <span>Retraso de {Math.round(getEstimatedDelay())} min</span>
                 </div>
               )}
@@ -156,11 +153,11 @@ const TourProgress = ({ tourId }) => {
 
           <div className="flex items-center gap-3">
             <button className="btn btn-outline flex items-center gap-2">
-              <Phone className="w-4 h-4" />
+              <PhoneIcon className="w-4 h-4" />
               Llamar guía
             </button>
             <button className="btn btn-primary flex items-center gap-2">
-              <MessageSquare className="w-4 h-4" />
+              <ChatBubbleLeftRightIcon className="w-4 h-4" />
               Enviar mensaje
             </button>
           </div>
@@ -212,13 +209,13 @@ const TourProgress = ({ tourId }) => {
                       <div className="flex items-center gap-4 mt-2 text-sm">
                         {stop.arrivalTime && (
                           <div className="flex items-center gap-1 text-gray-500">
-                            <MapPin className="w-4 h-4" />
+                            <MapPinIcon className="w-4 h-4" />
                             <span>Llegada: {formatters.formatTime(stop.arrivalTime)}</span>
                           </div>
                         )}
                         {stop.actualTime && (
                           <div className="flex items-center gap-1 text-gray-500">
-                            <Clock className="w-4 h-4" />
+                            <ClockIcon className="w-4 h-4" />
                             <span>{stop.actualTime} min</span>
                           </div>
                         )}
@@ -226,13 +223,13 @@ const TourProgress = ({ tourId }) => {
 
                       {stop.incidents.length > 0 && (
                         <div className="mt-2 p-2 bg-yellow-50 rounded text-sm text-yellow-800">
-                          <AlertTriangle className="w-4 h-4 inline mr-1" />
+                          <ExclamationTriangleIcon className="w-4 h-4 inline mr-1" />
                           {stop.incidents[0].message}
                         </div>
                       )}
                     </div>
 
-                    <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${
+                    <ChevronRightIcon className={`w-5 h-5 text-gray-400 transition-transform ${
                       expandedStop === stop.id ? 'rotate-90' : ''
                     }`} />
                   </div>

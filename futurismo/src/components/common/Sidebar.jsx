@@ -1,25 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { 
-  Home, 
-  Map, 
-  Calendar, 
-  Clock, 
-  MessageSquare,
-  User,
-  ChevronLeft,
-  ChevronRight,
-  Settings,
-  Users,
-  FileText,
-  CalendarDays,
-  UserCheck,
-  Building2,
-  Shield,
-  UserCog,
-  BarChart3,
-  Star
-} from 'lucide-react';
+import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { useAuthStore } from '../../stores/authStore';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -28,52 +9,52 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   // Menú diferente según el tipo de usuario
   const getMenuItems = () => {
     const baseItems = [
-      { path: '/dashboard', icon: Home, label: 'Dashboard' }
+      { path: '/dashboard', icon: HomeIcon, label: 'Dashboard' }
     ];
     
     if (user?.role === 'agency') {
       return [
         ...baseItems,
-        { path: '/monitoring', icon: Map, label: 'Monitoreo' },
-        { path: '/reservations', icon: Calendar, label: 'Reservas' },
-        { path: '/agency/calendar', icon: CalendarDays, label: 'Calendario' },
-        { path: '/agency/reports', icon: BarChart3, label: 'Reportes' },
-        { path: '/agency/points', icon: Star, label: 'Puntos' },
-        { path: '/history', icon: Clock, label: 'Historial' },
-        { path: '/chat', icon: MessageSquare, label: 'Chat' },
-        { path: '/profile', icon: User, label: 'Perfil' }
+        { path: '/monitoring', icon: MapIcon, label: 'Monitoreo' },
+        { path: '/reservations', icon: CalendarIcon, label: 'Reservas' },
+        { path: '/agency/calendar', icon: CalendarDaysIcon, label: 'Calendario' },
+        { path: '/agency/reports', icon: ChartBarIcon, label: 'Reportes' },
+        { path: '/agency/points', icon: StarIcon, label: 'Puntos' },
+        { path: '/history', icon: ClockIcon, label: 'Historial' },
+        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' },
+        { path: '/profile', icon: UserIcon, label: 'Perfil' }
       ];
     } else if (user?.role === 'guide') {
       const guideItems = [
         ...baseItems,
-        { path: '/monitoring', icon: Map, label: 'Mis Tours' },
-        { path: '/history', icon: Clock, label: 'Historial' },
-        { path: '/chat', icon: MessageSquare, label: 'Chat' }
+        { path: '/monitoring', icon: MapIcon, label: 'Mis Tours' },
+        { path: '/history', icon: ClockIcon, label: 'Historial' },
+        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' }
       ];
       
       // Agregar agenda solo para guías freelance
       if (user?.guideType === 'freelance') {
-        guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDays, label: 'Mi Agenda' });
+        guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: 'Mi Agenda' });
       }
       
-      guideItems.splice(-1, 0, { path: '/emergency', icon: Shield, label: 'Emergencias' });
-      guideItems.push({ path: '/profile', icon: User, label: 'Perfil' });
+      guideItems.splice(-1, 0, { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' });
+      guideItems.push({ path: '/profile', icon: UserIcon, label: 'Perfil' });
       return guideItems;
     } else if (user?.role === 'admin') {
       return [
         ...baseItems,
-        { path: '/monitoring', icon: Map, label: 'Monitoreo' },
-        { path: '/admin/reservations', icon: Calendar, label: 'Gestión Reservas' },
-        { path: '/assignments', icon: UserCheck, label: 'Asignaciones' },
-        { path: '/guides', icon: UserCog, label: 'Guías' },
-        { path: '/providers', icon: Building2, label: 'Proveedores' },
-        { path: '/emergency', icon: Shield, label: 'Emergencias' },
-        { path: '/agenda', icon: CalendarDays, label: 'Coordinación' },
-        { path: '/history', icon: FileText, label: 'Reportes' },
-        { path: '/chat', icon: MessageSquare, label: 'Chat' },
-        { path: '/users', icon: Users, label: 'Usuarios' },
-        { path: '/settings', icon: Settings, label: 'Configuración' },
-        { path: '/profile', icon: User, label: 'Perfil' }
+        { path: '/monitoring', icon: MapIcon, label: 'Monitoreo' },
+        { path: '/admin/reservations', icon: CalendarIcon, label: 'Gestión Reservas' },
+        { path: '/assignments', icon: UserCircleIcon, label: 'Asignaciones' },
+        { path: '/guides', icon: UserIcon, label: 'Guías' },
+        { path: '/providers', icon: BuildingOffice2Icon, label: 'Proveedores' },
+        { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' },
+        { path: '/agenda', icon: CalendarDaysIcon, label: 'Coordinación' },
+        { path: '/history', icon: DocumentTextIcon, label: 'Reportes' },
+        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' },
+        { path: '/users', icon: UserGroupIcon, label: 'Usuarios' },
+        { path: '/settings', icon: CogIcon, label: 'Configuración' },
+        { path: '/profile', icon: UserIcon, label: 'Perfil' }
       ];
     }
     
@@ -98,15 +79,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             className="p-1 rounded-lg hover:bg-gray-100 transition-colors lg:block hidden"
           >
             {isOpen ? (
-              <ChevronLeft className="w-5 h-5 text-gray-500" />
+              <ChevronLeftIcon className="w-5 h-5 text-gray-500" />
             ) : (
-              <ChevronRight className="w-5 h-5 text-gray-500" />
+              <ChevronRightIcon className="w-5 h-5 text-gray-500" />
             )}
           </button>
         </div>
       </div>
 
-      {/* Navigation */}
+      {/* MapIcon */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {menuItems.map((item) => {

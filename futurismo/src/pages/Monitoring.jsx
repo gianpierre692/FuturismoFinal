@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Map, Users, Activity, Filter } from 'lucide-react';
-import LiveMap from '../components/monitoring/LiveMap';
+import { MapIcon, UserGroupIcon, ChartBarIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import LiveMap from '../components/monitoring/LiveMapCDN';
 import GuideTracker from '../components/monitoring/GuideTracker';
 import TourProgress from '../components/monitoring/TourProgress';
 import { useAuthStore } from '../stores/authStore';
@@ -32,7 +32,7 @@ const Monitoring = () => {
               }`}
               onClick={() => setActiveView('map')}
             >
-              <Map className="w-4 h-4 inline mr-2" />
+              <MapIcon className="w-4 h-4 inline mr-2" />
               {isGuide ? 'Mi Ubicación' : 'Mapa en Vivo'}
             </button>
             {!isGuide && (
@@ -44,7 +44,7 @@ const Monitoring = () => {
                 }`}
                 onClick={() => setActiveView('guides')}
               >
-                <Users className="w-4 h-4 inline mr-2" />
+                <UserGroupIcon className="w-4 h-4 inline mr-2" />
                 Guías
               </button>
             )}
@@ -56,13 +56,13 @@ const Monitoring = () => {
               }`}
               onClick={() => setActiveView('tours')}
             >
-              <Activity className="w-4 h-4 inline mr-2" />
+              <ChartBarIcon className="w-4 h-4 inline mr-2" />
               {isGuide ? 'Mis Tours Activos' : 'Tours Activos'}
             </button>
           </div>
 
           <button className="btn btn-outline flex items-center gap-2">
-            <Filter className="w-4 h-4" />
+            <FunnelIcon className="w-4 h-4" />
             Filtros
           </button>
         </div>

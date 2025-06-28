@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { 
-  X, Save, Calendar, Clock, Plus, Trash2, 
-  MapPin, Users, FileText, Download,
-  Search, Filter, CheckCircle, Mail
-} from 'lucide-react';
+import { XMarkIcon, DocumentCheckIcon, CalendarIcon, ClockIcon, PlusIcon, TrashIcon, MapPinIcon, UserGroupIcon, DocumentTextIcon, ArrowDownTrayIcon, MagnifyingGlassIcon, FunnelIcon, CheckCircleIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import useProvidersStore from '../../stores/providersStore';
 import pdfService from '../../services/pdfService';
 
@@ -185,7 +181,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <X className="w-5 h-5" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
 
@@ -195,7 +191,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
             {/* Información del tour */}
             <div className="mb-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <Calendar className="w-5 h-5 mr-2 text-blue-500" />
+                <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
                 Información del Tour
               </h3>
               
@@ -258,13 +254,13 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
             {/* Proveedores asignados */}
             <div className="mb-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
+                <CheckCircleIcon className="w-5 h-5 mr-2 text-green-500" />
                 Proveedores Asignados ({assignedProviders.length})
               </h3>
 
               {assignedProviders.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 rounded-lg">
-                  <Users className="mx-auto h-12 w-12 text-gray-400" />
+                  <UserGroupIcon className="mx-auto h-12 w-12 text-gray-400" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">
                     No hay proveedores asignados
                   </h3>
@@ -338,7 +334,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
                           className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Remover proveedor"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       </div>
 
@@ -363,7 +359,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
             {/* Proveedores disponibles */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center">
-                <Plus className="w-5 h-5 mr-2 text-blue-500" />
+                <PlusIcon className="w-5 h-5 mr-2 text-blue-500" />
                 Proveedores Disponibles
               </h3>
 
@@ -371,7 +367,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
               <div className="mb-4 flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       type="text"
                       placeholder="Buscar proveedores..."
@@ -437,7 +433,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
                         className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                         title="Agregar proveedor"
                       >
-                        <Plus className="w-4 h-4" />
+                        <PlusIcon className="w-4 h-4" />
                       </button>
                     </div>
 
@@ -463,7 +459,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
 
                 {availableProviders.length === 0 && (
                   <div className="col-span-2 text-center py-8">
-                    <Search className="mx-auto h-12 w-12 text-gray-400" />
+                    <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-gray-400" />
                     <h3 className="mt-2 text-sm font-medium text-gray-900">
                       No se encontraron proveedores
                     </h3>
@@ -486,7 +482,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
               disabled={!selectedTour || !selectedDate || assignedProviders.length === 0}
               className="px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
             >
-              <Download className="w-4 h-4" />
+              <ArrowDownTrayIcon className="w-4 h-4" />
               <span>PDF Agencia</span>
             </button>
             
@@ -495,7 +491,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
               disabled={!selectedTour || !selectedDate || assignedProviders.length === 0}
               className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
             >
-              <FileText className="w-4 h-4" />
+              <DocumentTextIcon className="w-4 h-4" />
               <span>PDF Guía</span>
             </button>
             
@@ -504,7 +500,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
               disabled={!selectedTour || !selectedDate || assignedProviders.length === 0}
               className="px-3 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
             >
-              <Mail className="w-4 h-4" />
+              <EnvelopeIcon className="w-4 h-4" />
               <span>Ambos PDFs</span>
             </button>
           </div>
@@ -522,7 +518,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
               onClick={handleSubmit(handleSaveAssignment)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
             >
-              <Save className="w-4 h-4" />
+              <DocumentCheckIcon className="w-4 h-4" />
               <span>{existingAssignment ? 'Actualizar' : 'Guardar'} Asignación</span>
             </button>
           </div>

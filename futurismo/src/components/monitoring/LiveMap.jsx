@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
-import { Navigation, Users, MapPin, Phone, Clock, AlertCircle } from 'lucide-react';
+import { MapPinIcon, UserGroupIcon, PhoneIcon, ClockIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useServicesStore } from '../../stores/servicesStore';
 import { formatters } from '../../utils/formatters';
 import 'leaflet/dist/leaflet.css';
@@ -37,7 +37,7 @@ const createCustomIcon = (color, iconContent) => {
 };
 
 const LiveMap = () => {
-  const { activeServices, setServices } = useServicesStore();
+  const { activeServices, setServices, initializeMockData } = useServicesStore();
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [mapCenter, setMapCenter] = useState([-12.0464, -77.0428]); // Lima, Perú
   const [zoom, setZoom] = useState(13);
@@ -46,36 +46,9 @@ const LiveMap = () => {
   // Inicializar con datos mock
   useEffect(() => {
     if (activeServices.length === 0) {
-      // Agregar servicios mock para demostración
-      const mockServices = [
-        {
-          id: 'srv-1',
-          code: 'FT001',
-          tourName: 'City Tour Lima Histórica',
-          guideId: 'guide-1',
-          guideName: 'Carlos Mendoza',
-          guideLocation: { lat: -12.0464, lng: -77.0428 },
-          tourists: 12,
-          status: 'IN_SERVICE',
-          date: new Date(),
-          startTime: new Date(Date.now() - 3600000)
-        },
-        {
-          id: 'srv-2',
-          code: 'FT002',
-          tourName: 'Tour Gastronómico Miraflores',
-          guideId: 'guide-2',
-          guideName: 'María García',
-          guideLocation: { lat: -12.1219, lng: -77.0297 },
-          tourists: 8,
-          status: 'ON_WAY',
-          date: new Date(),
-          startTime: new Date(Date.now() - 7200000)
-        }
-      ];
-      setServices(mockServices);
+      initializeMockData();
     }
-  }, []);
+  }, [activeServices.length, initializeMockData]);
 
   // Simular actualizaciones en tiempo real
   useEffect(() => {
@@ -101,19 +74,22 @@ const LiveMap = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'IN_SERVICE': return '#10b981';
-      case 'ON_WAY': return '#f59e0b';
-      case 'DELAYED': return '#ef4444';
+      case 'en_curso': return '#10b981';
+      case 'programado': return '#3b82f6';
+      case 'pausado': return '#f59e0b';
+      case 'completado': return '#6b7280';
+      case 'cancelado': return '#ef4444';
       default: return '#6b7280';
     }
   };
 
   const getStatusText = (status) => {
     switch (status) {
-      case 'IN_SERVICE': return 'En Servicio';
-      case 'ON_WAY': return 'En Camino';
-      case 'DELAYED': return 'Retrasado';
-      case 'PENDING': return 'Pendiente';
+      case 'en_curso': return 'En Curso';
+      case 'programado': return 'Programado';
+      case 'pausado': return 'Pausado';
+      case 'completado': return 'Completado';
+      case 'cancelado': return 'Cancelado';
       default: return 'Inactivo';
     }
   };
@@ -143,21 +119,21 @@ const LiveMap = () => {
           />
 
           {activeServices.map((service) => {
-            if (!service.guideLocation) return null;
+            if (!service.currentLocation) return null;
 
-            const isSelected = selectedGuide === service.guideId;
+            const isSelected = selectedGuide === service.guide?.name;
             
             return (
               <Marker
                 key={service.id}
-                position={[service.guideLocation.lat, service.guideLocation.lng]}
+                position={[service.currentLocation.lat, service.currentLocation.lng]}
                 icon={createCustomIcon(getStatusColor(service.status), navigationIcon)}
               >
                 <Popup>
                   <div className="p-2 min-w-[200px]">
                     <div className="mb-2">
-                      <h4 className="font-semibold">{service.guideName}</h4>
-                      <p className="text-sm text-gray-600">{service.tourName}</p>
+                      <h4 className="font-semibold">{service.guide?.name || 'Guía no asignado'}</h4>
+                      <p className="text-sm text-gray-600">{service.destination}</p>
                     </div>
                     <div className="space-y-1 text-sm">
                       <div className="flex items-center gap-2">
@@ -165,18 +141,22 @@ const LiveMap = () => {
                         <span>{service.code}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-gray-500" />
-                        <span>{service.tourists} turistas</span>
+                        <UserGroupIcon className="w-4 h-4 text-gray-500" />
+                        <span>{service.client?.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-500" />
-                        <span>Inicio: {formatters.formatTime(service.startTime)}</span>
+                        <ClockIcon className="w-4 h-4 text-gray-500" />
+                        <span>Inicio: {service.startTime}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className={`badge ${
-                          service.status === 'IN_SERVICE' ? 'badge-green' :
-                          service.status === 'ON_WAY' ? 'badge-yellow' :
-                          service.status === 'DELAYED' ? 'badge-red' : 'badge-gray'
+                        <MapPinIcon className="w-4 h-4 text-gray-500" />
+                        <span>{service.pickupLocation}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          service.status === 'en_curso' ? 'bg-green-100 text-green-800' :
+                          service.status === 'programado' ? 'bg-blue-100 text-blue-800' :
+                          service.status === 'pausado' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
                         }`}>
                           {getStatusText(service.status)}
                         </span>

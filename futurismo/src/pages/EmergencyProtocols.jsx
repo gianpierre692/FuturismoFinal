@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { 
-  Search, Plus, Download, FileText, Shield, 
-  AlertTriangle, Phone, CheckCircle, Settings,
-  Filter, Eye, Edit, Trash2, RefreshCw
-} from 'lucide-react';
+import { MagnifyingGlassIcon, PlusIcon, ArrowDownTrayIcon, DocumentTextIcon, ShieldCheckIcon, ExclamationTriangleIcon, PhoneIcon, CheckCircleIcon, CogIcon, FunnelIcon, EyeIcon, PencilIcon, TrashIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import useEmergencyStore from '../stores/emergencyStore';
 import ProtocolViewer from '../components/emergency/ProtocolViewer';
 import ProtocolEditor from '../components/emergency/ProtocolEditor';
@@ -131,7 +127,7 @@ const EmergencyProtocols = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-            <Shield className="w-8 h-8 mr-3 text-red-500" />
+            <ShieldCheckIcon className="w-8 h-8 mr-3 text-red-500" />
             Protocolos de Emergencia
           </h1>
           <p className="text-gray-600 mt-1">
@@ -145,7 +141,7 @@ const EmergencyProtocols = () => {
             onClick={handleDownloadGuideKit}
             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center space-x-2"
           >
-            <Download className="w-4 h-4" />
+            <ArrowDownTrayIcon className="w-4 h-4" />
             <span>Kit Completo</span>
           </button>
 
@@ -153,7 +149,7 @@ const EmergencyProtocols = () => {
             onClick={handleDownloadAllProtocols}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2"
           >
-            <FileText className="w-4 h-4" />
+            <DocumentTextIcon className="w-4 h-4" />
             <span>Todos los Protocolos</span>
           </button>
 
@@ -161,7 +157,7 @@ const EmergencyProtocols = () => {
             onClick={() => setShowMaterials(true)}
             className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center space-x-2"
           >
-            <Settings className="w-4 h-4" />
+            <CogIcon className="w-4 h-4" />
             <span>Materiales</span>
           </button>
 
@@ -170,7 +166,7 @@ const EmergencyProtocols = () => {
               onClick={() => setIsEditing(true)}
               className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
             >
-              <Plus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4" />
               <span>Nuevo Protocolo</span>
             </button>
           )}
@@ -183,7 +179,7 @@ const EmergencyProtocols = () => {
           {/* Búsqueda */}
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Buscar protocolos..."
@@ -196,7 +192,7 @@ const EmergencyProtocols = () => {
 
           {/* Filtro por categoría */}
           <div className="flex items-center space-x-2">
-            <Filter className="w-4 h-4 text-gray-500" />
+            <FunnelIcon className="w-4 h-4 text-gray-500" />
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
@@ -241,7 +237,7 @@ const EmergencyProtocols = () => {
       {/* Lista de protocolos */}
       {filteredProtocols.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <AlertTriangle className="mx-auto h-12 w-12 text-gray-400" />
+          <ExclamationTriangleIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">
             No se encontraron protocolos
           </h3>
@@ -294,11 +290,11 @@ const EmergencyProtocols = () => {
                     <span>Actualizado: {protocol.lastUpdated}</span>
                     <div className="flex items-center space-x-3">
                       <span className="flex items-center">
-                        <CheckCircle className="w-3 h-3 mr-1" />
+                        <CheckCircleIcon className="w-3 h-3 mr-1" />
                         {protocol.content.steps.length} pasos
                       </span>
                       <span className="flex items-center">
-                        <Phone className="w-3 h-3 mr-1" />
+                        <PhoneIcon className="w-3 h-3 mr-1" />
                         {protocol.content.contacts.length} contactos
                       </span>
                     </div>
@@ -310,7 +306,7 @@ const EmergencyProtocols = () => {
                       onClick={() => setSelectedProtocol(protocol)}
                       className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2"
                     >
-                      <Eye className="w-4 h-4" />
+                      <EyeIcon className="w-4 h-4" />
                       <span>Ver</span>
                     </button>
                     
@@ -319,7 +315,7 @@ const EmergencyProtocols = () => {
                       className="px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
                       title="Descargar PDF"
                     >
-                      <Download className="w-4 h-4" />
+                      <ArrowDownTrayIcon className="w-4 h-4" />
                     </button>
                     
                     {user?.role === 'admin' && (
@@ -332,7 +328,7 @@ const EmergencyProtocols = () => {
                           className="px-3 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
                           title="Editar"
                         >
-                          <Edit className="w-4 h-4" />
+                          <PencilIcon className="w-4 h-4" />
                         </button>
                         
                         <button
@@ -344,7 +340,7 @@ const EmergencyProtocols = () => {
                           className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                           title="Eliminar"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon className="w-4 h-4" />
                         </button>
                       </>
                     )}
@@ -414,7 +410,7 @@ const EmergencyProtocols = () => {
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                             title="Ver protocolo"
                           >
-                            <Eye className="w-4 h-4" />
+                            <EyeIcon className="w-4 h-4" />
                           </button>
                           
                           <button
@@ -422,7 +418,7 @@ const EmergencyProtocols = () => {
                             className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
                             title="Descargar PDF"
                           >
-                            <Download className="w-4 h-4" />
+                            <ArrowDownTrayIcon className="w-4 h-4" />
                           </button>
                           
                           {user?.role === 'admin' && (
@@ -435,7 +431,7 @@ const EmergencyProtocols = () => {
                                 className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
                                 title="Editar protocolo"
                               >
-                                <Edit className="w-4 h-4" />
+                                <PencilIcon className="w-4 h-4" />
                               </button>
                               
                               <button
@@ -447,7 +443,7 @@ const EmergencyProtocols = () => {
                                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                 title="Eliminar protocolo"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <TrashIcon className="w-4 h-4" />
                               </button>
                             </>
                           )}

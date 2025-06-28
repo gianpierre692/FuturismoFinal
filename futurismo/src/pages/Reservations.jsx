@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, List, Calendar } from 'lucide-react';
+import { PlusIcon, ListBulletIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import ReservationWizard from '../components/reservations/ReservationWizard';
 import ReservationList from '../components/reservations/ReservationList';
 import ReservationCalendar from '../components/reservations/ReservationCalendar';
@@ -24,7 +24,7 @@ const Reservations = () => {
               }`}
               onClick={() => setView('list')}
             >
-              <List className="w-4 h-4 inline mr-2" />
+              <ListBulletIcon className="w-4 h-4 inline mr-2" />
               Lista
             </button>
             <button
@@ -35,7 +35,7 @@ const Reservations = () => {
               }`}
               onClick={() => setView('calendar')}
             >
-              <Calendar className="w-4 h-4 inline mr-2" />
+              <CalendarIcon className="w-4 h-4 inline mr-2" />
               Calendario
             </button>
           </div>
@@ -44,7 +44,7 @@ const Reservations = () => {
             onClick={() => setShowWizard(true)}
             className="btn btn-primary flex items-center gap-2"
           >
-            <Plus className="w-4 h-4" />
+            <PlusIcon className="w-4 h-4" />
             Nueva Reserva
           </button>
         </div>
