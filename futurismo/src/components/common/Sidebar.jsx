@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
 import { useAuthStore } from '../../stores/authStore';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -17,6 +17,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         ...baseItems,
         { path: '/monitoring', icon: MapIcon, label: 'Monitoreo' },
         { path: '/reservations', icon: CalendarIcon, label: 'Reservas' },
+        { path: '/marketplace', icon: MagnifyingGlassIcon, label: 'Buscar Guías' },
+        { path: '/marketplace/requests', icon: BriefcaseIcon, label: 'Mis Contrataciones' },
         { path: '/agency/calendar', icon: CalendarDaysIcon, label: 'Calendario' },
         { path: '/agency/reports', icon: ChartBarIcon, label: 'Reportes' },
         { path: '/agency/points', icon: StarIcon, label: 'Puntos' },
@@ -32,9 +34,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' }
       ];
       
-      // Agregar agenda solo para guías freelance
+      // Agregar opciones específicas para guías freelance
       if (user?.guideType === 'freelance') {
         guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: 'Mi Agenda' });
+        guideItems.splice(-1, 0, { path: '/marketplace/guide-dashboard', icon: BriefcaseIcon, label: 'Mis Servicios' });
+        guideItems.splice(-1, 0, { path: '/guide/finances', icon: CurrencyDollarIcon, label: 'Finanzas' });
       }
       
       guideItems.splice(-1, 0, { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' });
@@ -47,10 +51,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { path: '/admin/reservations', icon: CalendarIcon, label: 'Gestión Reservas' },
         { path: '/assignments', icon: UserCircleIcon, label: 'Asignaciones' },
         { path: '/guides', icon: UserIcon, label: 'Guías' },
+        { path: '/marketplace', icon: MagnifyingGlassIcon, label: 'Marketplace' },
         { path: '/providers', icon: BuildingOffice2Icon, label: 'Proveedores' },
         { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' },
         { path: '/agenda', icon: CalendarDaysIcon, label: 'Coordinación' },
-        { path: '/history', icon: DocumentTextIcon, label: 'Reportes' },
+        { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes' },
+        { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
         { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' },
         { path: '/users', icon: UserGroupIcon, label: 'Usuarios' },
         { path: '/settings', icon: CogIcon, label: 'Configuración' },

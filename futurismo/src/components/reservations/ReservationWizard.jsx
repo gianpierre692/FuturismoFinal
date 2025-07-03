@@ -48,7 +48,7 @@ const step3Schema = yup.object({
 
 const ReservationWizard = ({ onClose }) => {
   const navigate = useNavigate();
-  const { createReservation } = useReservationsStore();
+  const { submitReservation } = useReservationsStore();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +68,7 @@ const ReservationWizard = ({ onClose }) => {
   const steps = [
     { number: 1, title: 'Servicio', icon: MapPinIcon },
     { number: 2, title: 'Detalles', icon: UserGroupIcon },
-    { number: 3, title: 'Confirmación', icon: Check }
+    { number: 3, title: 'Confirmación', icon: CheckIcon }
   ];
 
 
@@ -181,7 +181,7 @@ const ReservationWizard = ({ onClose }) => {
         createdAt: new Date()
       };
 
-      await createReservation(reservation);
+      await submitReservation();
       toast.success('Reserva creada exitosamente');
       
       // Navegar a la página de confirmación o cerrar el wizard
@@ -213,7 +213,7 @@ const ReservationWizard = ({ onClose }) => {
                     : 'bg-gray-200 text-gray-600'}
                 `}>
                   {currentStep > step.number ? (
-                    <Check className="w-5 h-5" />
+                    <CheckIcon className="w-5 h-5" />
                   ) : (
                     step.number
                   )}
@@ -319,7 +319,7 @@ const ReservationWizard = ({ onClose }) => {
             {isFulldayTour && canBookDirectReservation && (
               <div className="border border-green-300 bg-green-50 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckIcon className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
                     <h4 className="text-sm font-medium text-green-800 mb-1">
                       Tour Full Day - Reserva Directa Disponible
@@ -696,7 +696,7 @@ const ReservationWizard = ({ onClose }) => {
             {currentStep === 3 ? (
               <>
                 {isSubmitting ? 'Procesando...' : 'Confirmar Reserva'}
-                <Check className="w-4 h-4" />
+                <CheckIcon className="w-4 h-4" />
               </>
             ) : (
               <>

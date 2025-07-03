@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import useAuthStore from '../../stores/authStore';
 
-const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+const ProtectedRoute = ({ children, allowedRoles = [], requireGuideType = null }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
   const location = useLocation();
@@ -18,12 +18,19 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     return <Navigate to="/dashboard" replace />;
   }
 
+  // Si se requiere un tipo específico de guía, verificar
+  if (requireGuideType && user?.role === 'guide' && user?.guideType !== requireGuideType) {
+    // Redirigir al dashboard si no es el tipo de guía correcto
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return children;
 };
 
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
-  allowedRoles: PropTypes.arrayOf(PropTypes.string)
+  allowedRoles: PropTypes.arrayOf(PropTypes.string),
+  requireGuideType: PropTypes.string
 };
 
 export default ProtectedRoute;

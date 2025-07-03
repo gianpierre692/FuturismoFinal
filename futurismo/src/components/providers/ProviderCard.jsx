@@ -1,4 +1,4 @@
-import { StarIcon, PhoneIcon, EnvelopeIcon, MapPinIcon, UserGroupIcon, PencilIcon, TrashIcon, EyeIcon, ClockIcon, CurrencyDollarIcon, BadgeCheckIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { StarIcon, PhoneIcon, EnvelopeIcon, MapPinIcon, UserGroupIcon, PencilIcon, TrashIcon, EyeIcon, ClockIcon, CurrencyDollarIcon, TrophyIcon } from '@heroicons/react/24/outline';
 
 const ProviderCard = ({ 
   provider, 

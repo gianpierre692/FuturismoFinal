@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { CheckCircleIcon, ClockIcon, MapPinIcon, UserGroupIcon, ChevronRightIcon, ExclamationTriangleIcon, PhoneIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, ClockIcon, MapPinIcon, UserGroupIcon, ChevronRightIcon, ExclamationTriangleIcon, PhoneIcon, ChatBubbleLeftRightIcon, CameraIcon } from '@heroicons/react/24/outline';
+import { EllipsisHorizontalCircleIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
+import PhotoUpload from '../common/PhotoUpload';
+import toast from 'react-hot-toast';
 
-const TourProgress = ({ tourId }) => {
+const TourProgress = ({ tourId, isGuideView = false }) => {
   const [expandedStop, setExpandedStop] = useState(null);
+  const [tourData, setTourData] = useState(null);
 
   // Datos mock del tour
   const mockTour = {
@@ -32,7 +36,20 @@ const TourProgress = ({ tourId }) => {
         arrivalTime: new Date(Date.now() - 6300000),
         departureTime: new Date(Date.now() - 6000000),
         status: 'completado',
-        photos: ['photo1.jpg', 'photo2.jpg'],
+        photos: [
+          {
+            id: 1,
+            url: 'https://via.placeholder.com/300x300?text=Plaza+de+Armas',
+            name: 'plaza_armas_1.jpg',
+            uploadedAt: new Date(Date.now() - 6000000)
+          },
+          {
+            id: 2,
+            url: 'https://via.placeholder.com/300x300?text=Catedral',
+            name: 'plaza_armas_2.jpg',
+            uploadedAt: new Date(Date.now() - 5900000)
+          }
+        ],
         incidents: []
       },
       {
@@ -44,7 +61,14 @@ const TourProgress = ({ tourId }) => {
         arrivalTime: new Date(Date.now() - 5700000),
         departureTime: new Date(Date.now() - 5400000),
         status: 'completado',
-        photos: ['photo3.jpg'],
+        photos: [
+          {
+            id: 3,
+            url: 'https://via.placeholder.com/300x300?text=Catedral+Interior',
+            name: 'catedral_interior.jpg',
+            uploadedAt: new Date(Date.now() - 5400000)
+          }
+        ],
         incidents: []
       },
       {
@@ -105,11 +129,11 @@ const TourProgress = ({ tourId }) => {
       case 'completado':
         return <CheckCircleIcon className="w-6 h-6 text-green-600" />;
       case 'en_progreso':
-        return <Circle className="w-6 h-6 text-blue-600 animate-pulse" />;
+        return <EllipsisHorizontalCircleIcon className="w-6 h-6 text-blue-600 animate-pulse" />;
       case 'pendiente':
-        return <Circle className="w-6 h-6 text-gray-400" />;
+        return <EllipsisHorizontalCircleIcon className="w-6 h-6 text-gray-400" />;
       default:
-        return <Circle className="w-6 h-6 text-gray-400" />;
+        return <EllipsisHorizontalCircleIcon className="w-6 h-6 text-gray-400" />;
     }
   };
 
@@ -124,6 +148,17 @@ const TourProgress = ({ tourId }) => {
     const plannedElapsed = now - mockTour.startTime;
     const delay = elapsed - plannedElapsed;
     return delay > 0 ? delay / 60000 : 0; // En minutos
+  };
+
+  const handlePhotosChange = (stopId, newPhotos) => {
+    // En una implementación real, esto actualizaría el estado del tour en el store
+    console.log(`Fotos actualizadas para parada ${stopId}:`, newPhotos);
+    toast.success('Fotos actualizadas correctamente');
+  };
+
+  const canUploadPhotos = (stop) => {
+    // Solo se pueden subir fotos si la parada está en progreso o completada
+    return isGuideView && (stop.status === 'en_progreso' || stop.status === 'completado');
   };
 
   return (
@@ -263,16 +298,49 @@ const TourProgress = ({ tourId }) => {
                       )}
                     </div>
 
-                    {stop.photos.length > 0 && (
-                      <div>
-                        <p className="text-sm text-gray-600 mb-2">Fotos subidas</p>
-                        <div className="flex gap-2">
-                          {stop.photos.map((photo, i) => (
-                            <div key={i} className="w-16 h-16 bg-gray-200 rounded-lg"></div>
-                          ))}
-                        </div>
+                    {/* Sección de fotos */}
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-sm font-medium text-gray-700">
+                          Fotos de la parada {canUploadPhotos(stop) && '(opcional)'}
+                        </p>
+                        {stop.photos.length > 0 && (
+                          <span className="text-xs text-gray-500">
+                            {stop.photos.length} foto{stop.photos.length > 1 ? 's' : ''}
+                          </span>
+                        )}
                       </div>
-                    )}
+
+                      {canUploadPhotos(stop) ? (
+                        <PhotoUpload
+                          photos={stop.photos}
+                          onPhotosChange={(newPhotos) => handlePhotosChange(stop.id, newPhotos)}
+                          maxPhotos={8}
+                        />
+                      ) : (
+                        // Vista solo lectura para administradores o paradas no activas
+                        <>
+                          {stop.photos.length > 0 ? (
+                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                              {stop.photos.map((photo) => (
+                                <div key={photo.id} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                                  <img
+                                    src={photo.url}
+                                    alt={photo.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="text-center py-6 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
+                              <CameraIcon className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                              <p className="text-sm">Sin fotos de esta parada</p>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
 
                     {stop.status === 'pendiente' && (
                       <div className="text-sm text-gray-500">

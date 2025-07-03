@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, FunnelIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 import { useReservationsStore } from '../../stores/reservationsStore';
 import { useAuthStore } from '../../stores/authStore';
 import ReservationDetail from './ReservationDetail';
 import ExportModal from '../common/ExportModal';
 import exportService from '../../services/exportService';
+import ServiceRatingModal from '../ratings/ServiceRatingModal';
+import toast from 'react-hot-toast';
 
 const ReservationList = () => {
   const { reservations } = useReservationsStore();
@@ -14,9 +16,16 @@ const ReservationList = () => {
   const [showDetail, setShowDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [customerFilter, setCustomerFilter] = useState('');
+  const [minPassengers, setMinPassengers] = useState('');
+  const [maxPassengers, setMaxPassengers] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [showActions, setShowActions] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const itemsPerPage = 10;
 
@@ -36,6 +45,29 @@ const ReservationList = () => {
       pickupLocation: 'Hotel Marriott Miraflores',
       createdAt: new Date('2024-02-01'),
       paymentStatus: 'pagado',
+      tourists: [
+        {
+          id: '1',
+          name: 'Juan Pérez',
+          documentType: 'DNI',
+          documentNumber: '12345678',
+          phone: '+51 987654321'
+        },
+        {
+          id: '2',
+          name: 'María Pérez',
+          documentType: 'DNI',
+          documentNumber: '87654321',
+          phone: '+51 987654321'
+        },
+        {
+          id: '3',
+          name: 'Carlos García',
+          documentType: 'DNI',
+          documentNumber: '11223344',
+          phone: '+51 987654322'
+        }
+      ],
       groups: [
         {
           representativeName: 'Juan Pérez',
@@ -47,7 +79,8 @@ const ReservationList = () => {
           representativePhone: '+51 987654322',
           companionsCount: 1
         }
-      ]
+      ],
+      isRated: false
     },
     {
       id: 'RES002',
@@ -62,7 +95,38 @@ const ReservationList = () => {
       status: 'pendiente',
       pickupLocation: 'Parque Kennedy',
       createdAt: new Date('2024-02-05'),
-      paymentStatus: 'pendiente'
+      paymentStatus: 'pendiente',
+      tourists: [
+        {
+          id: '4',
+          name: 'María García',
+          documentType: 'DNI',
+          documentNumber: '22334455',
+          phone: '+51 976543210'
+        },
+        {
+          id: '5',
+          name: 'Ana García',
+          documentType: 'DNI',
+          documentNumber: '33445566',
+          phone: '+51 976543210'
+        },
+        {
+          id: '6',
+          name: 'Luis García',
+          documentType: 'DNI',
+          documentNumber: '44556677',
+          phone: '+51 976543210'
+        },
+        {
+          id: '7',
+          name: 'Pedro García',
+          documentType: 'DNI',
+          documentNumber: '55667788',
+          phone: '+51 976543210'
+        }
+      ],
+      isRated: false
     },
     {
       id: 'RES003',
@@ -74,10 +138,48 @@ const ReservationList = () => {
       adults: 3,
       children: 2,
       total: 340,
-      status: 'confirmada',
+      status: 'completada',
       pickupLocation: 'Hotel Hilton',
       createdAt: new Date('2024-02-08'),
-      paymentStatus: 'pagado'
+      paymentStatus: 'pagado',
+      tourists: [
+        {
+          id: '8',
+          name: 'Carlos Rodríguez',
+          documentType: 'DNI',
+          documentNumber: '66778899',
+          phone: '+51 965432198'
+        },
+        {
+          id: '9',
+          name: 'Sofia Rodríguez',
+          documentType: 'DNI',
+          documentNumber: '77889900',
+          phone: '+51 965432198'
+        },
+        {
+          id: '10',
+          name: 'Miguel Rodríguez',
+          documentType: 'DNI',
+          documentNumber: '88990011',
+          phone: '+51 965432198'
+        },
+        {
+          id: '11',
+          name: 'Elena Rodríguez',
+          documentType: 'DNI',
+          documentNumber: '99001122',
+          phone: '+51 965432198'
+        },
+        {
+          id: '12',
+          name: 'Pablo Rodríguez',
+          documentType: 'DNI',
+          documentNumber: '00112233',
+          phone: '+51 965432198'
+        }
+      ],
+      isRated: false
     },
     {
       id: 'RES004',
@@ -92,7 +194,24 @@ const ReservationList = () => {
       status: 'cancelada',
       pickupLocation: 'JW Marriott',
       createdAt: new Date('2024-01-28'),
-      paymentStatus: 'reembolsado'
+      paymentStatus: 'reembolsado',
+      tourists: [
+        {
+          id: '13',
+          name: 'Ana López',
+          documentType: 'DNI',
+          documentNumber: '11223344',
+          phone: '+51 954321876'
+        },
+        {
+          id: '14',
+          name: 'Roberto López',
+          documentType: 'DNI',
+          documentNumber: '22334455',
+          phone: '+51 954321876'
+        }
+      ],
+      isRated: false
     }
   ];
 
@@ -124,7 +243,33 @@ const ReservationList = () => {
     
     const matchesStatus = statusFilter === 'all' || reservation.status === statusFilter;
     
-    return matchesSearch && matchesStatus;
+    // Filtro por fechas
+    let matchesDate = true;
+    if (dateFrom) {
+      const fromDate = new Date(dateFrom);
+      matchesDate = matchesDate && reservation.date >= fromDate;
+    }
+    if (dateTo) {
+      const toDate = new Date(dateTo);
+      toDate.setHours(23, 59, 59, 999);
+      matchesDate = matchesDate && reservation.date <= toDate;
+    }
+    
+    // Filtro por cliente
+    const matchesCustomer = !customerFilter || 
+      reservation.clientName.toLowerCase().includes(customerFilter.toLowerCase());
+    
+    // Filtro por cantidad de pasajeros
+    const totalPassengers = reservation.adults + reservation.children;
+    let matchesPassengers = true;
+    if (minPassengers) {
+      matchesPassengers = matchesPassengers && totalPassengers >= parseInt(minPassengers);
+    }
+    if (maxPassengers) {
+      matchesPassengers = matchesPassengers && totalPassengers <= parseInt(maxPassengers);
+    }
+    
+    return matchesSearch && matchesStatus && matchesDate && matchesCustomer && matchesPassengers;
   });
 
   // Paginación
@@ -159,6 +304,39 @@ const ReservationList = () => {
       console.log('Eliminar reserva:', reservation.id);
     }
     setShowActions(null);
+  };
+
+  const handleRateTourists = (reservation) => {
+    if (!reservation.tourists || reservation.tourists.length === 0) {
+      toast.error('No hay turistas registrados para valorar');
+      return;
+    }
+    
+    setSelectedService({
+      id: reservation.id,
+      name: reservation.tourName,
+      date: reservation.date,
+      time: reservation.time
+    });
+    setShowRatingModal(true);
+    setShowActions(null);
+  };
+
+  const handleRatingsCompleted = (allRatings) => {
+    console.log('Valoraciones completadas:', allRatings);
+    
+    // En una implementación real, aquí se guardarían las valoraciones en la base de datos
+    // y se actualizaría el estado de la reserva como "valorada"
+    
+    setShowRatingModal(false);
+    setSelectedService(null);
+    
+    // Simular actualización del estado (en producción esto vendría del backend)
+    // mockReservations.find(r => r.id === selectedService.id).isRated = true;
+  };
+
+  const canRateService = (reservation) => {
+    return reservation.status === 'completada' && !reservation.isRated;
   };
 
   const handleExport = () => {
@@ -212,21 +390,34 @@ const ReservationList = () => {
       <div className="bg-white rounded-lg shadow">
         {/* Header con búsqueda y filtros */}
         <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row gap-4 justify-between">
-            <div className="flex-1 max-w-md">
-              <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Buscar por tour, cliente o código..."
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+          <div className="flex flex-col gap-4">
+            {/* Primera fila: Búsqueda y Exportar */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-between">
+              <div className="flex-1 max-w-md">
+                <div className="relative">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    placeholder="Buscar por tour, cliente o código..."
+                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
+
+              <button 
+                onClick={handleExport}
+                className="btn btn-outline flex items-center gap-2 hover:bg-primary-50 hover:border-primary-500"
+                title="Exportar reservas filtradas en Excel, PDF o CSV"
+              >
+                <ArrowDownTrayIcon className="w-4 h-4" />
+                Exportar ({filteredReservations.length})
+              </button>
             </div>
 
-            <div className="flex gap-3">
+            {/* Segunda fila: Filtros */}
+            <div className="flex flex-wrap gap-3">
               <select
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 value={statusFilter}
@@ -239,14 +430,68 @@ const ReservationList = () => {
                 <option value="completada">Completada</option>
               </select>
 
-              <button 
-                onClick={handleExport}
-                className="btn btn-outline flex items-center gap-2 hover:bg-primary-50 hover:border-primary-500"
-                title="Exportar reservas filtradas en Excel, PDF o CSV"
-              >
-                <ArrowDownTrayIcon className="w-4 h-4" />
-                Exportar ({filteredReservations.length})
-              </button>
+              <input
+                type="date"
+                placeholder="Fecha desde"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                title="Fecha desde"
+              />
+
+              <input
+                type="date"
+                placeholder="Fecha hasta"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                title="Fecha hasta"
+              />
+
+              <input
+                type="text"
+                placeholder="Cliente"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-40"
+                value={customerFilter}
+                onChange={(e) => setCustomerFilter(e.target.value)}
+              />
+
+              <input
+                type="number"
+                placeholder="Min. pasajeros"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-32"
+                value={minPassengers}
+                onChange={(e) => setMinPassengers(e.target.value)}
+                min="1"
+              />
+
+              <input
+                type="number"
+                placeholder="Máx. pasajeros"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-32"
+                value={maxPassengers}
+                onChange={(e) => setMaxPassengers(e.target.value)}
+                min="1"
+              />
+
+              {/* Botón para limpiar filtros */}
+              {(dateFrom || dateTo || customerFilter || minPassengers || maxPassengers) && (
+                <button
+                  onClick={() => {
+                    setDateFrom('');
+                    setDateTo('');
+                    setCustomerFilter('');
+                    setMinPassengers('');
+                    setMaxPassengers('');
+                    setCurrentPage(1);
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 flex items-center gap-1"
+                  title="Limpiar filtros"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                  Limpiar
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -348,6 +593,17 @@ const ReservationList = () => {
                             <EyeIcon className="w-4 h-4" />
                             Ver Detalles
                           </button>
+                          
+                          {/* Botón de valoración - solo para servicios completados */}
+                          {canRateService(reservation) && (
+                            <button
+                              onClick={() => handleRateTourists(reservation)}
+                              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-green-700 hover:bg-green-50"
+                            >
+                              <HeartIcon className="w-4 h-4" />
+                              Valorar Turistas ({reservation.tourists?.length || 0})
+                            </button>
+                          )}
                           {/* Solo agencias pueden editar sus propias reservas */}
                           {user?.role === 'agency' && (
                             <>
@@ -374,7 +630,7 @@ const ReservationList = () => {
                                 onClick={() => handleDelete(reservation)}
                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                               >
-                                <Trash className="w-4 h-4" />
+                                <TrashIcon className="w-4 h-4" />
                                 Eliminar
                               </button>
                             </>
@@ -452,6 +708,21 @@ const ReservationList = () => {
         filterStatus={statusFilter}
         stats={exportStats}
       />
+
+      {/* Modal de valoración de turistas */}
+      {showRatingModal && selectedService && (
+        <ServiceRatingModal
+          isOpen={showRatingModal}
+          onClose={() => {
+            setShowRatingModal(false);
+            setSelectedService(null);
+          }}
+          service={selectedService}
+          tourists={mockReservations.find(r => r.id === selectedService.id)?.tourists || []}
+          onAllRatingsCompleted={handleRatingsCompleted}
+        />
+      )}
+
     </>
   );
 };

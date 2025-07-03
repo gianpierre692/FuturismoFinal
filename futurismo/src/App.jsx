@@ -30,6 +30,18 @@ const AgencyCalendar = lazy(() => import('./pages/AgencyCalendar'));
 const AgencyReports = lazy(() => import('./pages/AgencyReports'));
 const AgencyPoints = lazy(() => import('./pages/AgencyPoints'));
 const AdminReservations = lazy(() => import('./pages/AdminReservations'));
+const ReservationManagement = lazy(() => import('./pages/admin/ReservationManagement'));
+const Reports = lazy(() => import('./pages/admin/Reports'));
+const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
+
+// Marketplace pages
+const GuidesMarketplace = lazy(() => import('./pages/marketplace/GuidesMarketplace'));
+const GuideMarketplaceProfile = lazy(() => import('./pages/marketplace/GuideMarketplaceProfile'));
+const ServiceRequestForm = lazy(() => import('./pages/marketplace/ServiceRequestForm'));
+const ServiceRequestDetail = lazy(() => import('./pages/marketplace/ServiceRequestDetail'));
+const ServiceReview = lazy(() => import('./pages/marketplace/ServiceReview'));
+const AgencyMarketplaceDashboard = lazy(() => import('./pages/marketplace/AgencyMarketplaceDashboard'));
+const GuideMarketplaceDashboard = lazy(() => import('./pages/marketplace/GuideMarketplaceDashboard'));
 
 // WebSocket service
 import webSocketService from './services/websocket';
@@ -111,7 +123,7 @@ function App() {
               path="admin/reservations" 
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminReservations />
+                  <ReservationManagement />
                 </ProtectedRoute>
               } 
             />
@@ -198,6 +210,82 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route 
+              path="admin/reports" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <Reports />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="guide/finances" 
+              element={
+                <ProtectedRoute allowedRoles={['guide']} requireGuideType="freelance">
+                  <FinancialDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Rutas del Marketplace */}
+            <Route path="marketplace">
+              <Route 
+                index 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                    <GuidesMarketplace />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="guide/:guideId" 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                    <GuideMarketplaceProfile />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="book/:guideId" 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                    <ServiceRequestForm />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="requests" 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                    <AgencyMarketplaceDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="requests/:requestId" 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin', 'guide']}>
+                    <ServiceRequestDetail />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="review/:requestId" 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                    <ServiceReview />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="guide-dashboard" 
+                element={
+                  <ProtectedRoute allowedRoles={['guide']} requireGuideType="freelance">
+                    <GuideMarketplaceDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+            </Route>
           </Route>
 
           {/* Ruta 404 */}

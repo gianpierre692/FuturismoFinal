@@ -22,7 +22,23 @@
       "Bash(npm run lint)",
       "Bash(npm run:*)",
       "Bash(rg:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npx vite:*)",
+      "Bash(./node_modules/.bin/vite:*)",
+      "Bash(node:*)",
+      "Bash(npm --version)",
+      "WebFetch(domain:docs.google.com)",
+      "Bash(npx eslint:*)",
+      "Bash(timeout:*)",
+      "Bash(VITE_FORCE_BUILD=true npm run dev -- --force --clearCache)",
+      "Bash(mv:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm dedupe:*)",
+      "Bash(npm audit:*)",
+      "Bash(node check-unused-imports.js)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }
