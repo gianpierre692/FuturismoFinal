@@ -2,8 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Bars3Icon, BellIcon, MagnifyingGlassIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
+import LanguageToggle from './LanguageToggle';
 
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ const Header = ({ toggleSidebar }) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const profileMenuRef = useRef(null);
+  const { t } = useTranslation();
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -58,7 +61,7 @@ const Header = ({ toggleSidebar }) => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar servicios..."
+                  placeholder={t('search.searchServices')}
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary w-64 lg:w-80"
                 />
               </div>
@@ -67,6 +70,9 @@ const Header = ({ toggleSidebar }) => {
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
+            {/* Language Toggle */}
+            <LanguageToggle />
+            
             {/* Notifications */}
             <button
               onClick={toggleVisibility}
@@ -94,9 +100,9 @@ const Header = ({ toggleSidebar }) => {
                 <div className="hidden md:block text-left">
                   <p className="text-sm font-medium text-gray-900">{user?.name || 'Usuario'}</p>
                   <p className="text-xs text-gray-500">
-                    {user?.role === 'agency' && '🏢 Agencia'}
-                    {user?.role === 'guide' && '🗺️ Guía Turístico'}
-                    {user?.role === 'admin' && '⚙️ Administrador'}
+                    {user?.role === 'agency' && t('roles.agency')}
+                    {user?.role === 'guide' && t('roles.guide')}
+                    {user?.role === 'admin' && t('roles.admin')}
                   </p>
                 </div>
                 <ChevronDownIcon className="w-4 h-4 text-gray-500" />
@@ -113,7 +119,7 @@ const Header = ({ toggleSidebar }) => {
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                   >
                     <UserIcon className="w-4 h-4 mr-3" />
-                    Mi Perfil
+                    {t('profile.myProfile')}
                   </button>
                   <button
                     onClick={() => {
@@ -123,7 +129,7 @@ const Header = ({ toggleSidebar }) => {
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
                   >
                     <CogIcon className="w-4 h-4 mr-3" />
-                    Configuración
+                    {t('profile.configuration')}
                   </button>
                   <hr className="my-1" />
                   <button
@@ -131,7 +137,7 @@ const Header = ({ toggleSidebar }) => {
                     className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
                   >
                     <ArrowRightOnRectangleIcon className="w-4 h-4 mr-3" />
-                    Cerrar sesión
+                    {t('profile.logout')}
                   </button>
                 </div>
               )}

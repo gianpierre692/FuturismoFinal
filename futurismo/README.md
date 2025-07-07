@@ -1,5 +1,7 @@
 # Futurismo - Sistema de Gestión Turística B2B
 
+Versión 25.07.0001
+
 Sistema de gestión turística B2B desarrollado con React, Vite y TailwindCSS.
 
 ## Características Principales

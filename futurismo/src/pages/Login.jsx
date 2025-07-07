@@ -3,25 +3,41 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
-import { EyeIcon, EyeSlashIcon, ArrowPathIcon, BuildingOffice2Icon, MapIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, EyeSlashIcon, ArrowPathIcon, BuildingOffice2Icon, MapIcon, ShieldCheckIcon, UserCircleIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 // BuildingStorefrontIcon y validación
 import useAuthStore from '../stores/authStore';
-import { loginSchema } from '../utils/validators';
+import { loginSchema, freelanceGuideRegisterSchema } from '../utils/validators';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, isLoading } = useAuthStore();
+  const { login, register: registerUser, isLoading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const { t } = useTranslation();
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(loginSchema),
-    defaultValues: {
+    resolver: yupResolver(isRegistering ? freelanceGuideRegisterSchema : loginSchema),
+    defaultValues: isRegistering ? {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      phone: '',
+      dni: '',
+      city: '',
+      languages: [],
+      experience: 0,
+      specialties: [],
+      acceptTerms: false
+    } : {
       email: '',
       password: '',
       remember: false
@@ -30,18 +46,63 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const result = await login(data);
-      
-      if (result.success) {
-        toast.success('¡Bienvenido a Futurismo!');
-        navigate('/dashboard');
+      if (isRegistering) {
+        const registerData = {
+          ...data,
+          role: 'guide',
+          guideType: 'freelance'
+        };
+        const result = await registerUser(registerData);
+        
+        if (result.success) {
+          toast.success(t('auth.registerSuccess'));
+          navigate('/dashboard');
+        } else {
+          toast.error(result.error || t('auth.registerError'));
+        }
       } else {
-        toast.error(result.error || 'Error al iniciar sesión');
+        const result = await login(data);
+        
+        if (result.success) {
+          toast.success(t('auth.welcome'));
+          navigate('/dashboard');
+        } else {
+          toast.error(result.error || t('auth.loginError'));
+        }
       }
     } catch (error) {
-      toast.error('Error inesperado. Por favor intenta de nuevo.');
+      toast.error(t('auth.unexpectedError'));
     }
   };
+
+  const toggleMode = () => {
+    setIsRegistering(!isRegistering);
+    reset();
+    setShowPassword(false);
+  };
+
+  // Opciones para idiomas y especialidades
+  const languageOptions = [
+    { value: 'spanish', label: t('auth.spanish') },
+    { value: 'english', label: t('auth.english') },
+    { value: 'portuguese', label: t('auth.portuguese') },
+    { value: 'french', label: t('auth.french') },
+    { value: 'german', label: t('auth.german') },
+    { value: 'italian', label: t('auth.italian') },
+    { value: 'japanese', label: t('auth.japanese') },
+    { value: 'chinese', label: t('auth.chinese') }
+  ];
+
+  const specialtyOptions = [
+    { value: 'history', label: t('auth.historyTours') },
+    { value: 'nature', label: t('auth.natureTours') },
+    { value: 'culture', label: t('auth.culturalTours') },
+    { value: 'adventure', label: t('auth.adventureTours') },
+    { value: 'gastronomy', label: t('auth.gastronomyTours') },
+    { value: 'city', label: t('auth.cityTours') },
+    { value: 'photography', label: t('auth.photographyTours') },
+    { value: 'religious', label: t('auth.religiousTours') }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center px-4">
@@ -52,20 +113,29 @@ const Login = () => {
             <span className="text-3xl text-white">🌎</span>
           </div>
           <h1 className="text-4xl font-bold text-gray-900">Futurismo</h1>
-          <p className="text-gray-600 mt-2">Sistema de Gestión Turística B2B</p>
+          <p className="text-gray-600 mt-2">{t('auth.systemTitle')}</p>
         </div>
 
         {/* Formulario */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-            Iniciar sesión
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold text-gray-900">
+              {isRegistering ? t('auth.registerAsGuide') : t('auth.login')}
+            </h2>
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="text-primary-600 hover:text-primary-700 text-sm font-medium"
+            >
+              {isRegistering ? t('auth.alreadyHaveAccount') : t('auth.dontHaveAccount')}
+            </button>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
             <div>
               <label htmlFor="email" className="label">
-                Correo electrónico
+                {t('auth.email')}
               </label>
               <input
                 {...register('email')}
@@ -83,7 +153,7 @@ const Login = () => {
             {/* Password */}
             <div>
               <label htmlFor="password" className="label">
-                Contraseña
+                {t('auth.password')}
               </label>
               <div className="relative">
                 <input
@@ -119,11 +189,11 @@ const Login = () => {
                   type="checkbox"
                   className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                 />
-                <span className="ml-2 text-sm text-gray-700">Recordarme</span>
+                <span className="ml-2 text-sm text-gray-700">{t('auth.rememberMe')}</span>
               </label>
               
               <a href="#" className="text-sm text-primary hover:text-primary-600">
-                ¿Olvidaste tu contraseña?
+                {t('auth.forgotPassword')}
               </a>
             </div>
 
@@ -136,10 +206,10 @@ const Login = () => {
               {isLoading ? (
                 <>
                   <ArrowPathIcon className="w-5 h-5 mr-2 animate-spin" />
-                  Iniciando sesión...
+                  {t('auth.loggingIn')}
                 </>
               ) : (
-                'Iniciar sesión'
+                t('auth.login')
               )}
             </button>
           </form>
@@ -147,7 +217,7 @@ const Login = () => {
           {/* Demo credentials */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-600 text-center mb-3">
-              Acceso rápido - Usuarios de prueba:
+              {t('auth.quickAccess')}
             </p>
             <div className="space-y-2">
               {/* Botón Agencia */}
@@ -165,7 +235,7 @@ const Login = () => {
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
                       <BuildingOffice2Icon className="w-4 h-4 text-primary-600" />
-                      Agencia de Viajes
+                      {t('auth.travelAgency')}
                     </p>
                     <p className="text-sm text-gray-600">agencia@test.com</p>
                   </div>
@@ -190,7 +260,7 @@ const Login = () => {
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
                       <MapIcon className="w-4 h-4 text-secondary-600" />
-                      Guía Turístico
+                      {t('auth.tourGuide')}
                     </p>
                     <p className="text-sm text-gray-600">guia@test.com</p>
                   </div>
@@ -215,7 +285,7 @@ const Login = () => {
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
                       <UserCircleIcon className="w-4 h-4 text-green-600" />
-                      Guía Freelance
+                      {t('auth.freelanceGuide')}
                     </p>
                     <p className="text-sm text-gray-600">freelance@test.com</p>
                   </div>
@@ -240,7 +310,7 @@ const Login = () => {
                   <div>
                     <p className="font-medium text-gray-900 flex items-center gap-2">
                       <ShieldCheckIcon className="w-4 h-4 text-gray-600" />
-                      Administrador
+                      {t('auth.administrator')}
                     </p>
                     <p className="text-sm text-gray-600">admin@futurismo.com</p>
                   </div>
@@ -252,14 +322,14 @@ const Login = () => {
             </div>
             
             <p className="text-xs text-gray-500 text-center mt-3">
-              Credenciales válidas para cada rol específico
+              {t('auth.validCredentials')}
             </p>
           </div>
         </div>
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-8">
-          © 2024 Futurismo. Todos los derechos reservados.
+          {t('auth.copyright')}
         </p>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import StatsCard from '../components/dashboard/StatsCard';
 import ServiceChart from '../components/dashboard/ServiceChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
@@ -11,6 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 const Dashboard = () => {
   const { user } = useAuthStore();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(() => {
     // Estadísticas diferentes según el rol
@@ -45,20 +47,28 @@ const Dashboard = () => {
   });
 
   // Datos para el gráfico de comparación mensual
-  const [monthlyData, setMonthlyData] = useState([
-    { month: 'Ene', reservations: 145, tourists: 367, revenue: 23400 },
-    { month: 'Feb', reservations: 132, tourists: 342, revenue: 21800 },
-    { month: 'Mar', reservations: 178, tourists: 445, revenue: 28900 },
-    { month: 'Abr', reservations: 189, tourists: 478, revenue: 31200 },
-    { month: 'May', reservations: 167, tourists: 423, revenue: 27600 },
-    { month: 'Jun', reservations: 203, tourists: 512, revenue: 33500 },
-    { month: 'Jul', reservations: 234, tourists: 589, revenue: 38700 },
-    { month: 'Ago', reservations: 221, tourists: 567, revenue: 36800 },
-    { month: 'Sep', reservations: 198, tourists: 501, revenue: 32400 },
-    { month: 'Oct', reservations: 187, tourists: 465, revenue: 30100 },
-    { month: 'Nov', reservations: 165, tourists: 418, revenue: 27200 },
-    { month: 'Dic', reservations: 201, tourists: 509, revenue: 33100 }
-  ]);
+  const getMonthlyData = () => {
+    const months = i18n.language === 'es' 
+      ? ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+      : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    return [
+      { month: months[0], reservations: 145, tourists: 367, revenue: 23400 },
+      { month: months[1], reservations: 132, tourists: 342, revenue: 21800 },
+      { month: months[2], reservations: 178, tourists: 445, revenue: 28900 },
+      { month: months[3], reservations: 189, tourists: 478, revenue: 31200 },
+      { month: months[4], reservations: 167, tourists: 423, revenue: 27600 },
+      { month: months[5], reservations: 203, tourists: 512, revenue: 33500 },
+      { month: months[6], reservations: 234, tourists: 589, revenue: 38700 },
+      { month: months[7], reservations: 221, tourists: 567, revenue: 36800 },
+      { month: months[8], reservations: 198, tourists: 501, revenue: 32400 },
+      { month: months[9], reservations: 187, tourists: 465, revenue: 30100 },
+      { month: months[10], reservations: 165, tourists: 418, revenue: 27200 },
+      { month: months[11], reservations: 201, tourists: 509, revenue: 33100 }
+    ];
+  };
+  
+  const [monthlyData, setMonthlyData] = useState([]);
 
   useEffect(() => {
     // Simular carga de datos
@@ -67,17 +77,22 @@ const Dashboard = () => {
     }, 1000);
   }, []);
 
-  if (loading) {
-    return <LoadingSpinner text="Cargando dashboard..." />;
-  }
+  // Actualizar datos del gráfico cuando cambia el idioma
+  useEffect(() => {
+    setMonthlyData(getMonthlyData());
+  }, [i18n.language]);
 
   // Obtener hora del día para el saludo
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Buenos días';
-    if (hour < 18) return 'Buenas tardes';
-    return 'Buenas noches';
+    if (hour < 12) return t('dashboard.goodMorning');
+    if (hour < 18) return t('dashboard.goodAfternoon');
+    return t('dashboard.goodEvening');
   };
+
+  if (loading) {
+    return <LoadingSpinner text={t('dashboard.loading')} />;
+  }
 
   return (
     <div>
@@ -87,7 +102,7 @@ const Dashboard = () => {
           {getGreeting()}, {user?.name || 'Usuario'}
         </h1>
         <p className="text-gray-600 mt-2">
-          Aquí tienes un resumen de la actividad de hoy
+          {t('dashboard.todaySummary')}
         </p>
       </div>
 
@@ -96,27 +111,27 @@ const Dashboard = () => {
         {user?.role === 'guide' ? (
           <>
             <StatsCard
-              title="Mis Tours Hoy"
+              title={t('dashboard.myToursToday')}
               value={stats.myTours}
               icon={CalendarIcon}
               trend="+1"
               color="primary"
             />
             <StatsCard
-              title="Completados"
+              title={t('dashboard.completed')}
               value={stats.completedToday}
               icon={CheckCircleIcon}
               trend="+2"
               color="success"
             />
             <StatsCard
-              title="Próximo Tour"
+              title={t('dashboard.nextTour')}
               value={stats.nextTour}
               icon={ClockIcon}
               color="secondary"
             />
             <StatsCard
-              title="Mi Puntualidad"
+              title={t('dashboard.myPunctuality')}
               value={`${stats.punctualityRate}%`}
               icon={ArrowTrendingUpIcon}
               trend="+0.5%"
@@ -126,28 +141,28 @@ const Dashboard = () => {
         ) : user?.role === 'agency' ? (
           <>
             <StatsCard
-              title="Total Reservas"
+              title={t('dashboard.totalReservations')}
               value={stats.totalReservations}
               icon={CalendarIcon}
               trend="+18%"
               color="primary"
             />
             <StatsCard
-              title="Total Turistas"
+              title={t('dashboard.totalTourists')}
               value={stats.totalTourists}
               icon={UserGroupIcon}
               trend="+15%"
               color="success"
             />
             <StatsCard
-              title="Ingresos Totales"
+              title={t('dashboard.totalIncome')}
               value={`$${stats.monthlyRevenue.toLocaleString()}`}
               icon={CurrencyDollarIcon}
               trend="+23%"
               color="secondary"
             />
             <StatsCard
-              title="Puntualidad"
+              title={t('dashboard.punctuality')}
               value={`${stats.punctualityRate}%`}
               icon={ArrowTrendingUpIcon}
               trend="+2.5%"
@@ -178,7 +193,7 @@ const Dashboard = () => {
               color="secondary"
             />
             <StatsCard
-              title="Salud del Sistema"
+              title={t('dashboard.systemHealth')}
               value={`${stats.systemHealth}%`}
               icon={ChartBarIcon}
               color="primary"
@@ -193,7 +208,7 @@ const Dashboard = () => {
           {/* Reservas por Mes */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Reservas por Mes</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.reservationsByMonth')}</h3>
               <ChartBarIcon className="w-5 h-5 text-primary-600" />
             </div>
             <div className="h-48">
@@ -206,7 +221,7 @@ const Dashboard = () => {
                   />
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip 
-                    formatter={(value) => [value, 'Reservas']}
+                    formatter={(value) => [value, t('dashboard.reservations')]}
                     labelStyle={{ color: '#374151' }}
                   />
                   <Bar 
@@ -222,7 +237,7 @@ const Dashboard = () => {
           {/* Turistas por Mes */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Turistas por Mes</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.touristsByMonth')}</h3>
               <UserGroupIcon className="w-5 h-5 text-green-600" />
             </div>
             <div className="h-48">
@@ -235,7 +250,7 @@ const Dashboard = () => {
                   />
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip 
-                    formatter={(value) => [value, 'Turistas']}
+                    formatter={(value) => [value, t('dashboard.tourists')]}
                     labelStyle={{ color: '#374151' }}
                   />
                   <Bar 
@@ -251,7 +266,7 @@ const Dashboard = () => {
           {/* Ingresos por Mes */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Ingresos por Mes</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.incomeByMonth')}</h3>
               <CurrencyDollarIcon className="w-5 h-5 text-purple-600" />
             </div>
             <div className="h-48">
@@ -267,7 +282,7 @@ const Dashboard = () => {
                     tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
                   />
                   <Tooltip 
-                    formatter={(value) => [`$${value.toLocaleString()}`, 'Ingresos']}
+                    formatter={(value) => [`$${value.toLocaleString()}`, t('dashboard.totalIncome')]}
                     labelStyle={{ color: '#374151' }}
                   />
                   <Line 
@@ -294,7 +309,7 @@ const Dashboard = () => {
           {/* Tours activos mini table */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Tours Activos Ahora</h3>
+              <h3 className="text-lg font-semibold">{t('dashboard.activeToursNow')}</h3>
               <span className="text-sm text-gray-500">
                 {new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
               </span>
@@ -304,10 +319,10 @@ const Dashboard = () => {
               <table className="w-full text-sm">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left">Tour</th>
-                    <th className="px-4 py-2 text-left">Guía</th>
-                    <th className="px-4 py-2 text-center">Turistas</th>
-                    <th className="px-4 py-2 text-left">Estado</th>
+                    <th className="px-4 py-2 text-left">{t('dashboard.tour')}</th>
+                    <th className="px-4 py-2 text-left">{t('dashboard.guide')}</th>
+                    <th className="px-4 py-2 text-center">{t('dashboard.tourists')}</th>
+                    <th className="px-4 py-2 text-left">{t('dashboard.status')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -316,7 +331,7 @@ const Dashboard = () => {
                     <td className="px-4 py-3">Carlos Mendoza</td>
                     <td className="px-4 py-3 text-center">12</td>
                     <td className="px-4 py-3">
-                      <span className="badge badge-green">En ruta</span>
+                      <span className="badge badge-green">{t('dashboard.enRoute')}</span>
                     </td>
                   </tr>
                   <tr>
@@ -324,7 +339,7 @@ const Dashboard = () => {
                     <td className="px-4 py-3">María García</td>
                     <td className="px-4 py-3 text-center">8</td>
                     <td className="px-4 py-3">
-                      <span className="badge badge-yellow">En parada</span>
+                      <span className="badge badge-yellow">{t('dashboard.atStop')}</span>
                     </td>
                   </tr>
                   <tr>
@@ -332,7 +347,7 @@ const Dashboard = () => {
                     <td className="px-4 py-3">Juan Pérez</td>
                     <td className="px-4 py-3 text-center">15</td>
                     <td className="px-4 py-3">
-                      <span className="badge badge-blue">Iniciando</span>
+                      <span className="badge badge-blue">{t('dashboard.starting')}</span>
                     </td>
                   </tr>
                 </tbody>
@@ -341,7 +356,7 @@ const Dashboard = () => {
             
             <div className="mt-4 text-center">
               <a href="/monitoring" className="text-sm font-medium text-primary-600 hover:text-primary-700">
-                Ver monitoreo en tiempo real →
+                {t('dashboard.viewLiveMonitoring')}
               </a>
             </div>
           </div>
@@ -362,13 +377,12 @@ const Dashboard = () => {
             <ExclamationTriangleIcon className="w-6 h-6" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2">Recordatorio Importante</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('dashboard.importantReminder')}</h3>
             <p className="text-primary-100 mb-3">
-              Mañana es feriado nacional. Recuerda confirmar los horarios especiales con los guías 
-              y notificar a los clientes sobre posibles cambios en los itinerarios.
+              {t('dashboard.holidayMessage')}
             </p>
             <button className="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-              Ver calendario de feriados
+              {t('dashboard.viewHolidayCalendar')}
             </button>
           </div>
         </div>

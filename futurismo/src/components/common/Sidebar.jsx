@@ -1,66 +1,68 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   
   // Menú diferente según el tipo de usuario
   const getMenuItems = () => {
     const baseItems = [
-      { path: '/dashboard', icon: HomeIcon, label: 'Dashboard' }
+      { path: '/dashboard', icon: HomeIcon, label: t('navigation.dashboard') }
     ];
     
     if (user?.role === 'agency') {
       return [
         ...baseItems,
-        { path: '/monitoring', icon: MapIcon, label: 'Monitoreo' },
-        { path: '/reservations', icon: CalendarIcon, label: 'Reservas' },
-        { path: '/marketplace', icon: MagnifyingGlassIcon, label: 'Buscar Guías' },
-        { path: '/marketplace/requests', icon: BriefcaseIcon, label: 'Mis Contrataciones' },
-        { path: '/agency/calendar', icon: CalendarDaysIcon, label: 'Calendario' },
-        { path: '/agency/reports', icon: ChartBarIcon, label: 'Reportes' },
-        { path: '/agency/points', icon: StarIcon, label: 'Puntos' },
-        { path: '/history', icon: ClockIcon, label: 'Historial' },
-        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' },
-        { path: '/profile', icon: UserIcon, label: 'Perfil' }
+        { path: '/monitoring', icon: MapIcon, label: t('navigation.monitoring') },
+        { path: '/reservations', icon: CalendarIcon, label: t('navigation.reservations') },
+        { path: '/marketplace', icon: MagnifyingGlassIcon, label: t('navigation.searchGuides') },
+        { path: '/marketplace/requests', icon: BriefcaseIcon, label: t('navigation.myContracts') },
+        { path: '/agency/calendar', icon: CalendarDaysIcon, label: t('navigation.calendar') },
+        { path: '/agency/reports', icon: ChartBarIcon, label: t('navigation.reports') },
+        { path: '/agency/points', icon: StarIcon, label: t('navigation.points') },
+        { path: '/history', icon: ClockIcon, label: t('navigation.history') },
+        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') },
+        { path: '/profile', icon: UserIcon, label: t('navigation.profile') }
       ];
     } else if (user?.role === 'guide') {
       const guideItems = [
         ...baseItems,
-        { path: '/monitoring', icon: MapIcon, label: 'Mis Tours' },
-        { path: '/history', icon: ClockIcon, label: 'Historial' },
-        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' }
+        { path: '/monitoring', icon: MapIcon, label: t('navigation.myTours') },
+        { path: '/history', icon: ClockIcon, label: t('navigation.history') },
+        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') }
       ];
       
       // Agregar opciones específicas para guías freelance
       if (user?.guideType === 'freelance') {
-        guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: 'Mi Agenda' });
-        guideItems.splice(-1, 0, { path: '/marketplace/guide-dashboard', icon: BriefcaseIcon, label: 'Mis Servicios' });
-        guideItems.splice(-1, 0, { path: '/guide/finances', icon: CurrencyDollarIcon, label: 'Finanzas' });
+        guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: t('navigation.myAgenda') });
+        guideItems.splice(-1, 0, { path: '/marketplace/guide-dashboard', icon: BriefcaseIcon, label: t('navigation.myServices') });
+        guideItems.splice(-1, 0, { path: '/guide/finances', icon: CurrencyDollarIcon, label: t('navigation.finances') });
       }
       
-      guideItems.splice(-1, 0, { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' });
-      guideItems.push({ path: '/profile', icon: UserIcon, label: 'Perfil' });
+      guideItems.splice(-1, 0, { path: '/emergency', icon: ShieldCheckIcon, label: t('navigation.emergencies') });
+      guideItems.push({ path: '/profile', icon: UserIcon, label: t('navigation.profile') });
       return guideItems;
     } else if (user?.role === 'admin') {
       return [
         ...baseItems,
-        { path: '/monitoring', icon: MapIcon, label: 'Monitoreo' },
-        { path: '/admin/reservations', icon: CalendarIcon, label: 'Gestión Reservas' },
-        { path: '/assignments', icon: UserCircleIcon, label: 'Asignaciones' },
-        { path: '/guides', icon: UserIcon, label: 'Guías' },
-        { path: '/marketplace', icon: MagnifyingGlassIcon, label: 'Marketplace' },
-        { path: '/providers', icon: BuildingOffice2Icon, label: 'Proveedores' },
-        { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' },
-        { path: '/agenda', icon: CalendarDaysIcon, label: 'Coordinación' },
-        { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes' },
-        { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
-        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat' },
-        { path: '/users', icon: UserGroupIcon, label: 'Usuarios' },
-        { path: '/settings', icon: CogIcon, label: 'Configuración' },
-        { path: '/profile', icon: UserIcon, label: 'Perfil' }
+        { path: '/monitoring', icon: MapIcon, label: t('navigation.monitoring') },
+        { path: '/admin/reservations', icon: CalendarIcon, label: t('navigation.reservationManagement') },
+        { path: '/assignments', icon: UserCircleIcon, label: t('navigation.assignments') },
+        { path: '/guides', icon: UserIcon, label: t('navigation.guides') },
+        { path: '/marketplace', icon: MagnifyingGlassIcon, label: t('navigation.marketplace') },
+        { path: '/providers', icon: BuildingOffice2Icon, label: t('navigation.providers') },
+        { path: '/emergency', icon: ShieldCheckIcon, label: t('navigation.emergencies') },
+        { path: '/agenda', icon: CalendarDaysIcon, label: t('navigation.coordination') },
+        { path: '/admin/reports', icon: ChartBarIcon, label: t('navigation.reports') },
+        { path: '/history', icon: DocumentTextIcon, label: t('navigation.history') },
+        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') },
+        { path: '/users', icon: UserGroupIcon, label: t('navigation.users') },
+        { path: '/settings', icon: CogIcon, label: t('navigation.settings') },
+        { path: '/profile', icon: UserIcon, label: t('navigation.profile') }
       ];
     }
     

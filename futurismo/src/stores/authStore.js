@@ -76,6 +76,71 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
+  register: async (registerData) => {
+    set({ isLoading: true, error: null });
+    
+    try {
+      // Simular API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Simular validación de email único
+      const existingEmails = [
+        'admin@futurismo.com',
+        'agencia@test.com', 
+        'guia@test.com',
+        'freelance@test.com'
+      ];
+      
+      if (existingEmails.includes(registerData.email)) {
+        throw new Error('Este email ya está registrado');
+      }
+      
+      // Crear nuevo usuario
+      const newUser = {
+        id: 'user_' + Date.now(),
+        name: registerData.name,
+        email: registerData.email,
+        role: registerData.role,
+        guideType: registerData.guideType,
+        phone: registerData.phone,
+        dni: registerData.dni,
+        city: registerData.city,
+        languages: registerData.languages,
+        specialties: registerData.specialties,
+        experience: registerData.experience,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(registerData.name)}&background=10B981&color=fff`,
+        status: 'pending', // Pendiente de aprobación
+        createdAt: new Date().toISOString()
+      };
+      
+      const mockToken = 'mock_jwt_token_' + Date.now();
+      
+      set({
+        token: mockToken,
+        user: newUser,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null
+      });
+      
+      // Guardar en localStorage
+      localStorage.setItem('auth_token', mockToken);
+      localStorage.setItem('auth_user', JSON.stringify(newUser));
+      
+      return { success: true, user: newUser };
+      
+    } catch (error) {
+      set({
+        isLoading: false,
+        error: error.message,
+        isAuthenticated: false,
+        token: null,
+        user: null
+      });
+      return { success: false, error: error.message };
+    }
+  },
+
   logout: () => {
     set({
       token: null,

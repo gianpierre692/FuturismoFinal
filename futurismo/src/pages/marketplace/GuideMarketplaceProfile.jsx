@@ -15,17 +15,20 @@ import {
   HeartIcon,
   ShareIcon,
   ChatBubbleLeftRightIcon,
-  PlayIcon
+  PlayIcon,
+  BuildingLibraryIcon
 } from '@heroicons/react/24/solid';
 import { HeartIcon as HeartOutlineIcon } from '@heroicons/react/24/outline';
 import useMarketplaceStore from '../../stores/marketplaceStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import PhotoUpload from '../../components/common/PhotoUpload';
+import { useTranslation } from 'react-i18next';
 
 const GuideMarketplaceProfile = () => {
   const { guideId } = useParams();
   const navigate = useNavigate();
   const { getGuideById, getGuideReviews } = useMarketplaceStore();
+  const { t } = useTranslation();
   
   const [guide, setGuide] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -70,6 +73,21 @@ const GuideMarketplaceProfile = () => {
     corporate: 'Corporativo',
     vip: 'VIP',
     specialNeeds: 'Necesidades especiales'
+  };
+
+  const museumNames = {
+    larco: t('auth.larcoMuseum'),
+    gold: t('auth.goldMuseum'),
+    national: t('auth.nationalMuseum'),
+    art: t('auth.artMuseum'),
+    archaeology: t('auth.archaeologyMuseum'),
+    history: t('auth.historyMuseum'),
+    contemporary: t('auth.contemporaryArt'),
+    colonial: t('auth.colonialArt'),
+    // Museos adicionales de Cusco
+    qorikancha: 'Museo Qorikancha',
+    inca: 'Museo Inca',
+    chocolate: 'Museo del Chocolate'
   };
 
   useEffect(() => {
@@ -326,6 +344,82 @@ const GuideMarketplaceProfile = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* Experiencia en Museos */}
+                    {guide.specializations.museums && guide.specializations.museums.length > 0 ? (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                          <BuildingLibraryIcon className="h-5 w-5 text-gray-400" />
+                          {t('auth.museumExperienceProfile')}
+                        </h3>
+                        <div className="space-y-4">
+                          {guide.specializations.museums.map((museum) => (
+                            <div key={museum} className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <BuildingLibraryIcon className="h-5 w-5 text-orange-600" />
+                                  <span className="font-medium text-gray-900">{museumNames[museum]}</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <StarIcon
+                                      key={star}
+                                      className={`h-4 w-4 ${
+                                        star <= (guide.specializations.museumRatings?.[museum] || 0)
+                                          ? 'text-yellow-400'
+                                          : 'text-gray-300'
+                                      }`}
+                                    />
+                                  ))}
+                                  <span className="ml-2 text-sm text-gray-600">
+                                    ({guide.specializations.museumRatings?.[museum] || 0}/5)
+                                  </span>
+                                </div>
+                              </div>
+                              
+                              {/* Experiencia del guía en el museo */}
+                              {guide.specializations.museumExperiences?.[museum] && (
+                                <div className="space-y-2">
+                                  {typeof guide.specializations.museumExperiences[museum] === 'string' ? (
+                                    // Formato antiguo (string simple)
+                                    <div className="bg-white rounded-md p-3 border-l-4 border-orange-500">
+                                      <p className="text-sm text-gray-700 italic">
+                                        "{guide.specializations.museumExperiences[museum]}"
+                                      </p>
+                                    </div>
+                                  ) : (
+                                    // Formato nuevo (objeto con idiomas)
+                                    Object.entries(guide.specializations.museumExperiences[museum]).map(([lang, experience]) => (
+                                      <div key={lang} className="bg-white rounded-md p-3 border-l-4 border-orange-500">
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <span className="text-sm">
+                                            {lang === 'es' ? '🇪🇸' : lang === 'en' ? '🇺🇸' : '🏳️'}
+                                          </span>
+                                          <span className="text-xs font-medium text-gray-600">
+                                            {lang === 'es' ? 'Español' : lang === 'en' ? 'English' : lang.toUpperCase()}
+                                          </span>
+                                        </div>
+                                        <p className="text-sm text-gray-700 italic">
+                                          "{experience}"
+                                        </p>
+                                      </div>
+                                    ))
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                          <BuildingLibraryIcon className="h-5 w-5 text-gray-400" />
+                          {t('auth.museumExperienceProfile')}
+                        </h3>
+                        <p className="text-gray-500 italic">{t('auth.noMuseumExperience')}</p>
+                      </div>
+                    )}
                   </div>
                 )}
 

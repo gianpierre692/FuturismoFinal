@@ -12,7 +12,7 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Lazy loading de páginas
-const Login = lazy(() => import('./pages/Login'));
+const LoginRegister = lazy(() => import('./pages/LoginRegister'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Monitoring = lazy(() => import('./pages/Monitoring'));
 const Reservations = lazy(() => import('./pages/Reservations'));
@@ -95,7 +95,7 @@ function App() {
           <Route 
             path="/login" 
             element={
-              isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
+              isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginRegister />
             } 
           />
 

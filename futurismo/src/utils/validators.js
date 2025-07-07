@@ -16,6 +16,71 @@ export const loginSchema = yup.object().shape({
   remember: yup.boolean()
 });
 
+// Validación de registro para guía freelance
+export const freelanceGuideRegisterSchema = yup.object().shape({
+  name: yup
+    .string()
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .required('El nombre es requerido'),
+  email: yup
+    .string()
+    .email('Email inválido')
+    .required('El email es requerido'),
+  password: yup
+    .string()
+    .min(6, 'La contraseña debe tener al menos 6 caracteres')
+    .required('La contraseña es requerida'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Las contraseñas no coinciden')
+    .required('Confirma la contraseña'),
+  phone: yup
+    .string()
+    .matches(REGEX_PATTERNS.PHONE, 'Formato de teléfono inválido')
+    .required('El teléfono es requerido'),
+  dni: yup
+    .string()
+    .matches(/^\d{8}$/, 'DNI debe tener 8 dígitos')
+    .required('El DNI es requerido'),
+  city: yup
+    .string()
+    .required('La ciudad es requerida'),
+  languages: yup
+    .array()
+    .min(1, 'Debe seleccionar al menos un idioma')
+    .required('Los idiomas son requeridos'),
+  experience: yup
+    .number()
+    .min(0, 'La experiencia no puede ser negativa')
+    .max(50, 'La experiencia no puede ser mayor a 50 años')
+    .required('La experiencia es requerida'),
+  specialties: yup
+    .array()
+    .min(1, 'Debe seleccionar al menos una especialidad')
+    .required('Las especialidades son requeridas'),
+  museums: yup
+    .array()
+    .optional(),
+  museumExperiences: yup
+    .object()
+    .optional(),
+  acceptTerms: yup
+    .boolean()
+    .oneOf([true], 'Debe aceptar los términos y condiciones')
+    .required('Debe aceptar los términos y condiciones'),
+  profileImage: yup
+    .mixed()
+    .nullable()
+    .test('fileSize', 'El archivo es demasiado grande (máx. 5MB)', value => {
+      if (!value) return true;
+      return value.size <= 5 * 1024 * 1024;
+    })
+    .test('fileType', 'Formato de imagen no válido', value => {
+      if (!value) return true;
+      return ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'].includes(value.type);
+    })
+});
+
 // Validación de datos de turista
 export const touristSchema = yup.object().shape({
   name: yup

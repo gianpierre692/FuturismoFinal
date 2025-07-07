@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import { formatters } from '../../utils/formatters';
 import { useReservationsStore } from '../../stores/reservationsStore';
 import { useAuthStore } from '../../stores/authStore';
@@ -12,6 +13,7 @@ import toast from 'react-hot-toast';
 const ReservationList = () => {
   const { reservations } = useReservationsStore();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const [selectedReservation, setSelectedReservation] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -224,6 +226,16 @@ const ReservationList = () => {
     };
     return badges[status] || 'badge-gray';
   };
+  
+  const getStatusLabel = (status) => {
+    const labels = {
+      pendiente: t('reservations.pending'),
+      confirmada: t('reservations.confirmed'),
+      cancelada: t('reservations.cancelled'),
+      completada: t('reservations.completed')
+    };
+    return labels[status] || status;
+  };
 
   const getPaymentBadge = (status) => {
     const badges = {
@@ -232,6 +244,15 @@ const ReservationList = () => {
       reembolsado: 'badge-blue'
     };
     return badges[status] || 'badge-gray';
+  };
+  
+  const getPaymentLabel = (status) => {
+    const labels = {
+      pendiente: t('reservations.pending'),
+      pagado: t('reservations.paid'),
+      reembolsado: t('reservations.refunded')
+    };
+    return labels[status] || status;
   };
 
   // Filtrar reservaciones
@@ -300,7 +321,7 @@ const ReservationList = () => {
 
   const handleDelete = (reservation) => {
     // Implementar eliminación
-    if (window.confirm('¿Está seguro de eliminar esta reserva?')) {
+    if (window.confirm(t('search.deleteConfirm'))) {
       console.log('Eliminar reserva:', reservation.id);
     }
     setShowActions(null);
@@ -398,7 +419,7 @@ const ReservationList = () => {
                   <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Buscar por tour, cliente o código..."
+                    placeholder={t('search.searchByTour')}
                     className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -412,7 +433,7 @@ const ReservationList = () => {
                 title="Exportar reservas filtradas en Excel, PDF o CSV"
               >
                 <ArrowDownTrayIcon className="w-4 h-4" />
-                Exportar ({filteredReservations.length})
+                {t('search.export')} ({filteredReservations.length})
               </button>
             </div>
 
@@ -423,11 +444,11 @@ const ReservationList = () => {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
-                <option value="all">Todos los estados</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="confirmada">Confirmada</option>
-                <option value="cancelada">Cancelada</option>
-                <option value="completada">Completada</option>
+                <option value="all">{t('search.allStatuses')}</option>
+                <option value="pendiente">{t('reservations.pending')}</option>
+                <option value="confirmada">{t('reservations.confirmed')}</option>
+                <option value="cancelada">{t('reservations.cancelled')}</option>
+                <option value="completada">{t('reservations.completed')}</option>
               </select>
 
               <input
@@ -436,7 +457,7 @@ const ReservationList = () => {
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                title="Fecha desde"
+                title={t('search.dateFrom')}
               />
 
               <input
@@ -445,12 +466,12 @@ const ReservationList = () => {
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                title="Fecha hasta"
+                title={t('search.dateTo')}
               />
 
               <input
                 type="text"
-                placeholder="Cliente"
+                placeholder={t('search.client')}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-40"
                 value={customerFilter}
                 onChange={(e) => setCustomerFilter(e.target.value)}
@@ -458,7 +479,7 @@ const ReservationList = () => {
 
               <input
                 type="number"
-                placeholder="Min. pasajeros"
+                placeholder={t('search.minPassengers')}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-32"
                 value={minPassengers}
                 onChange={(e) => setMinPassengers(e.target.value)}
@@ -467,7 +488,7 @@ const ReservationList = () => {
 
               <input
                 type="number"
-                placeholder="Máx. pasajeros"
+                placeholder={t('search.maxPassengers')}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-32"
                 value={maxPassengers}
                 onChange={(e) => setMaxPassengers(e.target.value)}
@@ -486,10 +507,10 @@ const ReservationList = () => {
                     setCurrentPage(1);
                   }}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800 flex items-center gap-1"
-                  title="Limpiar filtros"
+                  title={t('search.clear')}
                 >
                   <XMarkIcon className="w-4 h-4" />
-                  Limpiar
+                  {t('search.clear')}
                 </button>
               )}
             </div>
@@ -502,28 +523,28 @@ const ReservationList = () => {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Código
+                  {t('search.code')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tour / Cliente
+                  {t('search.tourClient')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Fecha y Hora
+                  {t('search.dateTime')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pasajeros
+                  {t('search.passengers')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total
+                  {t('search.total')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Estado
+                  {t('reservations.status')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Pago
+                  {t('reservations.payment')}
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Acciones
+                  {t('search.actions')}
                 </th>
               </tr>
             </thead>
@@ -567,12 +588,12 @@ const ReservationList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`badge ${getStatusBadge(reservation.status)}`}>
-                      {reservation.status}
+                      {getStatusLabel(reservation.status)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`badge ${getPaymentBadge(reservation.paymentStatus)}`}>
-                      {reservation.paymentStatus}
+                      {getPaymentLabel(reservation.paymentStatus)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -591,7 +612,7 @@ const ReservationList = () => {
                             className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             <EyeIcon className="w-4 h-4" />
-                            Ver Detalles
+                            {t('search.viewDetails')}
                           </button>
                           
                           {/* Botón de valoración - solo para servicios completados */}
@@ -601,7 +622,7 @@ const ReservationList = () => {
                               className="flex items-center gap-2 w-full px-4 py-2 text-sm text-green-700 hover:bg-green-50"
                             >
                               <HeartIcon className="w-4 h-4" />
-                              Valorar Turistas ({reservation.tourists?.length || 0})
+                              {t('search.rateTourists')} ({reservation.tourists?.length || 0})
                             </button>
                           )}
                           {/* Solo agencias pueden editar sus propias reservas */}
@@ -612,13 +633,13 @@ const ReservationList = () => {
                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               >
                                 <PencilIcon className="w-4 h-4" />
-                                Editar
+                                {t('search.edit')}
                               </button>
                               <button
                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                               >
                                 <DocumentTextIcon className="w-4 h-4" />
-                                Generar Voucher
+                                {t('search.generateVoucher')}
                               </button>
                             </>
                           )}
@@ -631,7 +652,7 @@ const ReservationList = () => {
                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                               >
                                 <TrashIcon className="w-4 h-4" />
-                                Eliminar
+                                {t('search.delete')}
                               </button>
                             </>
                           )}
@@ -650,7 +671,7 @@ const ReservationList = () => {
           <div className="px-6 py-4 border-t border-gray-200">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-700">
-                Mostrando {startIndex + 1} a {Math.min(startIndex + itemsPerPage, filteredReservations.length)} de {filteredReservations.length} reservaciones
+                {t('search.showing')} {startIndex + 1} a {Math.min(startIndex + itemsPerPage, filteredReservations.length)} {t('search.of')} {filteredReservations.length} {t('search.reservationsPlural')}
               </div>
               <div className="flex gap-2">
                 <button

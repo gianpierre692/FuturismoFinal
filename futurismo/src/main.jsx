@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/globals.css';
+import './utils/i18n';
 
 // Configurar idioma para date-fns
 import { setDefaultOptions } from 'date-fns';

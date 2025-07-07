@@ -58,6 +58,25 @@ const mockFreelanceGuides = [
       ],
       tourTypes: ['cultural', 'gastronomico'],
       workZones: ['cusco-ciudad', 'valle-sagrado'],
+      museums: ['larco', 'national', 'art'],
+      museumRatings: {
+        larco: 5,
+        national: 4,
+        art: 5
+      },
+      museumExperiences: {
+        larco: {
+          es: 'Excelente colección de arte precolombino. Las explicaciones son muy detalladas y el recorrido está muy bien organizado. Perfecto para tours culturales.',
+          en: 'Excellent pre-Columbian art collection. The explanations are very detailed and the tour is very well organized. Perfect for cultural tours.'
+        },
+        national: {
+          es: 'Buena exhibición de la historia peruana. Las salas están bien distribuidas, aunque algunas podrían tener mejor iluminación.',
+          en: 'Good exhibition of Peruvian history. The rooms are well distributed, although some could have better lighting.'
+        },
+        art: {
+          es: 'Increíble variedad de arte contemporáneo peruano. El personal es muy conocedor y siempre dispuesto a explicar las obras.'
+        }
+      },
       groupExperience: {
         children: { level: 'experto', yearsExperience: 3 },
         schools: { level: 'intermedio', yearsExperience: 2 },
@@ -171,6 +190,25 @@ const mockFreelanceGuides = [
       ],
       tourTypes: ['aventura', 'fotografico', 'cultural'],
       workZones: ['machu-picchu', 'valle-sagrado', 'otros'],
+      museums: ['qorikancha', 'inca', 'chocolate'],
+      museumRatings: {
+        qorikancha: 5,
+        inca: 4,
+        chocolate: 3
+      },
+      museumExperiences: {
+        qorikancha: {
+          es: 'Experiencia excepcional en el Qorikancha. El templo del sol es impresionante y la fusión de arquitectura inca y colonial es fascinante. Perfecto para explicar la historia de la conquista y la religión inca.',
+          en: 'Exceptional experience at Qorikancha. The sun temple is impressive and the fusion of Inca and colonial architecture is fascinating. Perfect for explaining the history of conquest and Inca religion.'
+        },
+        inca: {
+          es: 'Muy buena colección del Museo Inca. Las piezas arqueológicas están bien conservadas y organizadas. Algunas salas podrían beneficiarse de mejor señalización, pero es ideal para tours culturales.',
+          en: 'Very good collection at the Inca Museum. The archaeological pieces are well preserved and organized. Some rooms could benefit from better signage, but it\'s ideal for cultural tours.'
+        },
+        chocolate: {
+          es: 'Museo del Chocolate interesante pero básico. La experiencia es educativa sobre el proceso del cacao, aunque la exhibición es limitada. Funciona bien para complementar otros tours.'
+        }
+      },
       groupExperience: {
         children: { level: 'basico', yearsExperience: 1 },
         schools: { level: 'basico', yearsExperience: 1 },

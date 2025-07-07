@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MapIcon, UserGroupIcon, ChartBarIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import LiveMap from '../components/monitoring/LiveMapCDN';
 import GuideTracker from '../components/monitoring/GuideTracker';
 import TourProgress from '../components/monitoring/TourProgress';
@@ -7,6 +8,7 @@ import { useAuthStore } from '../stores/authStore';
 
 const Monitoring = () => {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const [activeView, setActiveView] = useState('map');
   const [selectedGuide, setSelectedGuide] = useState(null);
   const [selectedTour, setSelectedTour] = useState(null);
@@ -19,7 +21,7 @@ const Monitoring = () => {
       {/* Header con opciones de vista */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-900">
-          {isGuide ? 'Mis Tours' : 'Monitoreo en Tiempo Real'}
+          {isGuide ? t('monitoring.myTours') : t('monitoring.liveMonitoring')}
         </h1>
         
         <div className="flex items-center gap-4">
@@ -33,7 +35,7 @@ const Monitoring = () => {
               onClick={() => setActiveView('map')}
             >
               <MapIcon className="w-4 h-4 inline mr-2" />
-              {isGuide ? 'Mi Ubicación' : 'Mapa en Vivo'}
+              {isGuide ? t('monitoring.myLocation') : t('monitoring.liveMap')}
             </button>
             {!isGuide && (
               <button
@@ -45,7 +47,7 @@ const Monitoring = () => {
                 onClick={() => setActiveView('guides')}
               >
                 <UserGroupIcon className="w-4 h-4 inline mr-2" />
-                Guías
+                {t('monitoring.guides')}
               </button>
             )}
             <button
@@ -57,13 +59,13 @@ const Monitoring = () => {
               onClick={() => setActiveView('tours')}
             >
               <ChartBarIcon className="w-4 h-4 inline mr-2" />
-              {isGuide ? 'Mis Tours Activos' : 'Tours Activos'}
+              {isGuide ? t('monitoring.myActiveTours') : t('monitoring.activeTours')}
             </button>
           </div>
 
           <button className="btn btn-outline flex items-center gap-2">
             <FunnelIcon className="w-4 h-4" />
-            Filtros
+            {t('monitoring.filters')}
           </button>
         </div>
       </div>
@@ -76,7 +78,7 @@ const Monitoring = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
             {/* Lista de guías */}
             <div className="bg-white rounded-lg shadow-lg p-6 overflow-y-auto">
-              <h3 className="text-lg font-semibold mb-4">Guías Activos</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('monitoring.activeGuides')}</h3>
               <div className="space-y-3">
                 {[1, 2, 3, 4].map((id) => (
                   <div
@@ -96,7 +98,7 @@ const Monitoring = () => {
                       />
                       <div>
                         <p className="font-medium">Guía {id}</p>
-                        <p className="text-sm text-gray-600">En servicio - Tour Centro Histórico</p>
+                        <p className="text-sm text-gray-600">{t('monitoring.onService')}</p>
                       </div>
                     </div>
                   </div>
@@ -110,7 +112,7 @@ const Monitoring = () => {
                 <GuideTracker guideId={selectedGuide} />
               ) : (
                 <div className="bg-white rounded-lg shadow-lg p-6 h-full flex items-center justify-center">
-                  <p className="text-gray-500">Selecciona un guía para ver sus detalles</p>
+                  <p className="text-gray-500">{t('monitoring.selectGuide')}</p>
                 </div>
               )}
             </div>
@@ -122,7 +124,7 @@ const Monitoring = () => {
             {/* Lista de tours activos */}
             <div className="bg-white rounded-lg shadow-lg p-6 overflow-y-auto">
               <h3 className="text-lg font-semibold mb-4">
-                {isGuide ? 'Mis Tours en Progreso' : 'Tours en Progreso'}
+                {isGuide ? t('monitoring.myToursInProgress') : t('monitoring.toursInProgress')}
               </h3>
               <div className="space-y-3">
                 {[1, 2, 3].map((id) => (
@@ -138,11 +140,11 @@ const Monitoring = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">Tour Lima Histórica #{id}</p>
-                        <p className="text-sm text-gray-600">12 turistas • Guía: Carlos Mendoza</p>
+                        <p className="text-sm text-gray-600">12 {t('monitoring.tourists')} • Guía: Carlos Mendoza</p>
                       </div>
                       <div className="text-right">
                         <span className="badge badge-green">En ruta</span>
-                        <p className="text-xs text-gray-500 mt-1">60% completado</p>
+                        <p className="text-xs text-gray-500 mt-1">60% {t('monitoring.completedPercentage')}</p>
                       </div>
                     </div>
                   </div>
@@ -156,7 +158,7 @@ const Monitoring = () => {
                 <TourProgress tourId={selectedTour} />
               ) : (
                 <div className="bg-white rounded-lg shadow-lg p-6 h-full flex items-center justify-center">
-                  <p className="text-gray-500">Selecciona un tour para ver su progreso</p>
+                  <p className="text-gray-500">{t('monitoring.selectTour')}</p>
                 </div>
               )}
             </div>

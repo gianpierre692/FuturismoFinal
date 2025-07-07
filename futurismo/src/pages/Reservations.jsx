@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PlusIcon, ListBulletIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import ReservationWizard from '../components/reservations/ReservationWizard';
 import ReservationList from '../components/reservations/ReservationList';
 import ReservationCalendar from '../components/reservations/ReservationCalendar';
@@ -7,12 +8,13 @@ import ReservationCalendar from '../components/reservations/ReservationCalendar'
 const Reservations = () => {
   const [view, setView] = useState('list'); // 'list', 'new', 'calendar'
   const [showWizard, setShowWizard] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Reservas</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t('reservations.reservations')}</h1>
         
         <div className="flex gap-3">
           <div className="flex bg-gray-100 rounded-lg p-1">
@@ -25,7 +27,7 @@ const Reservations = () => {
               onClick={() => setView('list')}
             >
               <ListBulletIcon className="w-4 h-4 inline mr-2" />
-              Lista
+              {t('reservations.list')}
             </button>
             <button
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -36,7 +38,7 @@ const Reservations = () => {
               onClick={() => setView('calendar')}
             >
               <CalendarIcon className="w-4 h-4 inline mr-2" />
-              Calendario
+              {t('reservations.calendar')}
             </button>
           </div>
 
@@ -45,7 +47,7 @@ const Reservations = () => {
             className="btn btn-primary flex items-center gap-2"
           >
             <PlusIcon className="w-4 h-4" />
-            Nueva Reserva
+            {t('reservations.newReservation')}
           </button>
         </div>
       </div>

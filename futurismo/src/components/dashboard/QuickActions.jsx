@@ -1,11 +1,13 @@
 import { PlusIcon, CalendarIcon, UserGroupIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, ArrowDownTrayIcon, CogIcon, QuestionMarkCircleIcon, PaperAirplaneIcon, MapIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 import { generateWhatsAppURL, canBookDirectly } from '../../utils/formatters';
 
 const QuickActions = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
 
   // Acciones diferentes según el rol
   const getActions = () => {
@@ -13,55 +15,55 @@ const QuickActions = () => {
       return [
     {
       id: 1,
-      title: 'Nueva Reserva',
-      description: 'Crear una nueva reserva de tour',
+      title: t('quickActions.newReservation'),
+      description: t('quickActions.createNewReservation'),
       icon: PlusIcon,
       color: 'bg-primary-500 hover:bg-primary-600 text-white',
       onClick: () => navigate('/reservations')
     },
     {
       id: 2,
-      title: 'Ver Calendario',
-      description: 'Consultar disponibilidad',
+      title: t('quickActions.viewCalendar'),
+      description: t('quickActions.checkAvailability'),
       icon: CalendarIcon,
       color: 'bg-secondary-500 hover:bg-secondary-600 text-white',
       onClick: () => navigate('/reservations')
     },
     {
       id: 3,
-      title: 'Monitoreo en Vivo',
-      description: 'Ver tours activos',
+      title: t('quickActions.liveMonitoring'),
+      description: t('quickActions.viewActiveTours'),
       icon: MapIcon,
       color: 'bg-success-500 hover:bg-success-600 text-white',
       onClick: () => navigate('/monitoring')
     },
     {
       id: 4,
-      title: 'Consultar Full Day',
-      description: 'WhatsApp para tours después 5PM',
+      title: t('quickActions.consultFullDay'),
+      description: t('quickActions.whatsappAfter5'),
       icon: ChatBubbleLeftRightIcon,
       color: 'bg-green-500 hover:bg-green-600 text-white',
       onClick: () => {
         const currentHour = new Date().getHours();
         const message = currentHour >= 17 
-          ? "Hola, necesito consultar disponibilidad para un tour fullday"
-          : "Hola, necesito información sobre tours fullday disponibles";
+          ? t('quickActions.fullDayConsultMessage')
+          : t('quickActions.fullDayInfoMessage');
         window.open(generateWhatsAppURL(message), '_blank');
       },
-      badge: !canBookDirectly() ? 'Requerido' : null
+      badge: !canBookDirectly() ? t('quickActions.required') : null
     },
     {
       id: 5,
-      title: 'Generar Reporte',
-      description: 'Exportar datos del mes',
+      title: t('quickActions.generateReport'),
+      description: t('quickActions.exportMonthData'),
       icon: DocumentTextIcon,
       color: 'bg-indigo-500 hover:bg-indigo-600 text-white',
       onClick: () => navigate('/history')
     },
     {
       id: 6,
-      title: 'Asignar Guía',
-      description: 'Gestionar asignaciones',
+      title: t('quickActions.assignGuide'),
+      description: t('quickActions.manageAssignments'),
       icon: UserGroupIcon,
       color: 'bg-gray-500 hover:bg-gray-600 text-white',
       onClick: () => navigate('/reservations')
@@ -71,48 +73,48 @@ const QuickActions = () => {
       return [
         {
           id: 1,
-          title: 'Gestionar Usuarios',
-          description: 'Administrar cuentas',
+          title: t('quickActions.manageUsers'),
+          description: t('quickActions.manageAccounts'),
           icon: UserGroupIcon,
           color: 'bg-primary-500 hover:bg-primary-600 text-white',
           onClick: () => navigate('/users')
         },
         {
           id: 2,
-          title: 'Configuración',
-          description: 'Ajustes del sistema',
+          title: t('navigation.settings'),
+          description: t('quickActions.exportMonthData'),
           icon: CogIcon,
           color: 'bg-secondary-500 hover:bg-secondary-600 text-white',
           onClick: () => navigate('/settings')
         },
         {
           id: 3,
-          title: 'Monitoreo Global',
-          description: 'Ver todos los tours',
+          title: t('quickActions.globalMonitoring'),
+          description: t('quickActions.viewAllTours'),
           icon: MapIcon,
           color: 'bg-success-500 hover:bg-success-600 text-white',
           onClick: () => navigate('/monitoring')
         },
         {
           id: 4,
-          title: 'Reportes Generales',
-          description: 'Análisis completo',
+          title: t('quickActions.generalReports'),
+          description: t('quickActions.completeAnalysis'),
           icon: DocumentTextIcon,
           color: 'bg-purple-500 hover:bg-purple-600 text-white',
           onClick: () => navigate('/history')
         },
         {
           id: 5,
-          title: 'Comunicados',
-          description: 'Enviar avisos masivos',
+          title: t('quickActions.announcements'),
+          description: t('quickActions.sendMassNotices'),
           icon: ChatBubbleLeftRightIcon,
           color: 'bg-indigo-500 hover:bg-indigo-600 text-white',
           onClick: () => navigate('/chat')
         },
         {
           id: 6,
-          title: 'Respaldo',
-          description: 'Backup del sistema',
+          title: t('quickActions.backup'),
+          description: t('quickActions.systemBackup'),
           icon: ArrowDownTrayIcon,
           color: 'bg-gray-500 hover:bg-gray-600 text-white',
           onClick: () => console.log('Iniciar backup')
@@ -124,16 +126,16 @@ const QuickActions = () => {
   const actions = getActions();
 
   const shortcuts = [
-    { key: 'Ctrl + N', action: 'Nueva reserva' },
-    { key: 'Ctrl + M', action: 'Abrir mapa' },
-    { key: 'Ctrl + /', action: 'Búsqueda rápida' },
-    { key: 'Esc', action: 'Cerrar modal' }
+    { key: 'Ctrl + N', action: t('quickActions.newReservationShortcut') },
+    { key: 'Ctrl + M', action: t('quickActions.openMap') },
+    { key: 'Ctrl + /', action: t('quickActions.quickSearch') },
+    { key: 'Esc', action: t('quickActions.closeModal') }
   ];
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold">Acciones Rápidas</h3>
+        <h3 className="text-lg font-semibold">{t('quickActions.quickActions')}</h3>
         <button className="text-gray-400 hover:text-gray-600">
           <CogIcon className="w-5 h-5" />
         </button>
@@ -164,10 +166,10 @@ const QuickActions = () => {
       {/* Sección de ayuda rápida */}
       <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-sm font-medium text-gray-700">Atajos de Teclado</h4>
+          <h4 className="text-sm font-medium text-gray-700">{t('quickActions.keyboardShortcuts')}</h4>
           <button className="text-primary-600 hover:text-primary-700 text-sm font-medium flex items-center gap-1">
             <QuestionMarkCircleIcon className="w-4 h-4" />
-            Ver todos
+            {t('quickActions.viewAll')}
           </button>
         </div>
         
@@ -185,34 +187,34 @@ const QuickActions = () => {
 
       {/* Enlaces útiles */}
       <div className="mt-6 pt-6 border-t border-gray-200">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Enlaces Útiles</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">{t('quickActions.usefulLinks')}</h4>
         <div className="flex flex-wrap gap-2">
           <a 
             href="#" 
             className="text-xs text-primary-600 hover:text-primary-700 hover:underline"
           >
-            Centro de ayuda
+            {t('quickActions.helpCenter')}
           </a>
           <span className="text-gray-300">•</span>
           <a 
             href="#" 
             className="text-xs text-primary-600 hover:text-primary-700 hover:underline"
           >
-            Documentación API
+            {t('quickActions.apiDocumentation')}
           </a>
           <span className="text-gray-300">•</span>
           <a 
             href="#" 
             className="text-xs text-primary-600 hover:text-primary-700 hover:underline"
           >
-            Términos de servicio
+            {t('quickActions.termsOfService')}
           </a>
           <span className="text-gray-300">•</span>
           <a 
             href="#" 
             className="text-xs text-primary-600 hover:text-primary-700 hover:underline"
           >
-            Contactar soporte
+            {t('quickActions.contactSupport')}
           </a>
         </div>
       </div>
@@ -222,12 +224,12 @@ const QuickActions = () => {
         <div className="flex items-start gap-3">
           <PaperAirplaneIcon className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-blue-900">Nueva actualización disponible</p>
+            <p className="text-sm font-medium text-blue-900">{t('quickActions.newUpdateAvailable')}</p>
             <p className="text-xs text-blue-700 mt-1">
-              Versión 2.1.0 incluye mejoras en el sistema de notificaciones
+              {t('quickActions.version2Info')}
             </p>
             <button className="text-xs font-medium text-blue-600 hover:text-blue-700 mt-2">
-              Ver más detalles →
+              {t('quickActions.viewMoreDetails')}
             </button>
           </div>
         </div>
