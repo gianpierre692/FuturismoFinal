@@ -11,18 +11,26 @@ import {
   CheckCircleIcon as CheckCircle,
   CurrencyDollarIcon as DollarSign,
   ArrowTrendingUpIcon as TrendingUp,
-  ChartBarIcon as BarChart3
+  ChartBarIcon as BarChart3,
+  UserGroupIcon,
+  TruckIcon,
+  ExclamationTriangleIcon,
+  PlusIcon
 } from '@heroicons/react/24/outline';
+import AssignmentManager from '../../components/assignments/AssignmentManager';
+import toast from 'react-hot-toast';
 
 const ReservationManagement = () => {
   const [reservations, setReservations] = useState([]);
+  const [showAssignmentModal, setShowAssignmentModal] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState(null);
   const [filters, setFilters] = useState({
     dateFrom: '',
     dateTo: '',
     destination: 'all',
     guide: 'all',
     tourType: 'all',
-    status: 'completed', // Por defecto solo completados
+    status: 'all', // Por defecto mostrar todas
     searchTerm: '',
     // Filtros por cantidad de clientes
     clientQuantityType: 'all', // all, range, category
@@ -80,7 +88,13 @@ const ReservationManagement = () => {
       paymentStatus: 'paid',
       tourType: 'cultural',
       agencyId: 'ag001',
-      agencyName: 'Viajes El Dorado SAC'
+      agencyName: 'Viajes El Dorado SAC',
+      assignmentStatus: 'assigned',
+      assignedResources: {
+        guide: { id: 'G001', name: 'Carlos Mendez' },
+        driver: { id: 'D001', name: 'Luis García' },
+        vehicle: { id: 'V001', type: 'Van Toyota', capacity: 15 }
+      }
     },
     {
       id: 'RES-002',
@@ -93,12 +107,13 @@ const ReservationManagement = () => {
       tourDate: '2024-01-14',
       tourists: 2,
       totalAmount: 680,
-      status: 'completed',
+      status: 'confirmed',
       bookingDate: '2024-01-08',
       paymentStatus: 'paid',
       tourType: 'adventure',
       agencyId: 'ag006',
-      agencyName: 'Reserva Directa'
+      agencyName: 'Reserva Directa',
+      assignmentStatus: 'pending'
     },
     {
       id: 'RES-003',
@@ -111,12 +126,18 @@ const ReservationManagement = () => {
       tourDate: '2024-01-13',
       tourists: 6,
       totalAmount: 600000,
-      status: 'completed',
+      status: 'confirmed',
       bookingDate: '2024-01-07',
       paymentStatus: 'paid',
       tourType: 'cultural',
       agencyId: 'ag002',
-      agencyName: 'Turismo Aventura S.A.C.'
+      agencyName: 'Turismo Aventura S.A.C.',
+      assignmentStatus: 'assigned',
+      assignedResources: {
+        guide: { id: 'G002', name: 'Ana López' },
+        driver: { id: 'D002', name: 'Pedro Ruiz' },
+        vehicle: { id: 'V002', type: 'Minibus Mercedes', capacity: 19 }
+      }
     },
     {
       id: 'RES-004',
@@ -129,9 +150,9 @@ const ReservationManagement = () => {
       tourDate: '2024-01-12',
       tourists: 3,
       totalAmount: 300000,
-      status: 'completed',
+      status: 'pending',
       bookingDate: '2024-01-05',
-      paymentStatus: 'paid',
+      paymentStatus: 'pending',
       tourType: 'nature',
       agencyId: 'ag003',
       agencyName: 'Exploradores Colombia'
@@ -428,7 +449,8 @@ const ReservationManagement = () => {
     return new Intl.NumberFormat('es-PE', {
       style: 'currency',
       currency: 'PEN',
-      minimumFractionDigits: 2
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(amount);
   };
 
@@ -473,8 +495,9 @@ const ReservationManagement = () => {
   );
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <>
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -494,6 +517,38 @@ const ReservationManagement = () => {
               Actualizar
             </button>
           </div>
+        </div>
+
+        {/* Estadísticas rápidas de asignación */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <StatCard
+            title="Total Reservas"
+            value={filteredReservations.length}
+            subtitle="En vista actual"
+            icon={Calendar}
+            color="blue"
+          />
+          <StatCard
+            title="Confirmadas"
+            value={filteredReservations.filter(r => r.status === 'confirmed').length}
+            subtitle="Listas para asignar"
+            icon={CheckCircle}
+            color="green"
+          />
+          <StatCard
+            title="Sin Asignar"
+            value={filteredReservations.filter(r => r.status === 'confirmed' && r.assignmentStatus === 'pending').length}
+            subtitle="Requieren atención"
+            icon={ExclamationTriangleIcon}
+            color="yellow"
+          />
+          <StatCard
+            title="Asignadas"
+            value={filteredReservations.filter(r => r.assignmentStatus === 'assigned').length}
+            subtitle="Con recursos asignados"
+            icon={UserGroupIcon}
+            color="purple"
+          />
         </div>
 
         {/* Filtros */}
@@ -910,39 +965,176 @@ const ReservationManagement = () => {
           </button>
         </div>
 
-        {/* Tabla de reservas */}
+        {/* Tabla de reservas - Responsive */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="max-w-full">
+          {/* Vista móvil - Cards */}
+          <div className="lg:hidden">
+            {loading ? (
+              <div className="p-6 text-center">
+                <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2" />
+                <p className="text-gray-500">Cargando reservas...</p>
+              </div>
+            ) : filteredReservations.length === 0 ? (
+              <div className="p-6 text-center text-gray-500">
+                No se encontraron reservas con los filtros aplicados
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-200">
+                {filteredReservations.map((reservation) => (
+                  <div key={reservation.id} className="p-4 hover:bg-gray-50">
+                    {/* Header de la tarjeta */}
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-medium text-gray-900">{reservation.clientName}</h3>
+                        <p className="text-sm text-gray-500">{reservation.clientEmail}</p>
+                        <p className="text-xs text-gray-400">{reservation.id}</p>
+                      </div>
+                      <div className="text-right">
+                        {reservation.status === 'completed' ? (
+                          <span className="inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Completado
+                          </span>
+                        ) : reservation.status === 'confirmed' ? (
+                          <span className="inline-flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                            <Clock className="w-3 h-3 mr-1" />
+                            Confirmado
+                          </span>
+                        ) : reservation.status === 'pending' ? (
+                          <span className="inline-flex items-center px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                            <Clock className="w-3 h-3 mr-1" />
+                            Pendiente
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
+                            <ExclamationTriangleIcon className="w-3 h-3 mr-1" />
+                            Cancelado
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Detalles del tour */}
+                    <div className="space-y-2 mb-3">
+                      <div>
+                        <p className="font-medium text-sm text-gray-900">{reservation.tourName}</p>
+                        <p className="text-sm text-gray-500 flex items-center">
+                          <MapPin className="w-3 h-3 mr-1" />
+                          {reservation.destination}
+                        </p>
+                      </div>
+                      
+                      <div className="flex justify-between text-sm">
+                        <div className="flex items-center text-gray-600">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {formatDate(reservation.tourDate)}
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <Users className="w-3 h-3 mr-1" />
+                          {reservation.tourists} personas
+                        </div>
+                        <div className="font-medium text-gray-900">
+                          {formatCurrency(reservation.totalAmount)}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Estado de asignación */}
+                    {reservation.status === 'confirmed' && (
+                      <div className="border-t pt-3">
+                        {reservation.assignmentStatus === 'assigned' ? (
+                          <div className="flex justify-between items-center">
+                            <div className="space-y-1">
+                              <p className="text-xs font-medium text-gray-700">Recursos asignados:</p>
+                              <div className="flex items-center text-xs text-green-700">
+                                <UserGroupIcon className="w-3 h-3 mr-1" />
+                                {reservation.assignedResources?.guide?.name || 'Sin guía'}
+                              </div>
+                              {reservation.assignedResources?.driver && (
+                                <div className="flex items-center text-xs text-blue-700">
+                                  <TruckIcon className="w-3 h-3 mr-1" />
+                                  {reservation.assignedResources.driver.name}
+                                </div>
+                              )}
+                              {reservation.assignedResources?.vehicle && (
+                                <div className="flex items-center text-xs text-gray-600">
+                                  <TruckIcon className="w-3 h-3 mr-1" />
+                                  {reservation.assignedResources.vehicle.brand} {reservation.assignedResources.vehicle.model}
+                                </div>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => {
+                                setSelectedReservation(reservation);
+                                setShowAssignmentModal(true);
+                              }}
+                              className="px-3 py-1 text-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                            >
+                              Editar
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full font-medium">
+                              Sin asignar
+                            </span>
+                            <button
+                              onClick={() => {
+                                setSelectedReservation(reservation);
+                                setShowAssignmentModal(true);
+                              }}
+                              className="px-3 py-1.5 bg-primary-600 text-white text-sm rounded-lg hover:bg-primary-700 flex items-center gap-1"
+                            >
+                              <PlusIcon className="w-4 h-4" />
+                              Asignar
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Vista desktop - Tabla */}
+          <div className="hidden lg:block">
+            <div className="overflow-x-auto">
+              <table className="w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Cliente
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Tour / Destino
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Fecha
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Guía
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Turistas
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Total
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
                     Estado
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    Asignación
+                  </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                    Acciones
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="px-6 py-12 text-center">
+                    <td colSpan="9" className="px-6 py-12 text-center">
                       <div className="flex items-center justify-center">
                         <RefreshCw className="w-5 h-5 animate-spin mr-2" />
                         Cargando reservas...
@@ -951,15 +1143,15 @@ const ReservationManagement = () => {
                   </tr>
                 ) : filteredReservations.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan="9" className="px-6 py-12 text-center text-gray-500">
                       No se encontraron reservas con los filtros aplicados
                     </td>
                   </tr>
                 ) : (
                   filteredReservations.map((reservation) => (
                     <tr key={reservation.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div>
+                      <td className="px-4 py-3">
+                        <div className="min-w-[200px]">
                           <div className="text-sm font-medium text-gray-900">
                             {reservation.clientName}
                           </div>
@@ -971,35 +1163,30 @@ const ReservationManagement = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div>
+                      <td className="px-4 py-3">
+                        <div className="min-w-[180px]">
                           <div className="text-sm font-medium text-gray-900">
                             {reservation.tourName}
                           </div>
                           <div className="text-sm text-gray-500 flex items-center">
-                            <MapPin className="w-3 h-3 mr-1" />
+                            <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
                             {reservation.destination}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900 flex items-center">
-                          <Calendar className="w-3 h-3 mr-1" />
+                      <td className="px-4 py-3">
+                        <div className="text-sm text-gray-900 flex items-center whitespace-nowrap">
+                          <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
                           {formatDate(reservation.tourDate)}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {reservation.guide}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex flex-col items-center gap-1">
                           <div className="text-sm text-gray-900 flex items-center">
                             <Users className="w-3 h-3 mr-1" />
                             {reservation.tourists}
                           </div>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getGroupSizeInfo(reservation.tourists).color}`}>
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getGroupSizeInfo(reservation.tourists).color}`}>
                             {getGroupSizeInfo(reservation.tourists).category === 'individual' ? 'Individual' :
                              getGroupSizeInfo(reservation.tourists).category === 'small' ? 'Pequeño' :
                              getGroupSizeInfo(reservation.tourists).category === 'medium' ? 'Mediano' :
@@ -1008,28 +1195,158 @@ const ReservationManagement = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                      <td className="px-4 py-3 text-right">
+                        <div className="text-sm font-medium text-gray-900 whitespace-nowrap">
                           {formatCurrency(reservation.totalAmount)}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <CheckCircle className="w-3 h-3 text-green-500 mr-1" />
-                          <span className="text-sm text-green-800 bg-green-100 px-2 py-1 rounded-full">
-                            Completado
-                          </span>
+                      <td className="px-4 py-3">
+                        <div className="flex justify-center">
+                          {reservation.status === 'completed' ? (
+                            <span className="inline-flex items-center text-xs text-green-800 bg-green-100 px-2 py-1 rounded-full whitespace-nowrap">
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Completado
+                            </span>
+                          ) : reservation.status === 'confirmed' ? (
+                            <span className="inline-flex items-center text-xs text-blue-800 bg-blue-100 px-2 py-1 rounded-full whitespace-nowrap">
+                              <Clock className="w-3 h-3 mr-1" />
+                              Confirmado
+                            </span>
+                          ) : reservation.status === 'pending' ? (
+                            <span className="inline-flex items-center text-xs text-yellow-800 bg-yellow-100 px-2 py-1 rounded-full whitespace-nowrap">
+                              <Clock className="w-3 h-3 mr-1" />
+                              Pendiente
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center text-xs text-red-800 bg-red-100 px-2 py-1 rounded-full whitespace-nowrap">
+                              <ExclamationTriangleIcon className="w-3 h-3 mr-1" />
+                              Cancelado
+                            </span>
+                          )}
                         </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        {reservation.status === 'confirmed' ? (
+                          reservation.assignmentStatus === 'assigned' ? (
+                            <div className="space-y-1 min-w-[140px]">
+                              <div className="flex items-center text-xs text-green-700">
+                                <UserGroupIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">{reservation.assignedResources?.guide?.name || 'Sin guía'}</span>
+                              </div>
+                              {reservation.assignedResources?.driver && (
+                                <div className="flex items-center text-xs text-blue-700">
+                                  <TruckIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+                                  <span className="truncate">{reservation.assignedResources.driver.name}</span>
+                                </div>
+                              )}
+                              {reservation.assignedResources?.vehicle && (
+                                <div className="flex items-center text-xs text-gray-600">
+                                  <TruckIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+                                  <span className="truncate">{reservation.assignedResources.vehicle.brand} {reservation.assignedResources.vehicle.model}</span>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full font-medium whitespace-nowrap">
+                              Sin asignar
+                            </span>
+                          )
+                        ) : (
+                          <span className="text-xs text-gray-400">N/A</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {reservation.status === 'confirmed' && reservation.assignmentStatus !== 'assigned' ? (
+                          <button
+                            onClick={() => {
+                              setSelectedReservation(reservation);
+                              setShowAssignmentModal(true);
+                            }}
+                            className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-1"
+                          >
+                            <PlusIcon className="w-3 h-3" />
+                            Asignar
+                          </button>
+                        ) : reservation.assignmentStatus === 'assigned' ? (
+                          <button
+                            onClick={() => {
+                              setSelectedReservation(reservation);
+                              setShowAssignmentModal(true);
+                            }}
+                            className="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-colors"
+                          >
+                            Editar
+                          </button>
+                        ) : (
+                          <span className="text-xs text-gray-400">-</span>
+                        )}
                       </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
+            </div>
+          </div>
           </div>
         </div>
       </div>
     </div>
+
+    {/* Modal de asignación */}
+    {showAssignmentModal && selectedReservation && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Asignar Recursos - {selectedReservation.id}</h2>
+            <button
+              onClick={() => setShowAssignmentModal(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="p-6">
+            <AssignmentManager
+              reservation={{
+                date: selectedReservation.tourDate,
+                time: '08:00',
+                tourName: selectedReservation.tourName,
+                groupSize: selectedReservation.tourists,
+                agency: {
+                  name: selectedReservation.agencyName,
+                  whatsapp: '+51987654321'
+                },
+                pickupLocation: {
+                  name: selectedReservation.destination
+                }
+              }}
+              onAssignmentComplete={(assignment) => {
+                // Actualizar estado de la reserva después de asignar
+                setReservations(prev => prev.map(r => 
+                  r.id === selectedReservation.id 
+                    ? { 
+                        ...r, 
+                        assignmentStatus: 'assigned',
+                        assignedResources: {
+                          guide: assignment.guide,
+                          driver: assignment.driver,
+                          vehicle: assignment.vehicle
+                        }
+                      }
+                    : r
+                ));
+                setShowAssignmentModal(false);
+                toast.success('Recursos asignados correctamente');
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 

@@ -219,7 +219,7 @@ const useServicesStore = create((set, get) => ({
         startTime: '09:00',
         pickupLocation: 'Plaza de Armas',
         destination: 'Circuito Mágico del Agua',
-        currentLocation: { lat: -12.0464, lng: -77.0428 },
+        currentLocation: 'Plaza de Armas, Lima',
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -232,7 +232,7 @@ const useServicesStore = create((set, get) => ({
         startTime: '14:00',
         pickupLocation: 'Hotel Miraflores',
         destination: 'Museo Nacional',
-        currentLocation: { lat: -12.1215, lng: -77.0298 },
+        currentLocation: 'Miraflores, Lima',
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -245,7 +245,7 @@ const useServicesStore = create((set, get) => ({
         startTime: '11:30',
         pickupLocation: 'Barranco',
         destination: 'Centro Histórico',
-        currentLocation: { lat: -12.1533, lng: -77.0244 },
+        currentLocation: 'San Isidro, Lima',
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -258,7 +258,7 @@ const useServicesStore = create((set, get) => ({
         startTime: '16:00',
         pickupLocation: 'San Isidro',
         destination: 'Larco Mar',
-        currentLocation: { lat: -12.0956, lng: -77.0364 },
+        currentLocation: 'Jesús María, Lima',
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -271,7 +271,7 @@ const useServicesStore = create((set, get) => ({
         startTime: '18:30',
         pickupLocation: 'Callao',
         destination: 'Fortaleza del Real Felipe',
-        currentLocation: { lat: -12.0735, lng: -77.0826 },
+        currentLocation: 'Surco, Lima',
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       }

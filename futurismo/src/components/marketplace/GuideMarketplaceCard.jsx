@@ -7,7 +7,8 @@ import {
   BoltIcon,
   ClockIcon,
   UserGroupIcon,
-  CameraIcon
+  CameraIcon,
+  GiftIcon
 } from '@heroicons/react/24/solid';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
@@ -97,6 +98,17 @@ const GuideMarketplaceCard = ({ guide, onSelect, layout = 'grid' }) => {
                   <span>{guide.marketplaceStats.yearsExperience || Math.floor(guide.marketplaceStats.totalBookings / 30)} años exp.</span>
                   <span>•</span>
                   <span>{guide.marketplaceStats.totalBookings} tours</span>
+                  {guide.agencyPoints && guide.agencyPoints.totalPoints > 0 && (
+                    <>
+                      <span>•</span>
+                      <div className="flex items-center gap-1">
+                        <GiftIcon className="h-4 w-4 text-purple-500" />
+                        <span className="font-medium text-purple-600">
+                          {guide.agencyPoints.totalPoints} pts
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
               
@@ -271,6 +283,14 @@ const GuideMarketplaceCard = ({ guide, onSelect, layout = 'grid' }) => {
                 <span className="font-medium">{guide.ratings.overall.toFixed(1)}</span>
               </div>
               <span className="text-gray-500">({guide.ratings.totalReviews})</span>
+              {guide.agencyPoints && guide.agencyPoints.totalPoints > 0 && (
+                <div className="flex items-center gap-1 ml-auto">
+                  <GiftIcon className="h-4 w-4 text-purple-500" />
+                  <span className="font-medium text-purple-600 text-xs">
+                    {guide.agencyPoints.totalPoints}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

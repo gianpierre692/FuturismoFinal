@@ -10,19 +10,22 @@ import useNotificationsStore from './stores/notificationsStore';
 import Layout from './components/common/Layout';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import ConnectionStatus from './components/common/ConnectionStatus';
+import RouteErrorBoundary from './components/common/RouteErrorBoundary';
+import LazyWrapper from './components/common/LazyWrapper';
+import SkeletonLoader from './components/common/SkeletonLoader';
 
-// Lazy loading de páginas
-const LoginRegister = lazy(() => import('./pages/LoginRegister'));
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Monitoring = lazy(() => import('./pages/Monitoring'));
-const Reservations = lazy(() => import('./pages/Reservations'));
+// Lazy loading de páginas con chunks nombrados
+const LoginRegister = lazy(() => import(/* webpackChunkName: "auth" */ './pages/LoginRegister'));
+const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages/Dashboard'));
+const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './pages/Monitoring'));
+const Reservations = lazy(() => import(/* webpackChunkName: "reservations" */ './pages/Reservations'));
 const History = lazy(() => import('./pages/History'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Chat = lazy(() => import('./pages/Chat'));
 const Users = lazy(() => import('./pages/Users'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Agenda = lazy(() => import('./pages/Agenda'));
-const TourAssignments = lazy(() => import('./pages/TourAssignments'));
 const Providers = lazy(() => import('./pages/Providers'));
 const EmergencyProtocols = lazy(() => import('./pages/EmergencyProtocols'));
 const GuidesManagement = lazy(() => import('./pages/GuidesManagement'));
@@ -31,8 +34,10 @@ const AgencyReports = lazy(() => import('./pages/AgencyReports'));
 const AgencyPoints = lazy(() => import('./pages/AgencyPoints'));
 const AdminReservations = lazy(() => import('./pages/AdminReservations'));
 const ReservationManagement = lazy(() => import('./pages/admin/ReservationManagement'));
+const ResourcesManagement = lazy(() => import('./pages/admin/ResourcesManagement'));
 const Reports = lazy(() => import('./pages/admin/Reports'));
 const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
+const PointsStore = lazy(() => import('./pages/guide/PointsStore'));
 
 // Marketplace pages
 const GuidesMarketplace = lazy(() => import('./pages/marketplace/GuidesMarketplace'));
@@ -44,7 +49,7 @@ const AgencyMarketplaceDashboard = lazy(() => import('./pages/marketplace/Agency
 const GuideMarketplaceDashboard = lazy(() => import('./pages/marketplace/GuideMarketplaceDashboard'));
 
 // WebSocket service
-import webSocketService from './services/websocket';
+import webSocketResilientService from './services/websocketResilient';
 
 function App() {
   const { isAuthenticated, token, initialize } = useAuthStore();
@@ -60,44 +65,65 @@ function App() {
     }
   }, [initialize]);
 
-  // Conectar WebSocket cuando se autentique
+  // Conectar WebSocket resiliente cuando se autentique
   useEffect(() => {
     if (isAuthenticated && token) {
-      webSocketService.connect(token);
+      webSocketResilientService.connect(token);
 
-      // Listeners de WebSocket
-      const unsubscribeUpdate = webSocketService.on('service:update', (data) => {
+      // Listeners de WebSocket resiliente
+      const unsubscribeTourUpdate = webSocketResilientService.on('tour:location-update', (data) => {
+        // Actualización de ubicación de tour recibida
+        console.log('Tour location updated:', data);
+      });
+
+      const unsubscribeTourStatus = webSocketResilientService.on('tour:status-change', (data) => {
         addNotification({
           type: 'info',
-          title: 'Actualización de servicio',
-          message: `Servicio ${data.serviceCode} actualizado`,
-          actionUrl: `/monitoring?service=${data.serviceCode}`
+          title: 'Estado de tour actualizado',
+          message: `Tour ${data.tourId} cambió a: ${data.status}`,
+          actionUrl: `/monitoring?tour=${data.tourId}`
         });
       });
 
-      const unsubscribeNotification = webSocketService.on('notification:new', (data) => {
+      const unsubscribeEmergency = webSocketResilientService.on('emergency:alert', (data) => {
+        addNotification({
+          type: 'error',
+          title: '🚨 EMERGENCIA',
+          message: `Alerta de emergencia en ${data.location}`,
+          actionUrl: `/monitoring?emergency=${data.id}`
+        });
+      });
+
+      const unsubscribeNotification = webSocketResilientService.on('notification:new', (data) => {
         addNotification(data);
       });
 
       return () => {
-        unsubscribeUpdate();
+        unsubscribeTourUpdate();
+        unsubscribeTourStatus();
+        unsubscribeEmergency();
         unsubscribeNotification();
-        webSocketService.disconnect();
+        webSocketResilientService.disconnect();
       };
     }
-  }, [isAuthenticated, token]);
+  }, [isAuthenticated, token, addNotification]);
 
   return (
     <Router>
-      <Suspense fallback={<LoadingSpinner fullScreen />}>
-        <Routes>
-          {/* Ruta de login */}
-          <Route 
-            path="/login" 
-            element={
-              isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginRegister />
-            } 
-          />
+      <RouteErrorBoundary routeName="Aplicación Principal">
+        <Suspense fallback={<LoadingSpinner fullScreen />}>
+          <Routes>
+            {/* Ruta de login */}
+            <Route 
+              path="/login" 
+              element={
+                isAuthenticated ? <Navigate to="/dashboard" replace /> : (
+                  <LazyWrapper description="Cargando página de acceso...">
+                    <LoginRegister />
+                  </LazyWrapper>
+                )
+              } 
+            />
 
           {/* Rutas protegidas */}
           <Route
@@ -109,8 +135,22 @@ function App() {
             }
           >
             <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="monitoring" element={<Monitoring />} />
+            <Route path="dashboard" element={
+              <LazyWrapper 
+                fallback={<SkeletonLoader.Dashboard />}
+                description="Cargando dashboard..."
+              >
+                <Dashboard />
+              </LazyWrapper>
+            } />
+            <Route path="monitoring" element={
+              <LazyWrapper 
+                fallback={<SkeletonLoader.Map />}
+                description="Cargando monitoreo en tiempo real..."
+              >
+                <Monitoring />
+              </LazyWrapper>
+            } />
             <Route 
               path="reservations" 
               element={
@@ -124,6 +164,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <ReservationManagement />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/resources" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ResourcesManagement />
                 </ProtectedRoute>
               } 
             />
@@ -151,14 +199,6 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['guide', 'admin']}>
                   <Agenda />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="assignments" 
-              element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <TourAssignments />
                 </ProtectedRoute>
               } 
             />
@@ -223,6 +263,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['guide']} requireGuideType="freelance">
                   <FinancialDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="guide/points-store" 
+              element={
+                <ProtectedRoute allowedRoles={['guide']} requireGuideType="freelance">
+                  <PointsStore />
                 </ProtectedRoute>
               } 
             />
@@ -292,6 +340,10 @@ function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Suspense>
+
+      {/* Indicador de estado de conexión */}
+      {isAuthenticated && <ConnectionStatus />}
+      </RouteErrorBoundary>
 
       {/* Toast notifications */}
       <Toaster

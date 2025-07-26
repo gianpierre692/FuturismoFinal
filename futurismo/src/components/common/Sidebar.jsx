@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../../stores/authStore';
+import useAuthStore from '../../stores/authStore';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { user } = useAuthStore();
@@ -41,6 +41,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: t('navigation.myAgenda') });
         guideItems.splice(-1, 0, { path: '/marketplace/guide-dashboard', icon: BriefcaseIcon, label: t('navigation.myServices') });
         guideItems.splice(-1, 0, { path: '/guide/finances', icon: CurrencyDollarIcon, label: t('navigation.finances') });
+        guideItems.splice(-1, 0, { path: '/guide/points-store', icon: StarIcon, label: t('navigation.pointsStore') });
       }
       
       guideItems.splice(-1, 0, { path: '/emergency', icon: ShieldCheckIcon, label: t('navigation.emergencies') });
@@ -51,7 +52,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         ...baseItems,
         { path: '/monitoring', icon: MapIcon, label: t('navigation.monitoring') },
         { path: '/admin/reservations', icon: CalendarIcon, label: t('navigation.reservationManagement') },
-        { path: '/assignments', icon: UserCircleIcon, label: t('navigation.assignments') },
+        { path: '/admin/resources', icon: UserGroupIcon, label: t('navigation.resourcesManagement') },
         { path: '/guides', icon: UserIcon, label: t('navigation.guides') },
         { path: '/marketplace', icon: MagnifyingGlassIcon, label: t('navigation.marketplace') },
         { path: '/providers', icon: BuildingOffice2Icon, label: t('navigation.providers') },

@@ -50,17 +50,19 @@ export const LIMITS = {
   DEBOUNCE_DELAY: 300 // ms para búsquedas
 };
 
-// Configuración de reservas fulldays
+// Configuración de reservas fulldays (usando configuración centralizada)
 export const FULLDAY_CONFIG = {
   CUTOFF_HOUR: 17, // 5 PM - hora límite para reservas directas
-  WHATSAPP_NUMBER: "+51999888777", // Número de WhatsApp para consultas
-  WHATSAPP_MESSAGE: "Hola, necesito consultar disponibilidad para un tour fullday después de las 5 PM"
+  WHATSAPP_NUMBER: config.EXTERNAL_SERVICES.WHATSAPP.NUMBER,
+  WHATSAPP_MESSAGE: config.EXTERNAL_SERVICES.WHATSAPP.MESSAGE_TEMPLATE
 };
 
-// URLs de API (se sobrescribirán con variables de entorno)
+// URLs de API (importadas desde configuración centralizada)
+import config from './config.js';
+
 export const API_ENDPOINTS = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
-  WS_URL: import.meta.env.VITE_WS_URL || 'ws://localhost:3001'
+  BASE_URL: config.API.BASE_URL,
+  WS_URL: config.WEBSOCKET.PRIMARY_URL
 };
 
 // Mensajes de error comunes
@@ -81,13 +83,13 @@ export const DATE_FORMATS = {
   TIME_ONLY: 'HH:mm'
 };
 
-// Configuración del mapa
+// Configuración del mapa (importada desde configuración centralizada)
 export const MAP_CONFIG = {
-  DEFAULT_CENTER: [-13.5319, -71.9675], // Cusco, Perú
-  DEFAULT_ZOOM: 13,
-  MIN_ZOOM: 10,
-  MAX_ZOOM: 18,
-  TILE_LAYER_URL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  DEFAULT_CENTER: config.MAP.DEFAULT_CENTER,
+  DEFAULT_ZOOM: config.MAP.DEFAULT_ZOOM,
+  MIN_ZOOM: config.MAP.MIN_ZOOM,
+  MAX_ZOOM: config.MAP.MAX_ZOOM,
+  TILE_LAYER_URL: config.MAP.TILE_URLS.openstreetmap,
   ATTRIBUTION: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 };
 

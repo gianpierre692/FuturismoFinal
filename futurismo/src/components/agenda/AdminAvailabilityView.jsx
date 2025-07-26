@@ -5,9 +5,9 @@ import {
   ClockIcon,
   CalendarDaysIcon,
   MapPinIcon,
-  PhoneIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import { format } from 'date-fns';
@@ -21,6 +21,7 @@ import useIndependentAgendaStore from '../../stores/independentAgendaStore';
 import useAuthStore from '../../stores/authStore';
 
 const AdminAvailabilityView = () => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const { 
     currentView,
@@ -213,13 +214,12 @@ const AdminAvailabilityView = () => {
             </div>
 
             <div className="flex space-x-2 mt-3">
-              <button className="flex-1 flex items-center justify-center space-x-1 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
+              <button 
+                onClick={() => navigate('/chat')}
+                className="flex-1 flex items-center justify-center space-x-1 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+              >
                 <ChatBubbleLeftRightIcon className="w-3 h-3" />
-                <span>Chat</span>
-              </button>
-              <button className="flex-1 flex items-center justify-center space-x-1 px-2 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600">
-                <PhoneIcon className="w-3 h-3" />
-                <span>Llamar</span>
+                <span>Ir al Chat</span>
               </button>
             </div>
           </div>

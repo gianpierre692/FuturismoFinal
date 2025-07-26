@@ -266,8 +266,8 @@ class WebSocketService {
           type: 'location_update',
           guideId: 'guide-1',
           location: {
-            lat: -12.0464 + (Math.random() - 0.5) * 0.01,
-            lng: -77.0428 + (Math.random() - 0.5) * 0.01
+            lat: -13.5319 + (Math.random() - 0.5) * 0.01, // Cusco coordinates
+            lng: -71.9675 + (Math.random() - 0.5) * 0.01
           },
           timestamp: new Date()
         };

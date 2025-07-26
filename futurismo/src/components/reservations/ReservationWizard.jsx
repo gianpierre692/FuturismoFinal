@@ -19,8 +19,12 @@ const step1Schema = yup.object({
 });
 
 const step2Schema = yup.object({
-  adults: yup.number().required('Número de adultos requerido').min(1, 'Mínimo 1 adulto'),
-  children: yup.number().min(0, 'No puede ser negativo'),
+  adults: yup.number().transform((value, originalValue) => {
+    return originalValue === '' ? 0 : value;
+  }).min(0, 'No puede ser negativo').nullable(),
+  children: yup.number().transform((value, originalValue) => {
+    return originalValue === '' ? 0 : value;
+  }).min(0, 'No puede ser negativo').nullable(),
   pickupLocation: yup.string().required('El lugar de recojo es requerido'),
   specialRequirements: yup.string(),
   // Múltiples grupos en la reserva
@@ -106,7 +110,7 @@ const ReservationWizard = ({ onClose }) => {
         return {
           schema: step2Schema,
           defaultValues: {
-            adults: formData.adults || 1,
+            adults: formData.adults || 0,
             children: formData.children || 0,
             pickupLocation: formData.pickupLocation || '',
             specialRequirements: formData.specialRequirements || '',
@@ -147,7 +151,7 @@ const ReservationWizard = ({ onClose }) => {
   });
 
   const selectedTour = watch('tourId');
-  const adults = watch('adults') || 1;
+  const adults = watch('adults') || 0;
   const children = watch('children') || 0;
 
   const calculateTotal = () => {
@@ -342,12 +346,13 @@ const ReservationWizard = ({ onClose }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="label">Adultos</label>
+                <label className="label">Adulto mayor</label>
                 <input 
                   type="number" 
                   {...register('adults')} 
                   className="input"
-                  min="1"
+                  min="0"
+                  placeholder="0"
                 />
                 {errors.adults && (
                   <p className="mt-1 text-sm text-red-600">{errors.adults.message}</p>
@@ -361,11 +366,19 @@ const ReservationWizard = ({ onClose }) => {
                   {...register('children')} 
                   className="input"
                   min="0"
+                  placeholder="0"
                 />
                 {errors.children && (
                   <p className="mt-1 text-sm text-red-600">{errors.children.message}</p>
                 )}
               </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-800">
+                <strong>Nota:</strong> Los campos de "Adulto mayor" y "Niños" son informativos. 
+                Si no hay pasajeros de estas categorías, puede dejar los campos en 0.
+              </p>
             </div>
 
             <div>
@@ -555,7 +568,10 @@ const ReservationWizard = ({ onClose }) => {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Pasajeros:</span>
                   <span className="font-medium">
-                    {formData.adults} adultos{formData.children > 0 && `, ${formData.children} niños`}
+                    {formData.adults > 0 && `${formData.adults} adulto${formData.adults !== 1 ? 's' : ''} mayor${formData.adults !== 1 ? 'es' : ''}`}
+                    {formData.adults > 0 && formData.children > 0 && ', '}
+                    {formData.children > 0 && `${formData.children} niño${formData.children !== 1 ? 's' : ''}`}
+                    {formData.adults === 0 && formData.children === 0 && 'Sin pasajeros específicos'}
                   </span>
                 </div>
                 {formData.groups && formData.groups.length > 0 && (

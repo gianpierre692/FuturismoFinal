@@ -5,10 +5,6 @@ import {
   MapIcon,
   UsersIcon,
   BellIcon,
-  EyeIcon,
-  DocumentChartBarIcon,
-  ShieldCheckIcon,
-  LinkIcon,
   InformationCircleIcon
 } from '@heroicons/react/24/outline';
 
@@ -51,30 +47,6 @@ const Settings = () => {
       name: 'Notificaciones',
       icon: BellIcon,
       description: 'Configuración de notificaciones por canal'
-    },
-    {
-      id: 'monitoring',
-      name: 'Monitoreo',
-      icon: EyeIcon,
-      description: 'Configuración de seguimiento y ubicación'
-    },
-    {
-      id: 'reports',
-      name: 'Reportes',
-      icon: DocumentChartBarIcon,
-      description: 'Configuración de generación de reportes'
-    },
-    {
-      id: 'security',
-      name: 'Seguridad',
-      icon: ShieldCheckIcon,
-      description: 'Configuración de seguridad y acceso'
-    },
-    {
-      id: 'integrations',
-      name: 'Integraciones',
-      icon: LinkIcon,
-      description: 'Configuración de servicios externos'
     }
   ];
 
@@ -106,14 +78,6 @@ const Settings = () => {
         return <ComingSoonTab name="Agencias" />;
       case 'guides':
         return <ComingSoonTab name="Guías" />;
-      case 'monitoring':
-        return <ComingSoonTab name="Monitoreo" />;
-      case 'reports':
-        return <ComingSoonTab name="Reportes" />;
-      case 'security':
-        return <ComingSoonTab name="Seguridad" />;
-      case 'integrations':
-        return <ComingSoonTab name="Integraciones" />;
       default:
         return <GeneralSettings />;
     }

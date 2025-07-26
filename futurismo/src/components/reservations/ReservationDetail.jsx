@@ -98,10 +98,11 @@ const ReservationDetail = ({ reservation, onClose }) => {
                   <div className="flex items-center gap-1">
                     <UserGroupIcon className="w-4 h-4 text-gray-500" />
                     <span className="font-medium">
-                      {reservation.adults} adultos
+                      {reservation.adults} adulto 
                       {reservation.children > 0 && `, ${reservation.children} niños`}
                     </span>
-                  </div>
+                </div>
+                
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Lugar de Recojo</p>

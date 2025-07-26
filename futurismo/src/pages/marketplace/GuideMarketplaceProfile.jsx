@@ -16,7 +16,9 @@ import {
   ShareIcon,
   ChatBubbleLeftRightIcon,
   PlayIcon,
-  BuildingLibraryIcon
+  BuildingLibraryIcon,
+  GiftIcon,
+  TrophyIcon
 } from '@heroicons/react/24/solid';
 import { HeartIcon as HeartOutlineIcon } from '@heroicons/react/24/outline';
 import useMarketplaceStore from '../../stores/marketplaceStore';
@@ -231,7 +233,7 @@ const GuideMarketplaceProfile = () => {
             <div className="bg-white rounded-lg shadow-sm">
               <div className="border-b border-gray-200">
                 <nav className="flex -mb-px">
-                  {['about', 'experience', 'reviews', 'availability'].map((tab) => (
+                  {['about', 'experience', 'reviews', 'awards', 'availability'].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -244,6 +246,7 @@ const GuideMarketplaceProfile = () => {
                       {tab === 'about' && 'Acerca de'}
                       {tab === 'experience' && 'Experiencia'}
                       {tab === 'reviews' && 'Reseñas'}
+                      {tab === 'awards' && 'Reconocimientos'}
                       {tab === 'availability' && 'Disponibilidad'}
                     </button>
                   ))}
@@ -613,6 +616,124 @@ const GuideMarketplaceProfile = () => {
                           )}
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tab: Reconocimientos */}
+                {activeTab === 'awards' && (
+                  <div className="space-y-6">
+                    {/* Resumen de puntos */}
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            <TrophyIcon className="h-6 w-6 text-purple-600" />
+                            Puntos de Reconocimiento
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Puntos otorgados por agencias por servicio excepcional
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-3xl font-bold text-purple-600">
+                            {guide.agencyPoints?.totalPoints || 0}
+                          </p>
+                          <p className="text-sm text-purple-500">puntos totales</p>
+                        </div>
+                      </div>
+                      
+                      {/* Estadísticas adicionales */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-white/50 rounded-lg p-4 text-center">
+                          <div className="flex items-center justify-center gap-1 mb-1">
+                            <GiftIcon className="h-5 w-5 text-purple-500" />
+                            <span className="text-2xl font-bold text-gray-900">
+                              {guide.agencyPoints?.monthlyPoints || 0}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">Este mes</p>
+                        </div>
+                        <div className="bg-white/50 rounded-lg p-4 text-center">
+                          <div className="flex items-center justify-center gap-1 mb-1">
+                            <StarIcon className="h-5 w-5 text-purple-500" />
+                            <span className="text-2xl font-bold text-gray-900">
+                              {guide.agencyPoints?.averagePointsPerService?.toFixed(1) || '0.0'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600">Promedio por servicio</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Historial de reconocimientos */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <GiftIcon className="h-5 w-5 text-gray-400" />
+                        Historial de Reconocimientos
+                      </h3>
+                      
+                      {guide.agencyPoints?.pointsHistory && guide.agencyPoints.pointsHistory.length > 0 ? (
+                        <div className="space-y-4">
+                          {guide.agencyPoints.pointsHistory.slice(0, 10).map((award) => (
+                            <div
+                              key={award.id}
+                              className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <div className="flex items-center gap-1 bg-purple-100 px-3 py-1 rounded-full">
+                                      <GiftIcon className="h-4 w-4 text-purple-600" />
+                                      <span className="font-bold text-purple-700">+{award.points}</span>
+                                    </div>
+                                    <span className="text-sm text-gray-600">
+                                      por {award.agencyName}
+                                    </span>
+                                  </div>
+                                  
+                                  <p className="text-gray-800 font-medium mb-1">
+                                    {award.reason}
+                                  </p>
+                                  
+                                  <p className="text-sm text-gray-500">
+                                    {new Date(award.awardedAt).toLocaleDateString('es-ES', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                    })}
+                                  </p>
+                                </div>
+                                
+                                <div className="flex-shrink-0">
+                                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                                    <TrophyIcon className="h-6 w-6 text-white" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                          
+                          {guide.agencyPoints.pointsHistory.length > 10 && (
+                            <div className="text-center">
+                              <p className="text-sm text-gray-500">
+                                Y {guide.agencyPoints.pointsHistory.length - 10} reconocimientos más...
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="bg-gray-50 rounded-lg p-8 text-center">
+                          <GiftIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                          <h4 className="text-lg font-medium text-gray-900 mb-2">
+                            Aún no hay reconocimientos
+                          </h4>
+                          <p className="text-gray-500">
+                            Los puntos de reconocimiento aparecerán aquí cuando las agencias 
+                            los otorguen por servicios excepcionales.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

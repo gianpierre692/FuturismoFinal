@@ -135,6 +135,24 @@ const mockFreelanceGuides = [
       joinedDate: '2019-03-15'
     },
     
+    // Sistema de puntos otorgados por agencias
+    agencyPoints: {
+      totalPoints: 1250,
+      monthlyPoints: 80,
+      averagePointsPerService: 8.3,
+      pointsHistory: [
+        {
+          id: 'ap001',
+          agencyId: 'agency1',
+          agencyName: 'Turismo Aventura S.A.C.',
+          serviceRequestId: 'req001',
+          points: 15,
+          reason: 'Excelente servicio, muy profesional',
+          awardedAt: '2024-02-15T14:00:00Z'
+        }
+      ]
+    },
+    
     ratings: {
       overall: 4.8,
       communication: 4.9,
@@ -256,6 +274,33 @@ const mockFreelanceGuides = [
       repeatClients: 78,
       totalEarnings: 45000,
       joinedDate: '2016-08-20'
+    },
+    
+    // Sistema de puntos otorgados por agencias
+    agencyPoints: {
+      totalPoints: 2180,
+      monthlyPoints: 120,
+      averagePointsPerService: 9.5,
+      pointsHistory: [
+        {
+          id: 'ap002',
+          agencyId: 'agency1',
+          agencyName: 'Turismo Aventura S.A.C.',
+          serviceRequestId: 'req002',
+          points: 20,
+          reason: 'Guía excepcional, conocimiento profundo de la historia',
+          awardedAt: '2024-02-10T16:30:00Z'
+        },
+        {
+          id: 'ap003',
+          agencyId: 'agency2',
+          agencyName: 'Cusco Adventures',
+          serviceRequestId: 'req003',
+          points: 18,
+          reason: 'Muy puntual y organizado, excelente manejo del grupo',
+          awardedAt: '2024-02-08T11:15:00Z'
+        }
+      ]
     },
     
     ratings: {
@@ -635,6 +680,77 @@ const useMarketplaceStore = create((set, get) => ({
     }
     
     return newReview;
+  },
+  
+  // === GESTIÓN DE PUNTOS DE AGENCIAS ===
+  
+  // Otorgar puntos de agencia a un guía
+  awardAgencyPoints: (guideId, agencyId, agencyName, serviceRequestId, points, reason) => {
+    const newPointsAward = {
+      id: `ap${Date.now()}`,
+      agencyId,
+      agencyName,
+      serviceRequestId,
+      points,
+      reason,
+      awardedAt: new Date().toISOString()
+    };
+    
+    set(state => ({
+      freelanceGuides: state.freelanceGuides.map(guide =>
+        guide.id === guideId
+          ? {
+              ...guide,
+              agencyPoints: {
+                ...guide.agencyPoints,
+                totalPoints: guide.agencyPoints.totalPoints + points,
+                pointsHistory: [newPointsAward, ...guide.agencyPoints.pointsHistory]
+              }
+            }
+          : guide
+      )
+    }));
+    
+    return newPointsAward;
+  },
+  
+  // Obtener estadísticas de puntos de un guía
+  getGuidePointsStats: (guideId) => {
+    const guide = get().getGuideById(guideId);
+    if (!guide || !guide.agencyPoints) {
+      return {
+        totalPoints: 0,
+        monthlyPoints: 0,
+        averagePointsPerService: 0,
+        recentAwards: []
+      };
+    }
+    
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    const monthlyPoints = guide.agencyPoints.pointsHistory.filter(award => {
+      const awardDate = new Date(award.awardedAt);
+      return awardDate.getMonth() === currentMonth && awardDate.getFullYear() === currentYear;
+    }).reduce((sum, award) => sum + award.points, 0);
+    
+    const recentAwards = guide.agencyPoints.pointsHistory.slice(0, 5);
+    
+    return {
+      totalPoints: guide.agencyPoints.totalPoints,
+      monthlyPoints,
+      averagePointsPerService: guide.agencyPoints.averagePointsPerService,
+      recentAwards
+    };
+  },
+  
+  // Obtener historial de puntos de un guía por agencia
+  getGuidePointsByAgency: (guideId, agencyId) => {
+    const guide = get().getGuideById(guideId);
+    if (!guide || !guide.agencyPoints) return [];
+    
+    return guide.agencyPoints.pointsHistory.filter(award => award.agencyId === agencyId);
   },
   
   // Obtener estadísticas del marketplace

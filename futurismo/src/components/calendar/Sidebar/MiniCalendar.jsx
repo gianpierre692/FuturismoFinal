@@ -92,7 +92,7 @@ const MiniCalendar = () => {
         </button>
         
         <h3 className="text-sm font-semibold text-gray-800 capitalize">
-          {format(currentMonth, 'MMMM yyyy', { locale: es })}
+          {format(currentMonth, 'MMMM', { locale: es })}
         </h3>
         
         <button

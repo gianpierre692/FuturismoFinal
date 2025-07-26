@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { StarIcon } from '@heroicons/react/24/outline';
+import { StarIcon, GiftIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import { reviewSchema } from '../../utils/validationSchemas/marketplaceSchemas';
 import useMarketplaceStore from '../../stores/marketplaceStore';
@@ -14,13 +14,16 @@ const ServiceReview = () => {
   const { requestId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { serviceRequests, getGuideById, createReview, updateServiceRequest } = useMarketplaceStore();
+  const { serviceRequests, getGuideById, createReview, updateServiceRequest, awardAgencyPoints } = useMarketplaceStore();
   
   const [request, setRequest] = useState(null);
   const [guide, setGuide] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hoveredRating, setHoveredRating] = useState({});
+  const [awardPoints, setAwardPoints] = useState(false);
+  const [pointsToAward, setPointsToAward] = useState(10);
+  const [pointsReason, setPointsReason] = useState('');
 
   const ratingCategories = [
     { key: 'overall', label: 'Calificación general', description: 'Tu experiencia general con el guía' },
@@ -113,10 +116,24 @@ const ServiceReview = () => {
 
       createReview(reviewData);
       
+      // Otorgar puntos de agencia si está habilitado
+      if (awardPoints && pointsToAward > 0) {
+        awardAgencyPoints(
+          guide.id,
+          user.id,
+          user.agencyName || 'Agencia',
+          requestId,
+          pointsToAward,
+          pointsReason || 'Puntos otorgados por excelente servicio'
+        );
+        toast.success(`¡Reseña enviada y ${pointsToAward} puntos otorgados al guía!`);
+      } else {
+        toast.success('¡Reseña enviada exitosamente!');
+      }
+      
       // Marcar solicitud como reseñada
       updateServiceRequest(requestId, { hasReview: true });
       
-      toast.success('¡Reseña enviada exitosamente!');
       navigate(`/marketplace/requests/${requestId}`);
     } catch (error) {
       console.error('Error creating review:', error);
@@ -318,6 +335,119 @@ const ServiceReview = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Sección de puntos (opcional) */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <GiftIcon className="h-5 w-5 text-purple-500" />
+                  Otorgar puntos adicionales (opcional)
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Reconoce el excelente trabajo del guía otorgándole puntos adicionales
+                </p>
+              </div>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={awardPoints}
+                  onChange={(e) => setAwardPoints(e.target.checked)}
+                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                />
+                <span className="ml-2 text-sm font-medium text-gray-700">
+                  Otorgar puntos
+                </span>
+              </label>
+            </div>
+            
+            {awardPoints && (
+              <div className="space-y-4 border-t border-gray-200 pt-4">
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <SparklesIcon className="h-5 w-5 text-purple-600 mt-0.5" />
+                    <div className="text-sm">
+                      <p className="font-medium text-purple-800 mb-1">¿Por qué otorgar puntos?</p>
+                      <p className="text-purple-700">
+                        Los puntos adicionales ayudan a los guías a mejorar su posición en el marketplace 
+                        y son una forma de reconocer un servicio excepcional.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Cantidad de puntos
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min="5"
+                        max="50"
+                        step="5"
+                        value={pointsToAward}
+                        onChange={(e) => setPointsToAward(parseInt(e.target.value))}
+                        className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <div className="flex items-center gap-1 bg-purple-100 px-3 py-1 rounded-lg">
+                        <GiftIcon className="h-4 w-4 text-purple-600" />
+                        <span className="font-bold text-purple-700">{pointsToAward}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <span>5 puntos</span>
+                      <span>50 puntos</span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Motivo (opcional)
+                    </label>
+                    <input
+                      type="text"
+                      value={pointsReason}
+                      onChange={(e) => setPointsReason(e.target.value)}
+                      placeholder="Ej: Excelente conocimiento histórico"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+                      maxLength={100}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {pointsReason.length}/100 caracteres
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Sugerencias de puntos */}
+                <div>
+                  <p className="text-xs font-medium text-gray-700 mb-2">Sugerencias:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { points: 10, reason: 'Servicio profesional' },
+                      { points: 15, reason: 'Conocimiento excepcional' },
+                      { points: 20, reason: 'Experiencia memorable' },
+                      { points: 25, reason: 'Superó las expectativas' }
+                    ].map((suggestion, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => {
+                          setPointsToAward(suggestion.points);
+                          setPointsReason(suggestion.reason);
+                        }}
+                        className="inline-flex items-center gap-1 px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                      >
+                        <GiftIcon className="h-3 w-3" />
+                        {suggestion.points} pts - {suggestion.reason}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Resumen visual */}
