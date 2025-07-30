@@ -1,0 +1,136 @@
+/* Estilos responsive para formularios */
+
+/* Ajustar inputs en móviles */
+@media (max-width: 640px) {
+  /* Inputs más grandes para mejor accesibilidad táctil */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Previene zoom en iOS */
+    min-height: 44px; /* Tamaño mínimo recomendado para touch */
+    padding: 0.75rem;
+  }
+
+  /* Labels más visibles */
+  label {
+    font-size: 14px;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* Botones más grandes en móvil */
+  button,
+  .btn {
+    min-height: 44px;
+    font-size: 16px;
+    padding: 0.75rem 1.5rem;
+  }
+
+  /* Espacio entre campos */
+  .form-group,
+  .input-wrapper {
+    margin-bottom: 1rem;
+  }
+
+  /* Select mejorado */
+  select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  /* Checkbox y radio buttons más grandes */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.75rem;
+  }
+
+  /* Mensajes de error */
+  .error-message,
+  .text-red-600 {
+    font-size: 13px;
+    margin-top: 0.25rem;
+  }
+
+  /* Progress indicator más compacto */
+  .progress-step {
+    padding: 0.5rem;
+  }
+
+  /* Tarjetas de formulario */
+  .form-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Mejoras generales de formularios */
+.input {
+  width: 100%;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Grid responsive para formularios */
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .form-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .form-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Botones sticky en móvil */
+@media (max-width: 640px) {
+  .form-actions-sticky {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    margin: -1rem -1rem 0;
+    z-index: 10;
+  }
+}
+
+/* Wizard steps responsive */
+.wizard-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 640px) {
+  .wizard-step-text {
+    display: none;
+  }
+  
+  .wizard-step-number {
+    font-size: 14px;
+  }
+  
+  .wizard-connector {
+    margin: 0 0.5rem;
+  }
+}

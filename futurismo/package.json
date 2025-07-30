@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite .vite dist",
     "clean:win": "rd /s /q node_modules\\.vite .vite dist 2>nul || echo.",
+    "fix:cache": "node scripts/fix-vite-cache.js",
     "start:fresh": "npm run clean && npm start -- --force",
     "prepare": "husky",
     "lint": "eslint src --ext .js,.jsx",

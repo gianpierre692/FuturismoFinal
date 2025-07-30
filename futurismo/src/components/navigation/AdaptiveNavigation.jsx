@@ -50,15 +50,17 @@ const AdaptiveNavigation = ({ children }) => {
   // DESKTOP - Sidebar tradicional
   if (!isMobile) {
     return (
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 overflow-x-hidden max-w-full">
         <DesktopSidebar 
           isOpen={sidebarOpen} 
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
         />
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden min-w-0">
           <NotificationsPanel />
-          <div className="flex-1 overflow-y-auto">
-            {children}
+          <div className="flex-1 overflow-y-auto overflow-x-hidden max-w-full">
+            <div className="max-w-full">
+              {children}
+            </div>
           </div>
         </div>
         {/* Botón Back to Top para desktop */}
@@ -72,7 +74,7 @@ const AdaptiveNavigation = ({ children }) => {
   const showBottomNav = isGuide || user?.role === 'driver';
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
       {/* Header móvil - oculto en marketplace */}
       {!location.pathname.includes('/marketplace') && (
         <MobileHeader 
@@ -91,8 +93,10 @@ const AdaptiveNavigation = ({ children }) => {
       <NotificationsPanel />
       
       {/* Contenido principal */}
-      <main className={`${showBottomNav ? 'pb-16' : ''} ${location.pathname.includes('/marketplace') ? '' : 'pt-14'}`}>
-        {children}
+      <main className={`${showBottomNav ? 'pb-16' : ''} overflow-x-hidden max-w-full`}>
+        <div className="max-w-full">
+          {children}
+        </div>
       </main>
 
       {/* Bottom Navigation para guías */}

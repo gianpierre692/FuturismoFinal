@@ -203,9 +203,9 @@ const ReservationWizard = ({ onClose }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4 sm:px-0">
       {/* Progress indicator */}
-      <div className="mb-8">
+      <div className="mb-4 sm:mb-8">
         <div className="flex items-center justify-between">
           {steps.map((step, index) => (
             <div key={step.number} className="flex items-center flex-1">
@@ -222,9 +222,9 @@ const ReservationWizard = ({ onClose }) => {
                     step.number
                   )}
                 </div>
-                <span className={`ml-3 text-sm font-medium ${
+                <span className={`ml-2 sm:ml-3 text-xs sm:text-sm font-medium ${
                   currentStep >= step.number ? 'text-gray-900' : 'text-gray-500'
-                }`}>
+                } hidden sm:block`}>
                   {step.title}
                 </span>
               </div>
@@ -239,15 +239,15 @@ const ReservationWizard = ({ onClose }) => {
       </div>
 
       {/* Form content */}
-      <form onSubmit={handleSubmit(handleNext)} className="bg-white rounded-lg shadow-lg p-6">
+      <form onSubmit={handleSubmit(handleNext)} className="bg-white rounded-lg shadow-sm sm:shadow-lg p-3 sm:p-6">
         {/* Step 1: Service Selection */}
         {currentStep === 1 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold mb-4">Selecciona el Servicio</h3>
+            <h3 className="text-base sm:text-lg font-semibold mb-4">Selecciona el Servicio</h3>
 
-            <div>
-              <label className="label">Tipo de Servicio</label>
-              <select {...register('serviceType')} className="input">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Tipo de Servicio</label>
+              <select {...register('serviceType')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="tour">Tour Regular</option>
                 <option value="private">Tour Privado</option>
                 <option value="transfer">Traslado</option>
@@ -257,9 +257,9 @@ const ReservationWizard = ({ onClose }) => {
               )}
             </div>
 
-            <div>
-              <label className="label">Tour</label>
-              <select {...register('tourId')} className="input">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Tour</label>
+              <select {...register('tourId')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="">Selecciona un tour</option>
                 {availableTours.map(tour => (
                   <option key={tour.id} value={tour.id}>
@@ -272,13 +272,13 @@ const ReservationWizard = ({ onClose }) => {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="label">Fecha</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Fecha</label>
                 <input 
                   type="date" 
                   {...register('date')} 
-                  className="input"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   min={new Date().toISOString().split('T')[0]}
                 />
                 {errors.date && (
@@ -286,9 +286,9 @@ const ReservationWizard = ({ onClose }) => {
                 )}
               </div>
 
-              <div>
-                <label className="label">Hora</label>
-                <input type="time" {...register('time')} className="input" />
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Hora</label>
+                <input type="time" {...register('time')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 {errors.time && (
                   <p className="mt-1 text-sm text-red-600">{errors.time.message}</p>
                 )}
@@ -342,15 +342,15 @@ const ReservationWizard = ({ onClose }) => {
         {/* Step 2: Details */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold mb-4">Detalles de la Reserva</h3>
+            <h3 className="text-base sm:text-lg font-semibold mb-4">Detalles de la Reserva</h3>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="label">Adulto mayor</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Adulto mayor</label>
                 <input 
                   type="number" 
                   {...register('adults')} 
-                  className="input"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   min="0"
                   placeholder="0"
                 />
@@ -359,12 +359,12 @@ const ReservationWizard = ({ onClose }) => {
                 )}
               </div>
 
-              <div>
-                <label className="label">Niños</label>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Niños</label>
                 <input 
                   type="number" 
                   {...register('children')} 
-                  className="input"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   min="0"
                   placeholder="0"
                 />
@@ -381,12 +381,12 @@ const ReservationWizard = ({ onClose }) => {
               </p>
             </div>
 
-            <div>
-              <label className="label">Lugar de Recojo</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Lugar de Recojo</label>
               <input 
                 type="text" 
                 {...register('pickupLocation')} 
-                className="input"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Ej: Hotel Marriott Miraflores"
               />
               {errors.pickupLocation && (
@@ -394,11 +394,11 @@ const ReservationWizard = ({ onClose }) => {
               )}
             </div>
 
-            <div>
-              <label className="label">Requerimientos Especiales</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Requerimientos Especiales</label>
               <textarea 
                 {...register('specialRequirements')} 
-                className="input"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows="3"
                 placeholder="Alergias, dieta especial, movilidad reducida, etc."
               />
@@ -414,10 +414,11 @@ const ReservationWizard = ({ onClose }) => {
                 <button
                   type="button"
                   onClick={() => append({ representativeName: '', representativePhone: '', companionsCount: 0 })}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="flex items-center justify-center space-x-2 px-3 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
                   <PlusIcon className="w-4 h-4" />
-                  <span>Agregar Grupo</span>
+                  <span className="hidden sm:inline">Agregar Grupo</span>
+                  <span className="sm:hidden">Agregar</span>
                 </button>
               </div>
 
@@ -456,7 +457,7 @@ const ReservationWizard = ({ onClose }) => {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Nombre del Representante *
@@ -544,7 +545,7 @@ const ReservationWizard = ({ onClose }) => {
         {/* Step 3: Confirmation */}
         {currentStep === 3 && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold mb-4">Confirmación y Pago</h3>
+            <h3 className="text-base sm:text-lg font-semibold mb-4">Confirmación y Pago</h3>
 
             {/* Resumen de la reserva */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-3">
@@ -604,9 +605,9 @@ const ReservationWizard = ({ onClose }) => {
               </div>
             </div>
 
-            <div>
-              <label className="label">Método de Pago</label>
-              <select {...register('paymentMethod')} className="input">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-gray-700">Método de Pago</label>
+              <select {...register('paymentMethod')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="transfer">Transferencia Bancaria</option>
                 <option value="cash">Efectivo</option>
                 <option value="card">Tarjeta de Crédito/Débito</option>
@@ -619,37 +620,40 @@ const ReservationWizard = ({ onClose }) => {
             <div className="border-t pt-4">
               <h4 className="font-medium mb-3">Datos de Facturación</h4>
               
-              <div>
-                <label className="label">Nombre o Razón Social</label>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">Nombre o Razón Social</label>
                 <input 
                   type="text" 
                   {...register('billingName')} 
-                  className="input"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Ingrese nombre o razón social"
                 />
                 {errors.billingName && (
                   <p className="mt-1 text-sm text-red-600">{errors.billingName.message}</p>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label className="label">RUC/DNI</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">RUC/DNI</label>
                   <input 
                     type="text" 
                     {...register('billingDocument')} 
-                    className="input"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ingrese RUC o DNI"
                   />
                   {errors.billingDocument && (
                     <p className="mt-1 text-sm text-red-600">{errors.billingDocument.message}</p>
                   )}
                 </div>
 
-                <div>
-                  <label className="label">Dirección</label>
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">Dirección</label>
                   <input 
                     type="text" 
                     {...register('billingAddress')} 
-                    className="input"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Ingrese dirección"
                   />
                   {errors.billingAddress && (
                     <p className="mt-1 text-sm text-red-600">{errors.billingAddress.message}</p>
@@ -692,21 +696,22 @@ const ReservationWizard = ({ onClose }) => {
           </div>
         )}
 
-        {/* MapIcon buttons */}
-        <div className="flex justify-between mt-8">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="btn btn-outline flex items-center gap-2"
-            disabled={currentStep === 1}
-          >
-            <ChevronLeftIcon className="w-4 h-4" />
-            Anterior
-          </button>
+        {/* Navigation buttons */}
+        <div className="flex gap-3 mt-6 sm:mt-8">
+          {currentStep > 1 && (
+            <button
+              type="button"
+              onClick={handleBack}
+              className="btn btn-outline flex items-center justify-center gap-2 flex-1 sm:flex-none sm:w-auto"
+            >
+              <ChevronLeftIcon className="w-4 h-4" />
+              <span>Anterior</span>
+            </button>
+          )}
 
           <button
             type="submit"
-            className="btn btn-primary flex items-center gap-2"
+            className="btn btn-primary flex items-center justify-center gap-2 flex-1 sm:flex-none sm:w-auto ml-auto"
             disabled={isSubmitting || (currentStep === 1 && isFulldayTour && !canBookDirectReservation)}
           >
             {currentStep === 3 ? (

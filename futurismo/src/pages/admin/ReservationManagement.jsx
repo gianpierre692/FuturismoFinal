@@ -668,7 +668,7 @@ const ReservationManagement = () => {
 
   return (
     <>
-      <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
+      <div className="px-4 sm:px-6 lg:px-8 py-2 sm:py-4 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-6 lg:mb-8">

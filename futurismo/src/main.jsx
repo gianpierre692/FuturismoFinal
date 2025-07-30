@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/globals.css';
+import './styles/responsive-fixes.css';
+import './styles/form-responsive.css';
 import './utils/i18n';
 
 // Configurar idioma para date-fns
