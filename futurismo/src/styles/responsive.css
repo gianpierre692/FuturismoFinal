@@ -1,0 +1,181 @@
+/* Utilidades Responsive para Futurismo */
+
+/* Breakpoints estándar de Tailwind:
+   - sm: 640px
+   - md: 768px  
+   - lg: 1024px
+   - xl: 1280px
+   - 2xl: 1536px
+*/
+
+/* Clases para contenedores responsive */
+.container-responsive {
+  @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Padding responsive */
+.p-responsive {
+  @apply p-4 sm:p-6 lg:p-8;
+}
+
+.px-responsive {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+.py-responsive {
+  @apply py-4 sm:py-6 lg:py-8;
+}
+
+/* Texto responsive */
+.text-responsive-sm {
+  @apply text-xs sm:text-sm;
+}
+
+.text-responsive-base {
+  @apply text-sm sm:text-base;
+}
+
+.text-responsive-lg {
+  @apply text-base sm:text-lg lg:text-xl;
+}
+
+.text-responsive-xl {
+  @apply text-lg sm:text-xl lg:text-2xl;
+}
+
+.text-responsive-2xl {
+  @apply text-xl sm:text-2xl lg:text-3xl;
+}
+
+.text-responsive-3xl {
+  @apply text-2xl sm:text-3xl lg:text-4xl;
+}
+
+/* Spacing responsive */
+.gap-responsive {
+  @apply gap-4 sm:gap-6 lg:gap-8;
+}
+
+.space-responsive {
+  @apply space-y-4 sm:space-y-6 lg:space-y-8;
+}
+
+/* Grid responsive */
+.grid-responsive-2 {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6;
+}
+
+.grid-responsive-3 {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6;
+}
+
+.grid-responsive-4 {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6;
+}
+
+/* Tablas responsive */
+.table-responsive {
+  @apply overflow-x-auto -mx-4 sm:-mx-6;
+}
+
+.table-responsive table {
+  @apply min-w-full;
+}
+
+/* Ocultar columnas en móvil */
+.hide-mobile {
+  @apply hidden sm:table-cell;
+}
+
+.show-mobile {
+  @apply sm:hidden;
+}
+
+/* Modales responsive */
+.modal-responsive {
+  @apply fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2;
+  @apply w-full sm:w-auto sm:max-w-lg;
+  @apply h-full sm:h-auto sm:max-h-[90vh];
+  @apply rounded-none sm:rounded-lg;
+}
+
+/* Formularios responsive */
+.form-grid-responsive {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+}
+
+.input-responsive {
+  @apply w-full px-3 py-2 text-sm sm:text-base;
+}
+
+/* Botones responsive */
+.btn-responsive {
+  @apply px-3 py-2 text-sm sm:px-4 sm:py-2 sm:text-base;
+}
+
+.btn-group-responsive {
+  @apply flex flex-col sm:flex-row gap-2 sm:gap-4;
+}
+
+/* Cards responsive */
+.card-responsive {
+  @apply bg-white rounded-lg shadow p-4 sm:p-6;
+}
+
+/* Navegación responsive */
+.nav-responsive {
+  @apply flex flex-col sm:flex-row items-start sm:items-center gap-4;
+}
+
+/* Utilidades de visibilidad */
+.mobile-only {
+  @apply sm:hidden;
+}
+
+.desktop-only {
+  @apply hidden sm:block;
+}
+
+.tablet-up {
+  @apply hidden md:block;
+}
+
+/* Altura completa en móvil */
+.h-screen-mobile {
+  @apply h-screen sm:h-auto;
+}
+
+/* Z-index para overlays móviles */
+.z-mobile-overlay {
+  @apply z-50 sm:z-auto;
+}
+
+/* Animaciones responsive */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Touch targets mínimos para móvil */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px];
+}
+
+/* Scrollbar personalizada para móvil */
+@media (max-width: 640px) {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

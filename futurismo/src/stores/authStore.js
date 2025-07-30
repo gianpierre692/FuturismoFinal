@@ -243,5 +243,4 @@ const useAuthStore = create((set, get) => ({
   }
 }));
 
-export { useAuthStore };
 export default useAuthStore;

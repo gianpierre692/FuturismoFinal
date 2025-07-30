@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import DashboardMobile from './DashboardMobile';
 import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import StatsCard from '../components/dashboard/StatsCard';
@@ -7,13 +8,14 @@ import RecentActivity from '../components/dashboard/RecentActivity';
 import QuickActions from '../components/dashboard/QuickActions';
 import ExportPanel from '../components/dashboard/ExportPanel';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { useAuthStore } from '../stores/authStore';
+import useAuthStore from '../stores/authStore';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const Dashboard = () => {
   const { user } = useAuthStore();
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [stats, setStats] = useState(() => {
     // Estadísticas diferentes según el rol
     if (user?.role === 'guide') {
@@ -70,6 +72,16 @@ const Dashboard = () => {
   
   const [monthlyData, setMonthlyData] = useState([]);
 
+  // Detectar cambios de tamaño
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     // Simular carga de datos
     setTimeout(() => {
@@ -90,24 +102,29 @@ const Dashboard = () => {
     return t('dashboard.goodEvening');
   };
 
+  // Usar versión móvil para pantallas pequeñas
+  if (isMobile) {
+    return <DashboardMobile />;
+  }
+
   if (loading) {
     return <LoadingSpinner text={t('dashboard.loading')} />;
   }
 
   return (
-    <div>
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
           {getGreeting()}, {user?.name || 'Usuario'}
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
           {t('dashboard.todaySummary')}
         </p>
       </div>
 
-      {/* Stats Squares2X2Icon */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
         {user?.role === 'guide' ? (
           <>
             <StatsCard
@@ -204,14 +221,14 @@ const Dashboard = () => {
 
       {/* Monthly Comparison Charts - Only for Agency and Admin */}
       {(user?.role === 'agency' || user?.role === 'admin') && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Reservas por Mes */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.reservationsByMonth')}</h3>
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-sm sm:text-lg font-semibold text-gray-900">{t('dashboard.reservationsByMonth')}</h3>
               <ChartBarIcon className="w-5 h-5 text-primary-600" />
             </div>
-            <div className="h-48">
+            <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -235,12 +252,12 @@ const Dashboard = () => {
           </div>
 
           {/* Turistas por Mes */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.touristsByMonth')}</h3>
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-sm sm:text-lg font-semibold text-gray-900">{t('dashboard.touristsByMonth')}</h3>
               <UserGroupIcon className="w-5 h-5 text-green-600" />
             </div>
-            <div className="h-48">
+            <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -264,12 +281,12 @@ const Dashboard = () => {
           </div>
 
           {/* Ingresos por Mes */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.incomeByMonth')}</h3>
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:col-span-2 lg:col-span-1">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <h3 className="text-sm sm:text-lg font-semibold text-gray-900">{t('dashboard.incomeByMonth')}</h3>
               <CurrencyDollarIcon className="w-5 h-5 text-purple-600" />
             </div>
-            <div className="h-48">
+            <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -300,56 +317,62 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Main Content Squares2X2Icon */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Left Column - Chart */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           <ServiceChart />
           
           {/* Tours activos mini table */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">{t('dashboard.activeToursNow')}</h3>
+          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-2">
+              <h3 className="text-base sm:text-lg font-semibold">{t('dashboard.activeToursNow')}</h3>
               <span className="text-sm text-gray-500">
                 {new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
             
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left">{t('dashboard.tour')}</th>
-                    <th className="px-4 py-2 text-left">{t('dashboard.guide')}</th>
-                    <th className="px-4 py-2 text-center">{t('dashboard.tourists')}</th>
-                    <th className="px-4 py-2 text-left">{t('dashboard.status')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr>
-                    <td className="px-4 py-3">City Tour Lima</td>
-                    <td className="px-4 py-3">Carlos Mendoza</td>
-                    <td className="px-4 py-3 text-center">12</td>
-                    <td className="px-4 py-3">
-                      <span className="badge badge-green">{t('dashboard.enRoute')}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3">Tour Gastronómico</td>
-                    <td className="px-4 py-3">María García</td>
-                    <td className="px-4 py-3 text-center">8</td>
-                    <td className="px-4 py-3">
-                      <span className="badge badge-yellow">{t('dashboard.atStop')}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3">Islas Palomino</td>
-                    <td className="px-4 py-3">Juan Pérez</td>
-                    <td className="px-4 py-3 text-center">15</td>
-                    <td className="px-4 py-3">
-                      <span className="badge badge-blue">{t('dashboard.starting')}</span>
-                    </td>
-                  </tr>
+            <div className="overflow-x-auto -mx-4 sm:-mx-6">
+              <div className="inline-block min-w-full align-middle px-4 sm:px-6">
+                <table className="min-w-full text-sm">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-2 text-left">{t('dashboard.tour')}</th>
+                      <th className="px-3 py-2 text-left hidden sm:table-cell">{t('dashboard.guide')}</th>
+                      <th className="px-3 py-2 text-center">{t('dashboard.tourists')}</th>
+                      <th className="px-3 py-2 text-left">{t('dashboard.status')}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    <tr>
+                      <td className="px-3 py-2 sm:py-3">
+                        <div>
+                          <div className="font-medium">City Tour Lima</div>
+                          <div className="text-xs text-gray-500 sm:hidden">Carlos Mendoza</div>
+                        </div>
+                      </td>
+                      <td className="px-3 py-2 sm:py-3 hidden sm:table-cell">Carlos Mendoza</td>
+                      <td className="px-3 py-2 sm:py-3 text-center">12</td>
+                      <td className="px-3 py-2 sm:py-3">
+                        <span className="badge badge-green text-xs">{t('dashboard.enRoute')}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3">Tour Gastronómico</td>
+                      <td className="px-4 py-3">María García</td>
+                      <td className="px-4 py-3 text-center">8</td>
+                      <td className="px-4 py-3">
+                        <span className="badge badge-yellow">{t('dashboard.atStop')}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3">Islas Palomino</td>
+                      <td className="px-4 py-3">Juan Pérez</td>
+                      <td className="px-4 py-3 text-center">15</td>
+                      <td className="px-4 py-3">
+                        <span className="badge badge-blue">{t('dashboard.starting')}</span>
+                      </td>
+                    </tr>
                 </tbody>
               </table>
             </div>

@@ -10,6 +10,10 @@ import { es } from 'date-fns/locale';
 
 setDefaultOptions({ locale: es });
 
+// Service Worker deshabilitado - Esta es una aplicación web responsive, no una PWA
+
+// PWA deshabilitada - Esta es una aplicación web responsive
+
 // Suprimir warnings específicos de Recharts en desarrollo
 if (import.meta.env.DEV) {
   const originalError = console.error;

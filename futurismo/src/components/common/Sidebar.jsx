@@ -20,7 +20,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { path: '/monitoring', icon: MapIcon, label: t('navigation.monitoring') },
         { path: '/reservations', icon: CalendarIcon, label: t('navigation.reservations') },
         { path: '/marketplace', icon: MagnifyingGlassIcon, label: t('navigation.searchGuides') },
-        { path: '/marketplace/requests', icon: BriefcaseIcon, label: t('navigation.myContracts') },
+        { path: '/marketplace/bookings', icon: BriefcaseIcon, label: t('navigation.myContracts') },
         { path: '/agency/calendar', icon: CalendarDaysIcon, label: t('navigation.calendar') },
         { path: '/agency/reports', icon: ChartBarIcon, label: t('navigation.reports') },
         { path: '/agency/points', icon: StarIcon, label: t('navigation.points') },
@@ -73,9 +73,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const menuItems = getMenuItems();
 
   return (
-    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-white shadow-lg transition-all duration-300 flex flex-col`}>
+    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-white shadow-lg transition-all duration-300 flex-col h-full hidden lg:flex desktop-only`}>
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-4 lg:p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className={`flex items-center ${!isOpen && 'justify-center'}`}>
             <span className="text-2xl">🌎</span>
@@ -85,7 +85,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </div>
           <button
             onClick={toggleSidebar}
-            className="p-1 rounded-lg hover:bg-gray-100 transition-colors lg:block hidden"
+            className="p-1 rounded-lg hover:bg-gray-100 transition-colors hidden lg:block"
           >
             {isOpen ? (
               <ChevronLeftIcon className="w-5 h-5 text-gray-500" />
@@ -97,7 +97,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       </div>
 
       {/* MapIcon */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -105,8 +105,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               <li key={item.path}>
                 <NavLink
                   to={item.path}
+                  end
                   className={({ isActive }) =>
-                    `flex items-center px-4 py-3 rounded-lg transition-colors group relative ${
+                    `flex items-center px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-colors group relative ${
                       isActive
                         ? 'bg-primary text-white'
                         : 'text-gray-700 hover:bg-gray-100'

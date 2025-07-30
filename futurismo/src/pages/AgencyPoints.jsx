@@ -226,30 +226,31 @@ const AgencyPoints = () => {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-              <StarIcon className="w-8 h-8 mr-3 text-yellow-500" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center">
+              <StarIcon className="w-6 sm:w-8 h-6 sm:h-8 mr-2 sm:mr-3 text-yellow-500" />
               Sistema de Puntos
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
               Gestiona puntos, canjea beneficios y revisa tu historial
             </p>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {activeTab === 'store' && (
               <button
                 onClick={() => setShowAddModal(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center space-x-2 px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
               >
                 <PlusIcon className="w-4 h-4" />
-                <span>Agregar Beneficio</span>
+                <span className="hidden sm:inline">Agregar Beneficio</span>
+                <span className="sm:hidden">Agregar</span>
               </button>
             )}
             <button
               onClick={exportHistory}
-              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2"
+              className="px-3 sm:px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors flex items-center space-x-2 text-sm sm:text-base"
             >
               <ArrowDownTrayIcon className="w-4 h-4" />
               <span>Exportar</span>
@@ -303,61 +304,61 @@ const AgencyPoints = () => {
         </div>
 
       {/* Resumen de puntos */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <StarIcon className="w-6 h-6 text-yellow-600" />
+            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <StarIcon className="w-5 sm:w-6 h-5 sm:h-6 text-yellow-600" />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="min-w-0">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                 {pointsBalance.balance.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Balance Actual</p>
+              <p className="text-xs sm:text-sm text-gray-600">Balance Actual</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <ArrowTrendingUpIcon className="w-6 h-6 text-green-600" />
+            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <ArrowTrendingUpIcon className="w-5 sm:w-6 h-5 sm:h-6 text-green-600" />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="min-w-0">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                 {pointsBalance.totalEarned.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Total Ganados</p>
+              <p className="text-xs sm:text-sm text-gray-600">Total Ganados</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <GiftIcon className="w-6 h-6 text-red-600" />
+            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <GiftIcon className="w-5 sm:w-6 h-5 sm:h-6 text-red-600" />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="min-w-0">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                 {pointsBalance.totalRedeemed.toLocaleString()}
               </p>
-              <p className="text-sm text-gray-600">Total Canjeados</p>
+              <p className="text-xs sm:text-sm text-gray-600">Total Canjeados</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrophyIcon className="w-6 h-6 text-purple-600" />
+            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <TrophyIcon className="w-5 sm:w-6 h-5 sm:h-6 text-purple-600" />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-gray-900">
+            <div className="min-w-0">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
                 {currentAgency.tier === 'gold' ? 'Oro' : 
                  currentAgency.tier === 'silver' ? 'Plata' : 
                  currentAgency.tier === 'bronze' ? 'Bronce' : 'Platino'}
               </p>
-              <p className="text-sm text-gray-600">Nivel Actual</p>
+              <p className="text-xs sm:text-sm text-gray-600">Nivel Actual</p>
             </div>
           </div>
         </div>

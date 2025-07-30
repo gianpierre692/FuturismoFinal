@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { SERVICE_STATUS } from '../utils/constants';
+import { getDestination, getTourRoute, getRouteCoordinates } from '../data/destinations';
 
 const useServicesStore = create((set, get) => ({
   // Estado
@@ -216,10 +217,12 @@ const useServicesStore = create((set, get) => ({
         status: 'en_curso',
         client: { name: 'María González', phone: '+51 987654321' },
         guide: { name: 'Carlos Mendoza', phone: '+51 123456789' },
+        tourists: 4,
         startTime: '09:00',
-        pickupLocation: 'Plaza de Armas',
-        destination: 'Circuito Mágico del Agua',
-        currentLocation: 'Plaza de Armas, Lima',
+        pickupLocation: 'Plaza de Armas Cusco',
+        tourRoute: 'city-tour',
+        destination: 'sacsayhuaman',
+        currentLocation: getDestination('sacsayhuaman').coordinates,
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -229,10 +232,12 @@ const useServicesStore = create((set, get) => ({
         status: 'programado',
         client: { name: 'John Smith', phone: '+1 555-0123' },
         guide: { name: 'Ana Rivera', phone: '+51 987654321' },
+        tourists: 2,
         startTime: '14:00',
-        pickupLocation: 'Hotel Miraflores',
-        destination: 'Museo Nacional',
-        currentLocation: 'Miraflores, Lima',
+        pickupLocation: 'Hotel Cusco',
+        tourRoute: 'valle-sagrado',
+        destination: 'pisac',
+        currentLocation: getDestination('plaza-armas').coordinates,
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -242,10 +247,12 @@ const useServicesStore = create((set, get) => ({
         status: 'en_curso',
         client: { name: 'Sophie Dubois', phone: '+33 123456789' },
         guide: { name: 'Miguel Torres', phone: '+51 876543210' },
+        tourists: 6,
         startTime: '11:30',
-        pickupLocation: 'Barranco',
-        destination: 'Centro Histórico',
-        currentLocation: 'San Isidro, Lima',
+        pickupLocation: 'San Blas',
+        tourRoute: 'maras-moray',
+        destination: 'moray',
+        currentLocation: getDestination('moray').coordinates,
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -255,10 +262,12 @@ const useServicesStore = create((set, get) => ({
         status: 'pausado',
         client: { name: 'Roberto Silva', phone: '+51 555-9876' },
         guide: { name: 'Lucia Fernandez', phone: '+51 765432109' },
+        tourists: 8,
         startTime: '16:00',
-        pickupLocation: 'San Isidro',
-        destination: 'Larco Mar',
-        currentLocation: 'Jesús María, Lima',
+        pickupLocation: 'Chinchero',
+        tourRoute: 'montaña-colores',
+        destination: 'vinicunca',
+        currentLocation: getDestination('vinicunca').coordinates,
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       },
@@ -268,10 +277,12 @@ const useServicesStore = create((set, get) => ({
         status: 'programado',
         client: { name: 'Emma Johnson', phone: '+44 20 7946 0958' },
         guide: { name: 'Pedro Ramirez', phone: '+51 654321098' },
+        tourists: 3,
         startTime: '18:30',
-        pickupLocation: 'Callao',
-        destination: 'Fortaleza del Real Felipe',
-        currentLocation: 'Surco, Lima',
+        pickupLocation: 'Hotel Centro',
+        tourRoute: 'city-tour',
+        destination: 'qorikancha',
+        currentLocation: getDestination('plaza-armas').coordinates,
         lastUpdate: new Date().toISOString(),
         date: new Date().toISOString().split('T')[0]
       }

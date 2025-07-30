@@ -20,7 +20,7 @@ const LazyWrapper = memo(({
   const defaultFallback = (
     <div className={`w-full ${minHeight} flex items-center justify-center bg-white rounded-lg shadow-sm border border-gray-200`}>
       <div className="text-center">
-        <LoadingSpinner size="medium" />
+        <LoadingSpinner size="md" />
         {showDescription && (
           <p className="mt-3 text-sm text-gray-600">{description}</p>
         )}

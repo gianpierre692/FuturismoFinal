@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAuthStore } from '../stores/authStore';
+import useAuthStore from '../stores/authStore';
 import { Navigate } from 'react-router-dom';
 import ProvidersManager from '../components/providers/ProvidersManager';
 

@@ -27,7 +27,7 @@ if (isProduction) {
 
 // Configuración de API
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3006/api',
   TIMEOUT: parseInt(import.meta.env.VITE_REQUEST_TIMEOUT) || 30000,
   MAX_RETRIES: parseInt(import.meta.env.VITE_MAX_RETRY_ATTEMPTS) || 3,
   
@@ -40,9 +40,9 @@ export const API_CONFIG = {
 
 // Configuración de WebSocket
 export const WEBSOCKET_CONFIG = {
-  PRIMARY_URL: import.meta.env.VITE_WS_URL || 'ws://localhost:3001',
-  BACKUP_URL: import.meta.env.VITE_WS_BACKUP_URL || 'ws://backup.localhost:3001',
-  FALLBACK_URL: import.meta.env.VITE_WS_FALLBACK_URL || 'ws://fallback.localhost:3001',
+  PRIMARY_URL: import.meta.env.VITE_WS_URL || 'ws://localhost:3006',
+  BACKUP_URL: import.meta.env.VITE_WS_BACKUP_URL || 'ws://backup.localhost:3006',
+  FALLBACK_URL: import.meta.env.VITE_WS_FALLBACK_URL || 'ws://fallback.localhost:3006',
   
   ENABLED: import.meta.env.VITE_ENABLE_WEBSOCKET !== 'false',
   HEARTBEAT_INTERVAL: 30000,

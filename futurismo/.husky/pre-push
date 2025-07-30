@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Ejecutar ESLint en todos los archivos
+npm run lint
+
+# Si hay un comando de tests, ejecutarlo
+# npm test

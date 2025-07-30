@@ -21,7 +21,7 @@ const CONFIG_SCHEMAS = {
     VITE_API_URL: {
       type: 'url',
       required: true,
-      default: 'http://localhost:3001/api',
+      default: 'http://localhost:3006/api',
       description: 'URL base de la API',
       validation: {
         pattern: /^https?:\/\/.+/,
@@ -57,7 +57,7 @@ const CONFIG_SCHEMAS = {
     VITE_WS_URL: {
       type: 'url',
       required: false,
-      default: 'ws://localhost:3001',
+      default: 'ws://localhost:3006',
       description: 'URL del WebSocket principal',
       validation: {
         pattern: /^wss?:\/\/.+/,
@@ -67,7 +67,7 @@ const CONFIG_SCHEMAS = {
     VITE_WS_BACKUP_URL: {
       type: 'url',
       required: false,
-      default: 'ws://backup.localhost:3001',
+      default: 'ws://backup.localhost:3006',
       description: 'URL de respaldo del WebSocket',
       validation: {
         pattern: /^wss?:\/\/.+/,

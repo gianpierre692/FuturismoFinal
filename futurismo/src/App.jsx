@@ -15,9 +15,12 @@ import RouteErrorBoundary from './components/common/RouteErrorBoundary';
 import LazyWrapper from './components/common/LazyWrapper';
 import SkeletonLoader from './components/common/SkeletonLoader';
 
+// Componentes
+// import InstallPWA from './components/common/InstallPWA'; // Removido - no es una app móvil
+
 // Lazy loading de páginas con chunks nombrados
 const LoginRegister = lazy(() => import(/* webpackChunkName: "auth" */ './pages/LoginRegister'));
-const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages/Dashboard'));
+const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages/DashboardSimple'));
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './pages/Monitoring'));
 const Reservations = lazy(() => import(/* webpackChunkName: "reservations" */ './pages/Reservations'));
 const History = lazy(() => import('./pages/History'));
@@ -38,11 +41,17 @@ const ResourcesManagement = lazy(() => import('./pages/admin/ResourcesManagement
 const Reports = lazy(() => import('./pages/admin/Reports'));
 const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
 const PointsStore = lazy(() => import('./pages/guide/PointsStore'));
+const ResponsiveTest = lazy(() => import('./pages/ResponsiveTest'));
+const MobileMenuAlternatives = lazy(() => import('./components/navigation/MobileMenuAlternatives'));
+const MenuStructureComparison = lazy(() => import('./pages/MenuStructureComparison'));
+const MenuMockups = lazy(() => import('./pages/MenuMockups'));
 
 // Marketplace pages
-const GuidesMarketplace = lazy(() => import('./pages/marketplace/GuidesMarketplace'));
+const MarketplaceHome = lazy(() => import('./pages/marketplace/MarketplaceHome'));
+const GuideSearch = lazy(() => import('./pages/marketplace/GuideSearch'));
 const GuideMarketplaceProfile = lazy(() => import('./pages/marketplace/GuideMarketplaceProfile'));
-const ServiceRequestForm = lazy(() => import('./pages/marketplace/ServiceRequestForm'));
+const BookingFlow = lazy(() => import('./pages/marketplace/BookingFlow'));
+const MyBookings = lazy(() => import('./pages/marketplace/MyBookings'));
 const ServiceRequestDetail = lazy(() => import('./pages/marketplace/ServiceRequestDetail'));
 const ServiceReview = lazy(() => import('./pages/marketplace/ServiceReview'));
 const AgencyMarketplaceDashboard = lazy(() => import('./pages/marketplace/AgencyMarketplaceDashboard'));
@@ -67,7 +76,8 @@ function App() {
 
   // Conectar WebSocket resiliente cuando se autentique
   useEffect(() => {
-    if (isAuthenticated && token) {
+    const wsEnabled = import.meta.env.VITE_ENABLE_WEBSOCKET === 'true';
+    if (isAuthenticated && token && wsEnabled) {
       webSocketResilientService.connect(token);
 
       // Listeners de WebSocket resiliente
@@ -178,6 +188,10 @@ function App() {
             <Route path="history" element={<History />} />
             <Route path="chat" element={<Chat />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="responsive-test" element={<ResponsiveTest />} />
+            <Route path="menu-test" element={<MobileMenuAlternatives />} />
+            <Route path="menu-structure" element={<MenuStructureComparison />} />
+            <Route path="menu-mockups" element={<MenuMockups />} />
             <Route 
               path="users" 
               element={
@@ -280,8 +294,16 @@ function App() {
               <Route 
                 index 
                 element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin', 'guide']}>
+                    <MarketplaceHome />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="search" 
+                element={
                   <ProtectedRoute allowedRoles={['agency', 'admin']}>
-                    <GuidesMarketplace />
+                    <GuideSearch />
                   </ProtectedRoute>
                 } 
               />
@@ -294,10 +316,18 @@ function App() {
                 } 
               />
               <Route 
-                path="book/:guideId" 
+                path="booking/:guideId" 
                 element={
                   <ProtectedRoute allowedRoles={['agency', 'admin']}>
-                    <ServiceRequestForm />
+                    <BookingFlow />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="bookings" 
+                element={
+                  <ProtectedRoute allowedRoles={['agency', 'admin']}>
+                    <MyBookings />
                   </ProtectedRoute>
                 } 
               />
@@ -342,7 +372,7 @@ function App() {
       </Suspense>
 
       {/* Indicador de estado de conexión */}
-      {isAuthenticated && <ConnectionStatus />}
+      {isAuthenticated && !import.meta.env.DEV && <ConnectionStatus />}
       </RouteErrorBoundary>
 
       {/* Toast notifications */}

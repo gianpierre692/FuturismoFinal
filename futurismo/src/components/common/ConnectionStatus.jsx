@@ -27,7 +27,12 @@ const ConnectionStatus = () => {
           CONNECTION_STATES.POLLING
         ];
         
-        setIsVisible(problemStates.includes(data.newState));
+        // No mostrar el indicador durante la conexión inicial
+        if (data.newState === CONNECTION_STATES.CONNECTING) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(problemStates.includes(data.newState));
+        }
       }
     );
 

@@ -12,11 +12,11 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
   const isPositiveTrend = trend && trend.startsWith('+');
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-2">{value}</p>
+          <p className="text-xs sm:text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">{value}</p>
           
           {trend && (
             <div className="flex items-center mt-2">
@@ -28,13 +28,13 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
               <span className={`text-sm font-medium ${isPositiveTrend ? 'text-green-600' : 'text-red-600'}`}>
                 {trend}
               </span>
-              <span className="text-sm text-gray-500 ml-1">vs mes anterior</span>
+              <span className="text-xs sm:text-sm text-gray-500 ml-1 hidden sm:inline">vs mes anterior</span>
             </div>
           )}
         </div>
         
-        <div className={`p-3 rounded-lg ${colorClasses[color]}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`p-2 sm:p-3 rounded-lg ${colorClasses[color]}`}>
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
       </div>
     </div>

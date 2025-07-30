@@ -5,7 +5,7 @@ import ProtocolViewer from '../components/emergency/ProtocolViewer';
 import ProtocolEditor from '../components/emergency/ProtocolEditor';
 import MaterialsManager from '../components/emergency/MaterialsManager';
 import emergencyPDFService from '../services/emergencyPDFService';
-import { useAuthStore } from '../stores/authStore';
+import useAuthStore from '../stores/authStore';
 import AdminEmergency from './AdminEmergency';
 
 const EmergencyProtocols = () => {

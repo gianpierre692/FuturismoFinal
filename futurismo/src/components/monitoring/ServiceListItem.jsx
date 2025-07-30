@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { UserGroupIcon, MapPinIcon, ClockIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import { getDestination } from '../../data/destinations';
 
 /**
  * ServiceListItem - Componente memoizado para item individual de servicio
@@ -16,6 +17,7 @@ const ServiceListItem = memo(({
 }) => {
   const isSelected = selectedServiceId === service.id;
   const statusColor = statusColors.find(s => s.status === service.status)?.color || 'bg-gray-500';
+  const destination = getDestination(service.destination);
 
   return (
     <div
@@ -36,7 +38,10 @@ const ServiceListItem = memo(({
             </div>
             <div className="flex items-center gap-1 text-xs text-gray-600">
               <MapPinIcon className="w-3 h-3" />
-              <span>{service.currentLocation || 'En ruta'}</span>
+              <span>{destination?.name || service.destination || 'En ruta'}</span>
+              {destination?.city && (
+                <span className="text-gray-400 ml-1">• {destination.city}</span>
+              )}
             </div>
             <div className="flex items-center gap-1 text-xs text-gray-600">
               <ClockIcon className="w-3 h-3" />
@@ -51,7 +56,10 @@ const ServiceListItem = memo(({
         <div className="mt-3 pt-3 border-t border-gray-200">
           <div className="space-y-1 text-xs">
             <p><strong>Cliente:</strong> {service.client?.name || 'N/A'}</p>
-            <p><strong>Destino:</strong> {service.destination || 'N/A'}</p>
+            <p><strong>Destino:</strong> {destination?.name || service.destination || 'N/A'}</p>
+            {destination?.city && (
+              <p><strong>Ciudad:</strong> {destination.city}, {destination.region || 'Cusco'}</p>
+            )}
             {service.guide?.phone && (
               <div className="flex items-center gap-1">
                 <PhoneIcon className="w-3 h-3" />
@@ -71,7 +79,7 @@ ServiceListItem.displayName = 'ServiceListItem';
 
 ServiceListItem.propTypes = {
   service: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     code: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     currentLocation: PropTypes.string,
@@ -85,7 +93,7 @@ ServiceListItem.propTypes = {
     }),
     destination: PropTypes.string
   }).isRequired,
-  selectedServiceId: PropTypes.string,
+  selectedServiceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   statusColors: PropTypes.arrayOf(PropTypes.shape({
     status: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired

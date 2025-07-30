@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sin Conexión - Futurismo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 48px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 32px;
+            background-color: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon svg {
+            width: 60px;
+            height: 60px;
+            color: #dc2626;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+
+        p {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #1e40af;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .button:active {
+            background-color: #1e3a8a;
+        }
+
+        .status {
+            margin-top: 24px;
+            padding: 12px;
+            background-color: #fef3c7;
+            border-radius: 8px;
+            color: #92400e;
+            font-size: 14px;
+            display: none;
+        }
+
+        .features {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .features h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: #374151;
+        }
+
+        .features ul {
+            list-style: none;
+            text-align: left;
+            color: #6b7280;
+        }
+
+        .features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414">
+                </path>
+            </svg>
+        </div>
+
+        <h1>Sin Conexión a Internet</h1>
+        
+        <p>
+            Parece que no tienes conexión a internet. 
+            Verifica tu conexión y vuelve a intentarlo.
+        </p>
+
+        <button class="button" onclick="reloadPage()">
+            Reintentar
+        </button>
+
+        <div id="status" class="status"></div>
+
+        <div class="features">
+            <h2>Mientras tanto, puedes:</h2>
+            <ul>
+                <li>Revisar información guardada localmente</li>
+                <li>Las reservas pendientes se sincronizarán automáticamente</li>
+                <li>Los datos de tours se actualizarán al reconectar</li>
+                <li>Tu sesión permanece activa</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function reloadPage() {
+            const statusEl = document.getElementById('status');
+            statusEl.style.display = 'block';
+            statusEl.textContent = 'Verificando conexión...';
+            
+            // Intentar hacer un fetch para verificar conectividad
+            fetch('/', { method: 'HEAD' })
+                .then(() => {
+                    statusEl.textContent = '¡Conexión restaurada! Recargando...';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                })
+                .catch(() => {
+                    statusEl.textContent = 'Aún sin conexión. Intenta nuevamente en unos momentos.';
+                    setTimeout(() => {
+                        statusEl.style.display = 'none';
+                    }, 3000);
+                });
+        }
+
+        // Intentar reconectar automáticamente cada 30 segundos
+        setInterval(() => {
+            fetch('/', { method: 'HEAD' })
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(() => {
+                    // Aún sin conexión
+                });
+        }, 30000);
+
+        // Escuchar cuando vuelve la conexión
+        window.addEventListener('online', () => {
+            const statusEl = document.getElementById('status');
+            statusEl.style.display = 'block';
+            statusEl.textContent = '¡Conexión detectada! Recargando...';
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -19,7 +19,7 @@ const config = {
   
   // API Configuration
   api: {
-    baseUrl: getEnvVar('VITE_API_URL', 'http://localhost:3001/api'),
+    baseUrl: getEnvVar('VITE_API_URL', 'http://localhost:3006/api'),
     timeout: parseInt(getEnvVar('VITE_API_TIMEOUT', '30000')),
     retryAttempts: parseInt(getEnvVar('VITE_API_RETRY_ATTEMPTS', '3')),
     retryDelay: parseInt(getEnvVar('VITE_API_RETRY_DELAY', '1000')),
@@ -27,7 +27,7 @@ const config = {
   
   // WebSocket Configuration
   websocket: {
-    url: getEnvVar('VITE_WS_URL', 'ws://localhost:3001'),
+    url: getEnvVar('VITE_WS_URL', 'ws://localhost:3006'),
     reconnectInterval: parseInt(getEnvVar('VITE_WS_RECONNECT_INTERVAL', '5000')),
     maxReconnectAttempts: parseInt(getEnvVar('VITE_WS_MAX_RECONNECTS', '10')),
   },

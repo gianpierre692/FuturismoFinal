@@ -6,6 +6,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Importar utilidades responsive */
+@import './responsive.css';
+@import './navigation.css';
+
 /* Spinner animation */
 .spinner {
   border: 2px solid #f3f4f6;
@@ -216,5 +220,72 @@
   
   .print-break {
     page-break-after: always;
+  }
+}
+
+/* Animaciones para PWA */
+@keyframes slide-down {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* Estilos específicos para PWA instalada */
+.pwa-standalone .install-prompt {
+  display: none !important;
+}
+
+/* Mejoras para PWA en iOS */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .pwa-standalone {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Ajustes para el header en PWA iOS */
+  .pwa-standalone .fixed.top-0 {
+    top: env(safe-area-inset-top);
+  }
+  
+  /* Ajustes para el sidebar en PWA iOS */
+  .pwa-standalone .fixed.left-0 {
+    left: env(safe-area-inset-left);
   }
 }

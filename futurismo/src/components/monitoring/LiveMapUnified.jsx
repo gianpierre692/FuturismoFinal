@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { MapPinIcon, UserGroupIcon, PhoneIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { useServicesStore } from '../../stores/servicesStore';
 import { formatters } from '../../utils/formatters';
+import { getDestination } from '../../data/destinations';
 
 // Componente unificado que puede funcionar en 3 modos:
 // 1. 'simple' - Sin librerías externas, mapa simulado
@@ -20,7 +21,7 @@ const LiveMapUnified = memo(({
   const { activeServices, setServices, initializeMockData } = useServicesStore();
   const [selectedService, setSelectedService] = useState(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const [mapCenter] = useState([-13.5319, -71.9675]); // Cusco
+  const [mapCenter] = useState([-13.5169, -71.9788]); // Plaza de Armas Cusco
   const mapRef = useRef(null);
   const markersRef = useRef([]);
 
@@ -174,15 +175,40 @@ const LiveMapUnified = memo(({
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
 
-      // Agregar marcadores con posiciones simuladas basadas en el índice
+      // Agregar marcadores con coordenadas reales
       filteredServices.forEach((service, index) => {
-        // Generar posición alrededor del centro del mapa
-        const lat = mapCenter[0] + (Math.random() - 0.5) * 0.02;
-        const lng = mapCenter[1] + (Math.random() - 0.5) * 0.02;
+        // Usar las coordenadas reales del servicio
+        const coordinates = service.currentLocation;
+        if (!coordinates || coordinates.length !== 2) return;
         
-        const marker = window.L.marker([lat, lng])
+        const [lat, lng] = coordinates;
+        const destination = getDestination(service.destination);
+        
+        // Color según estado
+        const color = service.status === 'en_curso' ? '#10B981' : 
+                     service.status === 'pausado' ? '#F59E0B' : '#6366F1';
+        
+        // Icono personalizado
+        const icon = window.L.divIcon({
+          html: `<div style="background-color: ${color}; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${index + 1}</div>`,
+          className: 'custom-div-icon',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15]
+        });
+        
+        const marker = window.L.marker([lat, lng], { icon })
           .addTo(map)
-          .bindPopup(`<b>${service.code}</b><br>${service.guide?.name || 'Sin guía'}<br>${service.currentLocation}`)
+          .bindPopup(`
+            <div style="min-width: 200px;">
+              <b>${service.code}</b><br>
+              <strong>Guía:</strong> ${service.guide?.name || 'Sin guía'}<br>
+              <strong>Destino:</strong> ${destination?.name || service.destination}<br>
+              <strong>Ciudad:</strong> ${destination?.city || 'Cusco'}, ${destination?.region || 'Cusco'}<br>
+              <strong>Turistas:</strong> ${service.tourists || 0}<br>
+              <strong>Estado:</strong> ${service.status}<br>
+              <strong>Hora inicio:</strong> ${service.startTime}
+            </div>
+          `)
           .on('click', () => handleServiceSelect(service));
         
         markersRef.current.push(marker);
@@ -222,7 +248,7 @@ const LiveMapUnified = memo(({
   return (
     <div className="flex gap-4 h-full">
       {/* Mapa */}
-      <div className={`flex-1 ${height} bg-white rounded-lg shadow-md overflow-hidden`}>
+      <div className={`flex-1 ${height || 'h-full'} bg-white rounded-lg shadow-md overflow-hidden relative`}>
         {renderMap()}
       </div>
 

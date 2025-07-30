@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import AgencyReportsMobile from './AgencyReportsMobile';
 import { ChartBarIcon, ArrowTrendingUpIcon, CurrencyDollarIcon, UserGroupIcon, CalendarIcon, ArrowDownTrayIcon, FunnelIcon, ChevronLeftIcon, ChevronRightIcon, ChartPieIcon } from '@heroicons/react/24/outline';
 import { format, addMonths, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -20,6 +21,21 @@ import {
 import useAgencyStore from '../stores/agencyStore';
 
 const AgencyReports = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (isMobile) {
+    return <AgencyReportsMobile />;
+  }
+
   const { actions } = useAgencyStore();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [reportType, setReportType] = useState('monthly'); // monthly, yearly

@@ -1,0 +1,33 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Producción
+dist/
+build/
+
+# Archivos de configuración que no deben formatearse
+.git/
+.svn/
+.hg/
+
+# Archivos generados
+*.min.js
+*.min.css
+
+# Archivos de terceros
+public/service-worker.js
+
+# Archivos temporales
+*.log
+*.tmp
+.DS_Store
+
+# Archivos de IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Archivos específicos del proyecto
+CHANGELOG.md

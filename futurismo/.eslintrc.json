@@ -1,0 +1,80 @@
+{
+  "extends": [
+    "react-app",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": ["react", "react-hooks"],
+  "rules": {
+    "no-console": ["error", { 
+      "allow": ["warn", "error"] 
+    }],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-magic-numbers": ["warn", { 
+      "ignore": [0, 1, -1, 2, 100],
+      "ignoreArrayIndexes": true,
+      "ignoreDefaultValues": true,
+      "enforceConst": true
+    }],
+    "no-unused-vars": ["warn", { 
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }],
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "prefer-const": "error",
+    "no-var": "error",
+    "object-shorthand": "warn",
+    "arrow-body-style": ["warn", "as-needed"],
+    "no-duplicate-imports": "error",
+    "no-nested-ternary": "warn",
+    "max-depth": ["warn", 3],
+    "max-lines": ["warn", {
+      "max": 500,
+      "skipBlankLines": true,
+      "skipComments": true
+    }],
+    "complexity": ["warn", 15],
+    "consistent-return": "warn",
+    "default-case": "warn",
+    "eqeqeq": ["error", "always"],
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-extend-native": "error",
+    "no-extra-bind": "error",
+    "no-floating-decimal": "error",
+    "no-implicit-coercion": "warn",
+    "no-implicit-globals": "error",
+    "no-invalid-this": "error",
+    "no-loop-func": "error",
+    "no-new": "warn",
+    "no-new-func": "error",
+    "no-new-wrappers": "error",
+    "no-return-assign": "error",
+    "no-self-assign": "error",
+    "no-self-compare": "error",
+    "no-sequences": "error",
+    "no-throw-literal": "error",
+    "no-unmodified-loop-condition": "error",
+    "no-unused-expressions": ["error", {
+      "allowShortCircuit": true,
+      "allowTernary": true
+    }],
+    "no-useless-call": "error",
+    "no-useless-concat": "error",
+    "no-useless-return": "error",
+    "prefer-promise-reject-errors": "error",
+    "radix": "error",
+    "require-await": "error",
+    "yoda": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.jsx"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}

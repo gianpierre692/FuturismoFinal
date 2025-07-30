@@ -1,5 +1,5 @@
 import { XMarkIcon, ArrowDownTrayIcon, PencilIcon, PhoneIcon, ClockIcon, ExclamationTriangleIcon, CheckCircleIcon, UserGroupIcon, ShieldCheckIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { useAuthStore } from '../../stores/authStore';
+import useAuthStore from '../../stores/authStore';
 
 const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
   const { user } = useAuthStore();

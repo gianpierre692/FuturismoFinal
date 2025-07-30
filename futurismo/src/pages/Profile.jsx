@@ -1,19 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FreelanceAvailabilityView } from '../components/common/GuideAvailability';
 import { UserIcon, CalendarIcon, CogIcon, BuildingOfficeIcon, PhoneIcon, CreditCardIcon, ShieldCheckIcon, DocumentTextIcon, LockClosedIcon, PowerIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../stores/authStore';
+import useAuthStore from '../stores/authStore';
 import CompanyDataSection from '../components/profile/CompanyDataSection';
 import ContactDataSection from '../components/profile/ContactDataSection';
 import PaymentDataSection from '../components/profile/PaymentDataSection';
 import AccountStatusSection from '../components/profile/AccountStatusSection';
 import DocumentsSection from '../components/profile/DocumentsSection';
 import FeedbackSection from '../components/profile/FeedbackSectionSimple';
+import ProfileMobile from './ProfileMobile';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const { user, logout } = useAuthStore();
   const { t } = useTranslation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Detectar cambios de tamaño
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Usar versión móvil para pantallas pequeñas
+  if (isMobile) {
+    return <ProfileMobile />;
+  }
 
   // Configurar tabs - Secciones dinámicas según el rol
   const getTabsForRole = () => {

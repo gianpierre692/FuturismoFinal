@@ -48,11 +48,11 @@ class WebSocketResilientService {
     
     // Configuración temporal mientras se carga
     this.wsUrls = [
-      import.meta.env.VITE_WS_URL || 'ws://localhost:3001',
-      import.meta.env.VITE_WS_BACKUP_URL || 'ws://backup.localhost:3001',
-      import.meta.env.VITE_WS_FALLBACK_URL || 'ws://fallback.localhost:3001'
+      import.meta.env.VITE_WS_URL || 'ws://localhost:3006',
+      import.meta.env.VITE_WS_BACKUP_URL || 'ws://backup.localhost:3006',
+      import.meta.env.VITE_WS_FALLBACK_URL || 'ws://fallback.localhost:3006'
     ];
-    this.apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    this.apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3006/api';
     
     // Estado de conexión
     this.currentState = CONNECTION_STATES.DISCONNECTED;

@@ -1,0 +1,70 @@
+{
+  "name": "Futurismo - Sistema de Gestión Turística B2B",
+  "short_name": "Futurismo",
+  "description": "Plataforma integral para gestión de tours, reservas y monitoreo en tiempo real",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1E40AF",
+  "background_color": "#ffffff",
+  "categories": ["business", "travel", "productivity"],
+  "lang": "es-PE",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 144x144 152x152 192x192 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "label": "Dashboard principal"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "label": "Vista móvil"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nueva Reserva",
+      "short_name": "Reservar",
+      "description": "Crear una nueva reserva de tour",
+      "url": "/reservations?new=true",
+      "icons": []
+    },
+    {
+      "name": "Monitoreo",
+      "short_name": "Monitoreo",
+      "description": "Ver tours activos en tiempo real",
+      "url": "/monitoring",
+      "icons": []
+    },
+    {
+      "name": "Chat",
+      "short_name": "Chat",
+      "description": "Mensajes con guías y clientes",
+      "url": "/chat",
+      "icons": []
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "scope": "/",
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

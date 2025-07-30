@@ -1,0 +1,33 @@
+/* Forzar ocultamiento del sidebar en móvil */
+@media (max-width: 767px) {
+  aside {
+    display: none !important;
+  }
+  
+  /* Ajustar el contenido principal */
+  main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* Ocultar elementos desktop en móvil */
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+/* Mostrar elementos móviles solo en móvil */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Ajustes para tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+  aside {
+    display: none !important;
+  }
+}

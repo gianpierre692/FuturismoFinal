@@ -10,7 +10,7 @@ import LanguageToggle from './LanguageToggle';
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-  const { unreadCount, toggleVisibility } = useNotificationsStore();
+  const { unreadCount, toggleVisibility, isVisible } = useNotificationsStore();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const profileMenuRef = useRef(null);
@@ -42,19 +42,19 @@ const Header = ({ toggleSidebar }) => {
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="px-6 py-4">
+      <div className="px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           {/* Left side */}
           <div className="flex items-center">
             <button
               onClick={toggleSidebar}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors lg:hidden"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <Bars3Icon className="w-5 h-5 text-gray-500" />
             </button>
 
-            {/* MagnifyingGlassIcon bar */}
-            <form onSubmit={handleSearch} className="ml-4 lg:ml-0">
+            {/* Search bar - Hidden on mobile */}
+            <form onSubmit={handleSearch} className="hidden sm:block ml-4 lg:ml-0">
               <div className="relative">
                 <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -62,21 +62,27 @@ const Header = ({ toggleSidebar }) => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('search.searchServices')}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary w-64 lg:w-80"
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary w-48 md:w-64 lg:w-80"
                 />
               </div>
             </form>
           </div>
 
           {/* Right side */}
-          <div className="flex items-center space-x-4">
-            {/* Language Toggle */}
-            <LanguageToggle />
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Language Toggle - Hidden on mobile */}
+            <div className="hidden sm:block">
+              <LanguageToggle />
+            </div>
             
             {/* Notifications */}
             <button
-              onClick={toggleVisibility}
+              onClick={() => {
+                console.log('Notification button clicked! Current state:', isVisible);
+                toggleVisibility();
+              }}
               className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="notifications"
             >
               <BellIcon className="w-5 h-5 text-gray-500" />
               {unreadCount > 0 && (
@@ -97,7 +103,7 @@ const Header = ({ toggleSidebar }) => {
                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </span>
                 </div>
-                <div className="hidden md:block text-left">
+                <div className="hidden sm:block text-left">
                   <p className="text-sm font-medium text-gray-900">{user?.name || 'Usuario'}</p>
                   <p className="text-xs text-gray-500">
                     {user?.role === 'agency' && t('roles.agency')}
@@ -110,7 +116,7 @@ const Header = ({ toggleSidebar }) => {
 
               {/* Dropdown menu */}
               {profileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
                   <button
                     onClick={() => {
                       navigate('/profile');

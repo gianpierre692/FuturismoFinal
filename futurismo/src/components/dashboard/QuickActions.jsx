@@ -1,7 +1,7 @@
 import { PlusIcon, CalendarIcon, UserGroupIcon, DocumentTextIcon, ChatBubbleLeftRightIcon, ArrowDownTrayIcon, CogIcon, QuestionMarkCircleIcon, PaperAirplaneIcon, MapIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../../stores/authStore';
+import useAuthStore from '../../stores/authStore';
 import { generateWhatsAppURL, canBookDirectly } from '../../utils/formatters';
 
 const QuickActions = () => {

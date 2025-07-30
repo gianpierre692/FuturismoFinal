@@ -10,7 +10,13 @@
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite .vite dist",
     "clean:win": "rd /s /q node_modules\\.vite .vite dist 2>nul || echo.",
-    "start:fresh": "npm run clean && npm start -- --force"
+    "start:fresh": "npm run clean && npm start -- --force",
+    "prepare": "husky",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md}\"",
+    "fix:console-logs": "node scripts/fix-console-logs.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
@@ -48,6 +54,8 @@
   "devDependencies": {
     "@vitejs/plugin-react": "4.3.1",
     "autoprefixer": "10.4.17",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "postcss": "8.4.35",
     "tailwindcss": "3.4.1",
     "vite": "5.4.0"

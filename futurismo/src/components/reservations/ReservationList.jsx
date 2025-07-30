@@ -3,7 +3,7 @@ import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon,
 import { useTranslation } from 'react-i18next';
 import { formatters } from '../../utils/formatters';
 import { useReservationsStore } from '../../stores/reservationsStore';
-import { useAuthStore } from '../../stores/authStore';
+import useAuthStore from '../../stores/authStore';
 import ReservationDetail from './ReservationDetail';
 import ExportModal from '../common/ExportModal';
 import exportService from '../../services/exportService';
