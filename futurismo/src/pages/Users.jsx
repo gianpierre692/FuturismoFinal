@@ -13,10 +13,14 @@ import {
   FunnelIcon,
   MagnifyingGlassIcon,
   EllipsisVerticalIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  DocumentArrowDownIcon,
+  DocumentArrowUpIcon
 } from '@heroicons/react/24/outline';
+import ExcelButton from '../components/common/ExcelButton';
 import UserList from '../components/users/UserList';
 import UserForm from '../components/users/UserFormSimple';
+import ExportImportModal from '../components/common/ExportImportModal';
 import { useUsersStore } from '../stores/usersStoreSimple';
 
 const Users = () => {
@@ -27,8 +31,9 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showExportModal, setShowExportModal] = useState(false);
 
-  const { deleteUser, getUsersStatistics } = useUsersStore();
+  const { deleteUser, getUsersStatistics, getAllUsers, importUsers } = useUsersStore();
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,6 +84,17 @@ const Users = () => {
     setSelectedUser(null);
   };
 
+  const handleImportSuccess = (importedData) => {
+    // Process imported data and update users store
+    if (importedData && Object.keys(importedData).length > 0) {
+      const firstSheet = Object.values(importedData)[0];
+      if (importUsers && typeof importUsers === 'function') {
+        importUsers(firstSheet);
+      }
+      setShowExportModal(false);
+    }
+  };
+
   const stats = getUsersStatistics ? getUsersStatistics() : {
     total: 45,
     active: 38,
@@ -122,26 +138,33 @@ const Users = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Mobile Search */}
             {isMobile && (
-              <div className="relative flex-1">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <div className="flex-1">
                 <input
                   type="text"
                   placeholder="Buscar usuarios..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
                 />
               </div>
             )}
             
-            <button
-              onClick={handleCreateUser}
-              className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-sm sm:text-base"
-            >
-              <UserPlusIcon className="h-5 w-5 mr-2" />
-              <span className="hidden sm:inline">Nuevo Usuario</span>
-              <span className="sm:hidden">Nuevo</span>
-            </button>
+            <div className="flex gap-2">
+              <ExcelButton
+                onClick={() => setShowExportModal(true)}
+                text="Exportar/Importar"
+                className="text-sm sm:text-base"
+              />
+              
+              <button
+                onClick={handleCreateUser}
+                className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-sm sm:text-base"
+              >
+                <UserPlusIcon className="h-5 w-5 mr-2" />
+                <span className="hidden sm:inline">Nuevo Usuario</span>
+                <span className="sm:hidden">Nuevo</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -566,6 +589,16 @@ const Users = () => {
             <UserDetailsDesktop user={selectedUser} />
         )}
 
+        {/* Export/Import Modal */}
+        <ExportImportModal
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          data={getAllUsers ? getAllUsers() : []}
+          dataType="users"
+          title="Exportar/Importar Usuarios"
+          onImportSuccess={handleImportSuccess}
+        />
+
         {/* Info Card */}
         {currentView === 'list' && !isMobile && (
           <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
@@ -587,9 +620,9 @@ const Users = () => {
                     <p className="mb-2">Funcionalidades avanzadas disponibles:</p>
                     <ul className="list-disc list-inside space-y-1">
                       <li>Auditoría completa de actividades</li>
-                      <li>Exportación masiva de usuarios</li>
-                      <li>Importación desde archivos CSV/Excel</li>
-                      <li>Integración con sistemas externos</li>
+                      <li>Exportación masiva de usuarios (Excel/PDF)</li>
+                      <li>Importación desde archivos Excel</li>
+                      <li>Plantillas de importación descargables</li>
                     </ul>
                   </div>
                 </div>

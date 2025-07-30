@@ -228,6 +228,31 @@ const useReservationsStore = create((set, get) => ({
   getReservationById: (id) => {
     const { reservations } = get();
     return reservations.find(r => r.id === id);
+  },
+
+  // Método para importar reservaciones
+  importReservations: (importedReservations) => {
+    const { reservations } = get();
+    const newReservations = importedReservations.map((res, index) => ({
+      id: `imported-${Date.now()}-${index}`,
+      clientName: res.clientName || res.Cliente || '',
+      clientEmail: res.clientEmail || res.Email || '',
+      clientPhone: res.clientPhone || res.Teléfono || '',
+      serviceName: res.serviceName || res.Servicio || '',
+      date: res.date || res.Fecha || new Date(),
+      time: res.time || res.Hora || '09:00',
+      participants: res.participants || res.Personas || 1,
+      status: res.status || res.Estado || 'pending',
+      price: res.price || res.Precio || 0,
+      assignedGuide: res.assignedGuide || res['Guía Asignado'] || null,
+      agency: res.agency || res.Agencia || null,
+      notes: res.notes || res.Observaciones || '',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }));
+    
+    set({ reservations: [...reservations, ...newReservations] });
+    return { success: true, imported: newReservations.length };
   }
 }));
 

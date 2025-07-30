@@ -310,6 +310,29 @@ class ExportService {
       avgTicket: filteredData.length > 0 ? (filteredData.reduce((sum, item) => sum + item.total, 0) / filteredData.length) : 0
     };
   }
+
+  // Obtener datos para exportar
+  getExportData(status = 'all') {
+    const allData = this.getMockReservationsData();
+    const filteredData = this.filterDataByStatus(allData, status);
+    
+    // Formatear datos para exportación
+    return filteredData.map(item => ({
+      id: item.id,
+      date: item.date,
+      tourName: item.tourName,
+      clientName: item.clientName,
+      clientContact: item.clientContact,
+      clientEmail: item.clientEmail,
+      adults: item.adults,
+      children: item.children,
+      tourists: item.adults + item.children,
+      revenue: item.total,
+      status: item.status,
+      guideName: item.guideName,
+      paymentStatus: item.paymentStatus
+    }));
+  }
 }
 
 export default new ExportService();

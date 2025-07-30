@@ -20,6 +20,7 @@ import {
   AdjustmentsHorizontalIcon
 } from '@heroicons/react/24/outline';
 import AssignmentManager from '../../components/assignments/AssignmentManager';
+import ExcelButton from '../../components/common/ExcelButton';
 import toast from 'react-hot-toast';
 
 const ReservationManagement = () => {
@@ -689,13 +690,11 @@ const ReservationManagement = () => {
                   <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                   <span className="hidden sm:inline">Actualizar</span>
                 </button>
-                <button
+                <ExcelButton
                   onClick={handleExport}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
-                >
-                  <Download className="w-4 h-4" />
-                  <span className="hidden sm:inline">Exportar</span>
-                </button>
+                  text="Exportar"
+                  className="px-3 sm:px-4 text-sm sm:text-base"
+                />
               </div>
             </div>
           </div>

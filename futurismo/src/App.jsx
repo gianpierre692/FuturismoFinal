@@ -39,6 +39,7 @@ const AdminReservations = lazy(() => import('./pages/AdminReservations'));
 const ReservationManagement = lazy(() => import('./pages/admin/ReservationManagement'));
 const ResourcesManagement = lazy(() => import('./pages/admin/ResourcesManagement'));
 const Reports = lazy(() => import('./pages/admin/Reports'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
 const PointsStore = lazy(() => import('./pages/guide/PointsStore'));
 const ResponsiveTest = lazy(() => import('./pages/ResponsiveTest'));

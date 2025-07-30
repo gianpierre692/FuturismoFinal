@@ -254,6 +254,27 @@ const useGuidesStore = create((set, get) => ({
         freelance: guides.filter(g => g.guideType === 'freelance').length,
         active: guides.filter(g => g.status === 'active').length
       };
+    },
+
+    importGuides: (importedGuides) => {
+      const newGuides = importedGuides.map((guide, index) => ({
+        id: `imported-${Date.now()}-${index}`,
+        firstName: guide.firstName || guide.Nombre || '',
+        lastName: guide.lastName || guide.Apellido || '',
+        email: guide.email || guide.Email || '',
+        phone: guide.phone || guide.Teléfono || '',
+        guideType: guide.guideType || guide.Tipo || 'freelance',
+        status: guide.status || guide.Estado || 'active',
+        specialties: guide.specialties ? guide.specialties.split(',').map(s => s.trim()) : [],
+        languages: guide.languages ? guide.languages.split(',').map(l => l.trim()) : [],
+        rating: guide.rating || guide.Calificación || 0,
+        completedTours: guide.completedTours || guide['Tours Completados'] || 0,
+        available: guide.available !== undefined ? guide.available : true,
+        createdAt: new Date()
+      }));
+      
+      set(state => ({ guides: [...state.guides, ...newGuides] }));
+      return { success: true, imported: newGuides.length };
     }
   }
 }));

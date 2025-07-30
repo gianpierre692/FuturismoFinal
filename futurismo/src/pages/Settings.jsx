@@ -19,6 +19,7 @@ import GeneralSettings from '../components/settings/GeneralSettings';
 import ToursSettings from '../components/settings/ToursSettings';
 import NotificationsSettings from '../components/settings/NotificationsSettings';
 import { useSettingsStore } from '../stores/settingsStore';
+import UniversalExportService from '../services/universalExportService';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('general');
@@ -90,8 +91,35 @@ const Settings = () => {
     }
   };
 
-  const handleExport = () => {
-    exportSettings();
+  const handleExportSettings = () => {
+    const settingsData = [{
+      'Configuración': 'General',
+      'Datos': JSON.stringify(settings?.general || {}, null, 2)
+    }, {
+      'Configuración': 'Tours',
+      'Datos': JSON.stringify(settings?.tours || {}, null, 2)
+    }, {
+      'Configuración': 'Notificaciones',
+      'Datos': JSON.stringify(settings?.notifications || {}, null, 2)
+    }];
+    
+    UniversalExportService.exportToExcel(settingsData, 'configuracion_sistema', 'Configuraciones');
+    setShowExportSuccess(true);
+    setTimeout(() => setShowExportSuccess(false), 3000);
+  };
+
+  const handleExportPDF = () => {
+    const settingsData = [
+      ['Configuración General', JSON.stringify(settings?.general || {}, null, 2)],
+      ['Configuración Tours', JSON.stringify(settings?.tours || {}, null, 2)],
+      ['Configuración Notificaciones', JSON.stringify(settings?.notifications || {}, null, 2)]
+    ];
+    
+    UniversalExportService.exportToPDF(settingsData, {
+      filename: 'configuracion_sistema',
+      title: 'Configuración del Sistema',
+      columns: [{ header: 'Tipo' }, { header: 'Configuración' }]
+    });
     setShowExportSuccess(true);
     setTimeout(() => setShowExportSuccess(false), 3000);
   };
@@ -223,11 +251,19 @@ const Settings = () => {
 
           <div className="flex gap-2 sm:gap-3">
             <button
-              onClick={handleExport}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              onClick={handleExportSettings}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
-              <span>Exportar</span>
+              <span>Excel</span>
+            </button>
+
+            <button
+              onClick={handleExportPDF}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
+              <span>PDF</span>
             </button>
             
             <label className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">

@@ -368,6 +368,37 @@ const useUsersStore = create((set, get) => ({
     console.log(`Contraseña reseteada para usuario ${userId}`);
   },
 
+  // Método para obtener todos los usuarios
+  getAllUsers: () => {
+    const { users } = get();
+    return users;
+  },
+
+  // Método para importar usuarios
+  importUsers: (importedUsers) => {
+    const { users } = get();
+    const newUsers = importedUsers.map((user, index) => ({
+      id: `imported-${Date.now()}-${index}`,
+      username: user.username || user.Usuario || `user${Date.now()}${index}`,
+      email: user.email || user.Email || '',
+      firstName: user.firstName || user.Nombre || '',
+      lastName: user.lastName || user.Apellido || '',
+      role: user.role || user.Rol || 'guia',
+      status: user.status || user.Estado || 'activo',
+      avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
+      phone: user.phone || user.Teléfono || '',
+      company: user.company || user.Empresa || '',
+      position: user.position || user.Cargo || '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastLogin: null,
+      permissions: []
+    }));
+    
+    set({ users: [...users, ...newUsers] });
+    return { success: true, imported: newUsers.length };
+  },
+
   // Estados de carga
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),

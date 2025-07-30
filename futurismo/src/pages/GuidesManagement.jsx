@@ -19,11 +19,13 @@ import {
   ViewColumnsIcon,
   Squares2X2Icon,
   StarIcon,
-  XMarkIcon
+  XMarkIcon,
+  DocumentArrowDownIcon
 } from '@heroicons/react/24/outline';
 import useGuidesStore from '../stores/guidesStore';
 import GuideForm from '../components/guides/GuideForm';
 import GuideProfile from '../components/guides/GuideProfile';
+import ExportImportModal from '../components/common/ExportImportModal';
 
 const GuidesManagement = () => {
   const { guides = [], languages = [], museums = [], actions } = useGuidesStore();
@@ -37,6 +39,17 @@ const GuidesManagement = () => {
   const [viewMode, setViewMode] = useState('grid'); // grid, list, profile
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showFilters, setShowFilters] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  const handleImportSuccess = (importedData) => {
+    if (importedData && Object.keys(importedData).length > 0) {
+      const firstSheet = Object.values(importedData)[0];
+      if (actions?.importGuides && typeof actions.importGuides === 'function') {
+        actions.importGuides(firstSheet);
+      }
+      setShowExportModal(false);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -398,14 +411,25 @@ const GuidesManagement = () => {
                 <Squares2X2Icon className="w-5 h-5" />
               </button>
             )}
-            <button
-              onClick={handleAddGuide}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 text-sm sm:text-base"
-            >
-              <PlusIcon className="w-4 h-4" />
-              <span className="hidden sm:inline">Nuevo Guía</span>
-              <span className="sm:hidden">Nuevo</span>
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowExportModal(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 text-sm"
+              >
+                <DocumentArrowDownIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Export/Import</span>
+                <span className="sm:hidden">Export</span>
+              </button>
+              
+              <button
+                onClick={handleAddGuide}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 text-sm sm:text-base"
+              >
+                <PlusIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Nuevo Guía</span>
+                <span className="sm:hidden">Nuevo</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -687,6 +711,16 @@ const GuidesManagement = () => {
           </>
         )}
       </div>
+      
+      {/* Export/Import Modal */}
+      <ExportImportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        data={guides || []}
+        dataType="guides"
+        title="Exportar/Importar Guías"
+        onImportSuccess={handleImportSuccess}
+      />
     </div>
   );
 };

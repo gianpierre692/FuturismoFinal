@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ArrowDownTrayIcon, DocumentTextIcon, PhotoIcon, FunnelIcon, CheckCircleIcon, ClockIcon, XCircleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, DocumentTextIcon, TableCellsIcon, FunnelIcon, CheckCircleIcon, ClockIcon, XCircleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import exportService from '../../services/exportService';
+import UniversalExportService from '../../services/universalExportService';
 
 const ExportPanel = () => {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -17,7 +18,7 @@ const ExportPanel = () => {
     { 
       format: 'excel', 
       label: 'Excel', 
-      icon: DocumentTextIcon, 
+      icon: TableCellsIcon, 
       color: 'bg-green-500 hover:bg-green-600',
       description: 'Ideal para análisis detallado'
     },
@@ -27,13 +28,6 @@ const ExportPanel = () => {
       icon: DocumentTextIcon, 
       color: 'bg-red-500 hover:bg-red-600',
       description: 'Perfecto para reportes formales'
-    },
-    { 
-      format: 'csv', 
-      label: 'CSV', 
-      icon: PhotoIcon, 
-      color: 'bg-blue-500 hover:bg-blue-600',
-      description: 'Compatible con cualquier sistema'
     }
   ];
 
@@ -46,8 +40,40 @@ const ExportPanel = () => {
       const stats = exportService.getFilteredStats(selectedStatus);
       const statusLabel = statusOptions.find(opt => opt.value === selectedStatus)?.label || 'Información';
       
-      // Exportar con el filtro seleccionado
-      exportService.exportData(format, selectedStatus);
+      // Preparar datos para exportar
+      const reservationData = exportService.getExportData(selectedStatus);
+      
+      if (format === 'excel') {
+        // Exportar a Excel
+        UniversalExportService.exportToExcel(
+          reservationData,
+          `reservas_${selectedStatus}_${format}`,
+          statusLabel
+        );
+      } else if (format === 'pdf') {
+        // Convertir datos para PDF
+        const pdfData = reservationData.map(item => [
+          item.id || '',
+          item.date || '',
+          item.tourName || '',
+          item.status || '',
+          item.tourists || 0,
+          `$${item.revenue || 0}`
+        ]);
+        
+        UniversalExportService.exportToPDF(pdfData, {
+          filename: `reservas_${selectedStatus}`,
+          title: `Reporte de ${statusLabel}`,
+          columns: [
+            { header: 'ID' },
+            { header: 'Fecha' },
+            { header: 'Tour' },
+            { header: 'Estado' },
+            { header: 'Turistas' },
+            { header: 'Ingresos' }
+          ]
+        });
+      }
       
       // Mostrar mensaje de éxito detallado
       alert(`✅ ${statusLabel} exportada exitosamente!\n\n` +

@@ -5,6 +5,7 @@ import DesktopSidebar from '../common/Sidebar';
 import BottomNavigation from './BottomNavigation';
 import SlidePanelsNavigation from './SlidePanelsNavigation';
 import MobileHeader from './MobileHeader';
+import Header from '../common/Header';
 import NotificationsPanel from '../common/NotificationsPanel';
 import ResponsiveDebug from '../debug/ResponsiveDebug';
 import BackToTopButton from '../common/BackToTopButton';
@@ -47,7 +48,7 @@ const AdaptiveNavigation = ({ children }) => {
     return <>{children}</>;
   }
 
-  // DESKTOP - Sidebar tradicional
+  // DESKTOP - Sidebar tradicional con Header
   if (!isMobile) {
     return (
       <div className="flex h-screen bg-gray-50 overflow-x-hidden max-w-full">
@@ -56,8 +57,9 @@ const AdaptiveNavigation = ({ children }) => {
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
         />
         <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+          <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
           <NotificationsPanel />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden max-w-full">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden max-w-full pt-16">
             <div className="max-w-full">
               {children}
             </div>
@@ -93,7 +95,7 @@ const AdaptiveNavigation = ({ children }) => {
       <NotificationsPanel />
       
       {/* Contenido principal */}
-      <main className={`${showBottomNav ? 'pb-16' : ''} overflow-x-hidden max-w-full`}>
+      <main className={`${showBottomNav ? 'pb-16' : ''} ${!location.pathname.includes('/marketplace') ? 'pt-16' : ''} overflow-x-hidden max-w-full`}>
         <div className="max-w-full">
           {children}
         </div>

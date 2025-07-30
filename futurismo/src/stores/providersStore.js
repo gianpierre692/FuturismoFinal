@@ -383,6 +383,36 @@ const useProvidersStore = create(
             }
 
             return filtered;
+          },
+
+          getAllProviders: () => {
+            return get().providers;
+          },
+
+          importProviders: (importedProviders) => {
+            const newProviders = importedProviders.map((provider, index) => ({
+              id: `imported-${Date.now()}-${index}`,
+              name: provider.name || provider.Nombre || '',
+              type: provider.type || provider.Tipo || 'restaurant',
+              location: provider.location || provider.Ubicación || '',
+              category: provider.category || provider.Categoría || '',
+              contact: {
+                phone: provider.phone || provider.Teléfono || '',
+                email: provider.email || provider.Email || '',
+                address: provider.address || provider.Dirección || ''
+              },
+              capacity: provider.capacity || provider.Capacidad || 0,
+              rating: provider.rating || provider.Calificación || 0,
+              description: provider.description || provider.Descripción || '',
+              amenities: provider.amenities || [],
+              priceRange: provider.priceRange || provider['Rango Precio'] || 'medio',
+              images: [],
+              availability: {},
+              active: true
+            }));
+            
+            set(state => ({ providers: [...state.providers, ...newProviders] }));
+            return { success: true, imported: newProviders.length };
           }
         }
       }),

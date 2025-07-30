@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
-import { MapPinIcon, PlusIcon, MagnifyingGlassIcon, FunnelIcon, Squares2X2Icon, ListBulletIcon, BuildingOffice2Icon, PhoneIcon, EnvelopeIcon, StarIcon, UserGroupIcon, ClockIcon, CalendarIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, PlusIcon, MagnifyingGlassIcon, FunnelIcon, Squares2X2Icon, ListBulletIcon, BuildingOffice2Icon, PhoneIcon, EnvelopeIcon, StarIcon, UserGroupIcon, ClockIcon, CalendarIcon, DocumentTextIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import useProvidersStore from '../../stores/providersStore';
 import ProviderCard from './ProviderCard';
 import ProviderForm from './ProviderForm';
 import ProviderAssignment from './ProviderAssignment';
 import LocationTree from './LocationTree';
+import ExportImportModal from '../common/ExportImportModal';
 
 const ProvidersManager = () => {
   const {
@@ -25,6 +26,17 @@ const ProvidersManager = () => {
     category: '',
     minRating: 0
   });
+  const [showExportModal, setShowExportModal] = useState(false);
+
+  const handleImportSuccess = (importedData) => {
+    if (importedData && Object.keys(importedData).length > 0) {
+      const firstSheet = Object.values(importedData)[0];
+      if (actions?.importProviders && typeof actions.importProviders === 'function') {
+        actions.importProviders(firstSheet);
+      }
+      setShowExportModal(false);
+    }
+  };
 
   // Obtener proveedores filtrados
   const filteredProviders = useMemo(() => {
@@ -91,13 +103,23 @@ const ProvidersManager = () => {
             <span>Asignar a Tour</span>
           </button>
           
-          <button
-            onClick={handleAddProvider}
-            className="btn btn-primary flex items-center space-x-2"
-          >
-            <PlusIcon className="w-4 h-4" />
-            <span>Nuevo Proveedor</span>
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowExportModal(true)}
+              className="btn btn-secondary flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white border-green-600"
+            >
+              <DocumentArrowDownIcon className="w-4 h-4" />
+              <span>Export/Import</span>
+            </button>
+            
+            <button
+              onClick={handleAddProvider}
+              className="btn btn-primary flex items-center space-x-2"
+            >
+              <PlusIcon className="w-4 h-4" />
+              <span>Nuevo Proveedor</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -254,6 +276,16 @@ const ProvidersManager = () => {
           onClose={() => setShowAssignment(false)}
         />
       )}
+
+      {/* Export/Import Modal */}
+      <ExportImportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        data={actions?.getAllProviders ? actions.getAllProviders() : filteredProviders}
+        dataType="providers"
+        title="Exportar/Importar Proveedores"
+        onImportSuccess={handleImportSuccess}
+      />
     </div>
   );
 };

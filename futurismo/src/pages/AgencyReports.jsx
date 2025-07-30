@@ -19,6 +19,10 @@ import {
   Line
 } from 'recharts';
 import useAgencyStore from '../stores/agencyStore';
+import UniversalExportService from '../services/universalExportService';
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
+import ExcelButton from '../components/common/ExcelButton';
 
 const AgencyReports = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -40,6 +44,7 @@ const AgencyReports = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [reportType, setReportType] = useState('monthly'); // monthly, yearly
   const [chartType, setChartType] = useState('revenue'); // revenue, reservations, participants
+  const [showExportOptions, setShowExportOptions] = useState(false);
 
   // Obtener datos del reporte
   const reportData = useMemo(() => {
@@ -113,9 +118,117 @@ const AgencyReports = () => {
     }).format(value);
   };
 
-  const exportReport = () => {
-    // Implementar exportación a PDF/Excel
-    console.log('Exportando reporte...', reportData);
+  const exportToExcel = () => {
+    let sheetsData = [];
+    
+    if (reportType === 'monthly' && reportData.summary) {
+      // Hoja de resumen
+      const summaryData = [{
+        'Métrica': 'Total Reservas',
+        'Valor': reportData.summary.totalReservations
+      }, {
+        'Métrica': 'Ingresos Totales',
+        'Valor': formatCurrency(reportData.summary.totalRevenue)
+      }, {
+        'Métrica': 'Total Turistas',
+        'Valor': reportData.summary.totalParticipants
+      }, {
+        'Métrica': 'Ticket Promedio',
+        'Valor': formatCurrency(reportData.summary.averageOrderValue)
+      }];
+      
+      sheetsData.push({
+        sheetName: 'Resumen Mensual',
+        data: summaryData
+      });
+      
+      // Hoja de datos diarios
+      if (dailyChartData.length > 0) {
+        sheetsData.push({
+          sheetName: 'Ventas Diarias',
+          data: dailyChartData.map(day => ({
+            'Fecha': day.date,
+            'Día': day.day,
+            'Ingresos': formatCurrency(day.revenue),
+            'Reservas': day.reservations,
+            'Turistas': day.participants
+          }))
+        });
+      }
+      
+      // Hoja de servicios
+      if (serviceChartData.length > 0) {
+        sheetsData.push({
+          sheetName: 'Por Servicio',
+          data: serviceChartData.map(service => ({
+            'Servicio': service.name,
+            'Reservas': service.reservations,
+            'Turistas': service.participants,
+            'Ingresos': formatCurrency(service.revenue),
+            'Promedio': formatCurrency(service.reservations > 0 ? service.revenue / service.reservations : 0)
+          }))
+        });
+      }
+    } else if (reportType === 'yearly' && reportData.yearlyData) {
+      // Datos anuales
+      sheetsData.push({
+        sheetName: `Resumen ${reportData.year}`,
+        data: reportData.yearlyData.map(month => ({
+          'Mes': month.monthName,
+          'Reservas': month.totalReservations,
+          'Turistas': month.totalParticipants,
+          'Ingresos': formatCurrency(month.totalRevenue),
+          'Promedio': formatCurrency(month.averageOrderValue)
+        }))
+      });
+    }
+    
+    UniversalExportService.exportMultiSheetExcel(
+      sheetsData, 
+      `reporte_${reportType}_${format(selectedDate, 'yyyy-MM-dd')}`
+    );
+    toast.success('Reporte Excel exportado exitosamente');
+    setShowExportOptions(false);
+  };
+  
+  const exportToPDF = () => {
+    const pdfData = [];
+    let title = '';
+    
+    if (reportType === 'monthly' && reportData.summary) {
+      title = `Reporte Mensual - ${format(selectedDate, 'MMMM yyyy', { locale: es })}`;
+      
+      // Agregar resumen
+      pdfData.push(
+        ['Total Reservas', reportData.summary.totalReservations.toString()],
+        ['Ingresos Totales', formatCurrency(reportData.summary.totalRevenue)],
+        ['Total Turistas', reportData.summary.totalParticipants.toString()],
+        ['Ticket Promedio', formatCurrency(reportData.summary.averageOrderValue)]
+      );
+    } else if (reportType === 'yearly' && reportData.yearlyData) {
+      title = `Reporte Anual ${reportData.year}`;
+      
+      // Agregar datos mensuales
+      reportData.yearlyData.forEach(month => {
+        pdfData.push([
+          month.monthName,
+          month.totalReservations.toString(),
+          month.totalParticipants.toString(),
+          formatCurrency(month.totalRevenue)
+        ]);
+      });
+    }
+    
+    UniversalExportService.exportToPDF(pdfData, {
+      filename: `reporte_${reportType}_${format(selectedDate, 'yyyy-MM-dd')}`,
+      title,
+      columns: reportType === 'monthly' 
+        ? [{ header: 'Métrica' }, { header: 'Valor' }]
+        : [{ header: 'Mes' }, { header: 'Reservas' }, { header: 'Turistas' }, { header: 'Ingresos' }]
+    });
+    
+    toast.success('Reporte PDF exportado exitosamente');
+    setShowExportOptions(false);
   };
 
   return (
@@ -145,13 +258,33 @@ const AgencyReports = () => {
             </select>
           </div>
           
-          <button
-            onClick={exportReport}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
-          >
-            <ArrowDownTrayIcon className="w-4 h-4" />
-            <span>Exportar</span>
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowExportOptions(!showExportOptions)}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2"
+            >
+              <ArrowDownTrayIcon className="w-4 h-4" />
+              <span>Exportar</span>
+            </button>
+            
+            {showExportOptions && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                <ExcelButton
+                  onClick={exportToExcel}
+                  className="w-full justify-start rounded-b-none hover:rounded-t-lg"
+                  text="Excel"
+                  fullText={true}
+                />
+                <button
+                  onClick={exportToPDF}
+                  className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center space-x-2 rounded-b-lg border-t border-gray-100"
+                >
+                  <DocumentTextIcon className="w-5 h-5 text-red-600" />
+                  <span>Exportar PDF</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

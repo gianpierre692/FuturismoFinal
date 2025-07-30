@@ -6,13 +6,16 @@ import {
   UserGroupIcon,
   ArrowTrendingUpIcon,
   ChevronDownIcon,
-  ArrowDownTrayIcon
+  ArrowDownTrayIcon,
+  DocumentTextIcon
 } from '@heroicons/react/24/outline';
 import { format, startOfMonth, endOfMonth, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import toast from 'react-hot-toast';
 import SafeChart from '../components/charts/SafeChart';
+import UniversalExportService from '../services/universalExportService';
+import ExcelButton from '../components/common/ExcelButton';
 
 const AgencyReportsMobile = () => {
   const [loading, setLoading] = useState(false);
@@ -38,8 +41,48 @@ const AgencyReportsMobile = () => {
     }).format(amount);
   };
 
-  const handleExport = (format) => {
-    toast.success(`Exportando reporte en formato ${format.toUpperCase()}`);
+  const handleExportExcel = () => {
+    const exportData = [
+      { 
+        'Fecha': format(selectedMonth, 'MMMM yyyy', { locale: es }),
+        'Ingresos Totales': formatCurrency(reportData.summary.totalRevenue),
+        'Total Reservas': reportData.summary.totalReservations,
+        'Total Participantes': reportData.summary.totalParticipants,
+        'Valor Promedio': formatCurrency(reportData.summary.averageOrderValue)
+      }
+    ];
+
+    // Agregar datos diarios
+    chartData.forEach(day => {
+      exportData.push({
+        'Día': day.day,
+        'Ingresos': formatCurrency(day.revenue),
+        'Reservas': day.reservations,
+        'Participantes': day.participants
+      });
+    });
+
+    UniversalExportService.exportToExcel(exportData, 'reporte_agencia', 'Reporte Mensual');
+    toast.success('Reporte Excel exportado exitosamente');
+    setShowExportOptions(false);
+  };
+
+  const handleExportPDF = () => {
+    const pdfData = [
+      ['Métrica', 'Valor'],
+      ['Ingresos Totales', formatCurrency(reportData.summary.totalRevenue)],
+      ['Total Reservas', reportData.summary.totalReservations],
+      ['Total Participantes', reportData.summary.totalParticipants],
+      ['Valor Promedio', formatCurrency(reportData.summary.averageOrderValue)]
+    ];
+
+    UniversalExportService.exportToPDF(pdfData, {
+      filename: 'reporte_agencia',
+      title: `Reporte de Agencia - ${format(selectedMonth, 'MMMM yyyy', { locale: es })}`,
+      columns: [{ header: 'Métrica' }, { header: 'Valor' }]
+    });
+    
+    toast.success('Reporte PDF exportado exitosamente');
     setShowExportOptions(false);
   };
 
@@ -102,23 +145,18 @@ const AgencyReportsMobile = () => {
         {showExportOptions && (
           <div className="px-4 pb-3 border-t border-gray-100">
             <div className="mt-3 space-y-2">
+              <ExcelButton
+                onClick={handleExportExcel}
+                className="w-full py-3 text-sm"
+                text="como Excel"
+                fullText={true}
+              />
               <button
-                onClick={() => handleExport('pdf')}
-                className="w-full py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200"
+                onClick={handleExportPDF}
+                className="w-full py-3 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 flex items-center justify-center gap-2"
               >
+                <DocumentTextIcon className="h-4 w-4" />
                 Exportar como PDF
-              </button>
-              <button
-                onClick={() => handleExport('excel')}
-                className="w-full py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200"
-              >
-                Exportar como Excel
-              </button>
-              <button
-                onClick={() => handleExport('csv')}
-                className="w-full py-2 bg-gray-100 rounded-lg text-sm hover:bg-gray-200"
-              >
-                Exportar como CSV
               </button>
             </div>
           </div>

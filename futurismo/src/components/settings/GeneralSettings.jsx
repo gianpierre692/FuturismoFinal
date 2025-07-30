@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 import { 
   BuildingOfficeIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  GlobeAltIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  ExclamationTriangleIcon,
-  MapPinIcon,
-  LanguageIcon,
-  CalendarIcon
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { useSettingsStore } from '../../stores/settingsStore';
 
@@ -113,21 +105,14 @@ const GeneralSettings = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Nombre de la Empresa *
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <BuildingOfficeIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  className={`pl-16 pr-4 py-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white ${
-                    errors.companyName ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  placeholder="Futurismo Tours"
-                />
-              </div>
+              <input
+                type="text"
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+                placeholder="Futurismo Tours"
+              />
               {errors.companyName && (
                 <p className="mt-1 text-sm text-red-600">{errors.companyName}</p>
               )}
@@ -137,21 +122,14 @@ const GeneralSettings = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Teléfono de la Empresa *
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <PhoneIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <input
-                  type="tel"
-                  name="companyPhone"
-                  value={formData.companyPhone}
-                  onChange={handleChange}
-                  className={`pl-16 pr-4 py-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white ${
-                    errors.companyPhone ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  placeholder="+51 999 999 999"
-                />
-              </div>
+              <input
+                type="tel"
+                name="companyPhone"
+                value={formData.companyPhone}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+                placeholder="+51 999 999 999"
+              />
               {errors.companyPhone && (
                 <p className="mt-1 text-sm text-red-600">{errors.companyPhone}</p>
               )}
@@ -161,21 +139,14 @@ const GeneralSettings = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Email de la Empresa *
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <EnvelopeIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <input
-                  type="email"
-                  name="companyEmail"
-                  value={formData.companyEmail}
-                  onChange={handleChange}
-                  className={`pl-16 pr-4 py-3 w-full border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white ${
-                    errors.companyEmail ? 'border-red-300' : 'border-gray-300'
-                  }`}
-                  placeholder="info@futurismo.com"
-                />
-              </div>
+              <input
+                type="email"
+                name="companyEmail"
+                value={formData.companyEmail}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+                placeholder="info@futurismo.com"
+              />
               {errors.companyEmail && (
                 <p className="mt-1 text-sm text-red-600">{errors.companyEmail}</p>
               )}
@@ -185,38 +156,28 @@ const GeneralSettings = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Sitio Web
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <GlobeAltIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <input
-                  type="url"
-                  name="companyWebsite"
-                  value={formData.companyWebsite}
-                  onChange={handleChange}
-                  className="pl-16 pr-10 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
-                  placeholder="https://futurismo.com"
-                />
-              </div>
+              <input
+                type="url"
+                name="companyWebsite"
+                value={formData.companyWebsite}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+                placeholder="https://futurismo.com"
+              />
             </div>
 
             <div className="col-span-1 md:col-span-2 space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Dirección de la Empresa
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <MapPinIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <input
-                  type="text"
-                  name="companyAddress"
-                  value={formData.companyAddress}
-                  onChange={handleChange}
-                  className="pl-16 pr-4 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
-                  placeholder="Av. Larco 123, Miraflores, Lima"
-                />
-              </div>
+              <input
+                type="text"
+                name="companyAddress"
+                value={formData.companyAddress}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+                placeholder="Av. Larco 123, Miraflores, Lima"
+              />
             </div>
           </div>
 
@@ -232,15 +193,11 @@ const GeneralSettings = () => {
               <label className="block text-sm font-medium text-gray-700">
                 Moneda por Defecto
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <CurrencyDollarIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <select
+              <select
                   name="currency"
                   value={formData.currency}
                   onChange={handleChange}
-                  className="pl-16 pr-10 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
                 >
                   {currencyOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -248,96 +205,75 @@ const GeneralSettings = () => {
                     </option>
                   ))}
                 </select>
-              </div>
             </div>
 
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Zona Horaria
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <ClockIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <select
-                  name="timezone"
-                  value={formData.timezone}
-                  onChange={handleChange}
-                  className="pl-16 pr-10 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
-                >
+              <select
+                name="timezone"
+                value={formData.timezone}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+              >
                   {timezoneOptions.map(option => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-              </div>
             </div>
 
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Idioma del Sistema
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <LanguageIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <select
-                  name="language"
-                  value={formData.language}
-                  onChange={handleChange}
-                  className="pl-16 pr-10 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
-                >
+              <select
+                name="language"
+                value={formData.language}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+              >
                   {languageOptions.map(option => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-              </div>
             </div>
 
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Formato de Fecha
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <CalendarIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <select
-                  name="dateFormat"
-                  value={formData.dateFormat}
-                  onChange={handleChange}
-                  className="pl-16 pr-10 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
-                >
+              <select
+                name="dateFormat"
+                value={formData.dateFormat}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+              >
                   {dateFormatOptions.map(option => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
                 </select>
-              </div>
             </div>
 
             <div className="space-y-1">
               <label className="block text-sm font-medium text-gray-700">
                 Formato de Hora
               </label>
-              <div className="relative">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 h-8 w-8 bg-gray-100 rounded-full flex items-center justify-center">
-                  <ClockIcon className="h-4 w-4 text-gray-500" />
-                </div>
-                <select
-                  name="timeFormat"
-                  value={formData.timeFormat}
-                  onChange={handleChange}
-                  className="pl-16 pr-10 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors appearance-none bg-white"
-                >
+              <select
+                name="timeFormat"
+                value={formData.timeFormat}
+                onChange={handleChange}
+                className="block w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors appearance-none"
+              >
                   <option value="12h">12 horas (AM/PM)</option>
                   <option value="24h">24 horas</option>
                 </select>
-              </div>
             </div>
           </div>
 

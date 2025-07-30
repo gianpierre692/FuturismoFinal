@@ -155,16 +155,13 @@ const UserList = ({ onEdit, onView, onDelete }) => {
       <div className="bg-white p-4 rounded-lg shadow-sm border">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1 max-w-md">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
+            <input
                 type="text"
                 placeholder="Buscar usuarios..."
                 value={filters.search}
                 onChange={handleSearch}
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
               />
-            </div>
           </div>
 
           <div className="flex items-center gap-2">

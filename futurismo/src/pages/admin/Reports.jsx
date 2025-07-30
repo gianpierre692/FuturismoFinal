@@ -14,12 +14,15 @@ import {
   ChartPieIcon,
   DocumentTextIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
+  ArrowTrendingDownIcon,
+  TableCellsIcon
 } from '@heroicons/react/24/outline';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale';
+import UniversalExportService from '../../services/universalExportService';
 import { reportsAPI } from '../../services/api';
 import toast from 'react-hot-toast';
+import ExcelButton from '../../components/common/ExcelButton';
 
 function Reports() {
   const [loading, setLoading] = useState(false);
@@ -130,38 +133,71 @@ function Reports() {
     }, 1000);
   };
 
-  const exportToCSV = () => {
-    // Exportar directamente sin usar la API
-    const headers = ['Métrica', 'Valor'];
-    const rows = [
+  const exportToExcel = () => {
+    // Preparar datos para Excel con múltiples hojas
+    const sheetsData = [
+      {
+        sheetName: 'Resumen General',
+        data: [
+          { 'Métrica': 'Total Reservas', 'Valor': reportData.totalBookings },
+          { 'Métrica': 'Ingresos Totales', 'Valor': `S/. ${(reportData.totalRevenue || 0).toFixed(2)}` },
+          { 'Métrica': 'Total Usuarios', 'Valor': reportData.totalUsers },
+          { 'Métrica': 'Total Proveedores', 'Valor': reportData.totalProviders },
+          { 'Métrica': 'Valor Promedio', 'Valor': `S/. ${(reportData.averageBookingValue || 0).toFixed(2)}` },
+          { 'Métrica': 'Tasa Conversión', 'Valor': `${(reportData.conversionRate || 0).toFixed(2)}%` }
+        ]
+      },
+      {
+        sheetName: 'Estados de Reservas',
+        data: Object.entries(reportData.bookingsByStatus || {}).map(([status, count]) => ({
+          'Estado': status,
+          'Cantidad': count,
+          'Porcentaje': `${((count / reportData.totalBookings) * 100).toFixed(2)}%`
+        }))
+      },
+      {
+        sheetName: 'Top Destinos',
+        data: (reportData.topDestinations || []).map((dest, index) => ({
+          'Posición': index + 1,
+          'Destino': dest.location,
+          'Reservas': dest.count,
+          'Porcentaje': `${((dest.count / reportData.totalBookings) * 100).toFixed(2)}%`
+        }))
+      },
+      {
+        sheetName: 'Top Proveedores',
+        data: (reportData.topProviders || []).map((prov, index) => ({
+          'Posición': index + 1,
+          'Proveedor': prov.providerName,
+          'Ingresos': `S/. ${(prov.revenue || 0).toFixed(2)}`,
+          'Reservas': prov.bookings || 0,
+          'Porcentaje': `${((prov.revenue / reportData.totalRevenue) * 100).toFixed(2)}%`
+        }))
+      }
+    ];
+
+    UniversalExportService.exportMultiSheetExcel(sheetsData, `reporte_${format(new Date(), 'yyyy-MM-dd')}`);
+    toast.success('Reporte Excel exportado exitosamente');
+  };
+
+  const exportToPDF = () => {
+    // Preparar datos para PDF
+    const data = [
       ['Total Reservas', reportData.totalBookings],
       ['Ingresos Totales', `S/. ${(reportData.totalRevenue || 0).toFixed(2)}`],
       ['Total Usuarios', reportData.totalUsers],
       ['Total Proveedores', reportData.totalProviders],
-      '',
-      ['Estados de Reservas', ''],
-      ...Object.entries(reportData.bookingsByStatus || {}).map(([status, count]) => [status, count]),
-      '',
-      ['Top Destinos', ''],
-      ...(reportData.topDestinations || []).map(d => [d.location, d.count]),
-      '',
-      ['Top Proveedores', ''],
-      ...(reportData.topProviders || []).map(p => [p.providerName, `S/. ${(p.revenue || 0).toFixed(2)}`])
+      ['Valor Promedio', `S/. ${(reportData.averageBookingValue || 0).toFixed(2)}`],
+      ['Tasa Conversión', `${(reportData.conversionRate || 0).toFixed(2)}%`]
     ];
 
-    const csvContent = [headers, ...rows]
-      .map(row => row.join(','))
-      .join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `reporte_${format(new Date(), 'yyyy-MM-dd')}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    UniversalExportService.exportToPDF(data, {
+      filename: `reporte_${format(new Date(), 'yyyy-MM-dd')}`,
+      title: 'Reporte de Gestión - Futurismo Tours',
+      columns: [{ header: 'Métrica' }, { header: 'Valor' }]
+    });
     
-    toast.success('Reporte exportado exitosamente');
+    toast.success('Reporte PDF exportado exitosamente');
   };
 
   const StatCard = ({ icon: Icon, title, value, subtitle, color = 'blue', trend, compact = false }) => {
@@ -415,13 +451,19 @@ function Reports() {
                     <ArrowPathIcon className="w-5 h-5" />
                   </button>
                   
+                  <ExcelButton
+                    onClick={exportToExcel}
+                    className="px-3 sm:px-4 py-2 text-sm sm:text-base"
+                    text="Excel"
+                  />
+                  
                   <button
-                    onClick={exportToCSV}
-                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
+                    onClick={exportToPDF}
+                    className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
                   >
-                    <DocumentArrowDownIcon className="h-4 sm:h-5 w-4 sm:w-5" />
-                    <span className="hidden sm:inline">Exportar CSV</span>
-                    <span className="sm:hidden">CSV</span>
+                    <DocumentTextIcon className="h-4 sm:h-5 w-4 sm:w-5" />
+                    <span className="hidden sm:inline">PDF</span>
+                    <span className="sm:hidden">PDF</span>
                   </button>
                 </div>
               </div>

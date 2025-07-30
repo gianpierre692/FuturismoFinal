@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
@@ -10,14 +10,20 @@ import {
   ClockIcon,
   ExclamationTriangleIcon,
   CurrencyDollarIcon,
-  DocumentArrowDownIcon,
   EyeIcon
 } from '@heroicons/react/24/outline';
 import HistoryMobile from './HistoryMobile';
 import useAuthStore from '../stores/authStore';
+import ExcelButton from '../components/common/ExcelButton';
 
 const History = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const { user } = useAuthStore();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('date');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,12 +37,6 @@ const History = () => {
   if (isMobile) {
     return <HistoryMobile />;
   }
-  const { user } = useAuthStore();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('date');
-  const [sortOrder, setSortOrder] = useState('desc');
 
   // Mock data de viajes asignados
   const assignedTrips = [
@@ -543,10 +543,10 @@ const History = () => {
           <p className="text-sm text-gray-600">
             Mostrando {filteredTrips.length} de {assignedTrips.length} viajes
           </p>
-          <button className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-            <DocumentArrowDownIcon className="w-4 h-4" />
-            Exportar Excel
-          </button>
+          <ExcelButton
+            text="Excel"
+            fullText={true}
+          />
         </div>
 
         {/* Trips Table */}

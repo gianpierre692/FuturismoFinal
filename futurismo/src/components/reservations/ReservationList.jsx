@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
+import ExcelButton from '../common/ExcelButton';
 import { useTranslation } from 'react-i18next';
 import { formatters } from '../../utils/formatters';
 import { useReservationsStore } from '../../stores/reservationsStore';
@@ -427,14 +428,11 @@ const ReservationList = () => {
                 </div>
               </div>
 
-              <button 
+              <ExcelButton
                 onClick={handleExport}
-                className="btn btn-outline flex items-center gap-2 hover:bg-primary-50 hover:border-primary-500"
+                text={`${t('search.export')} (${filteredReservations.length})`}
                 title="Exportar reservas filtradas en Excel, PDF o CSV"
-              >
-                <ArrowDownTrayIcon className="w-4 h-4" />
-                {t('search.export')} ({filteredReservations.length})
-              </button>
+              />
             </div>
 
             {/* Segunda fila: Filtros */}

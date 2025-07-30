@@ -149,7 +149,7 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
         { icon: UserGroupIcon, label: 'Usuarios', action: () => navigateToPanel('users') },
         { icon: BuildingOffice2Icon, label: 'Gestión', action: () => navigateToPanel('management') },
         { icon: ChartBarIcon, label: 'Analytics', action: () => navigateToPanel('analytics') },
-        { icon: CogIcon, label: 'Sistema', action: () => navigateToPanel('system') }
+        { icon: CogIcon, label: 'Configuración', action: () => handleNavigate('/settings'), direct: true }
       );
 
       baseStructure.users = {
@@ -178,16 +178,6 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
           { icon: DocumentTextIcon, label: 'Reportes', action: () => handleNavigate('/admin/reports') },
           { icon: CurrencyDollarIcon, label: 'Finanzas', action: () => handleNavigate('/admin/finances') },
           { icon: StarIcon, label: 'KPIs', action: () => handleNavigate('/admin/kpis') }
-        ]
-      };
-
-      baseStructure.system = {
-        title: 'Sistema',
-        items: [
-          { icon: CogIcon, label: 'Configuración', action: () => handleNavigate('/settings') },
-          { icon: ShieldCheckIcon, label: 'Seguridad', action: () => handleNavigate('/security') },
-          { icon: DocumentTextIcon, label: 'Logs del Sistema', action: () => handleNavigate('/system-logs') },
-          { icon: ExclamationTriangleIcon, label: 'Mantenimiento', action: () => handleNavigate('/maintenance') }
         ]
       };
     }

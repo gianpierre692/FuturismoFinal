@@ -50,20 +50,43 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     } else if (user?.role === 'admin') {
       return [
         ...baseItems,
-        { path: '/monitoring', icon: MapIcon, label: t('navigation.monitoring') },
-        { path: '/admin/reservations', icon: CalendarIcon, label: t('navigation.reservationManagement') },
-        { path: '/admin/resources', icon: UserGroupIcon, label: t('navigation.resourcesManagement') },
-        { path: '/guides', icon: UserIcon, label: t('navigation.guides') },
-        { path: '/marketplace', icon: MagnifyingGlassIcon, label: t('navigation.marketplace') },
-        { path: '/providers', icon: BuildingOffice2Icon, label: t('navigation.providers') },
-        { path: '/emergency', icon: ShieldCheckIcon, label: t('navigation.emergencies') },
-        { path: '/agenda', icon: CalendarDaysIcon, label: t('navigation.coordination') },
-        { path: '/admin/reports', icon: ChartBarIcon, label: t('navigation.reports') },
-        { path: '/history', icon: DocumentTextIcon, label: t('navigation.history') },
-        { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') },
-        { path: '/users', icon: UserGroupIcon, label: t('navigation.users') },
-        { path: '/settings', icon: CogIcon, label: t('navigation.settings') },
-        { path: '/profile', icon: UserIcon, label: t('navigation.profile') }
+        { 
+          section: 'OPERACIONES',
+          items: [
+            { path: '/monitoring', icon: MapIcon, label: 'Monitoreo en Vivo', badge: 'En vivo', badgeColor: 'red' },
+            { path: '/reservations', icon: CalendarIcon, label: 'Reservaciones' },
+            { path: '/agenda', icon: CalendarDaysIcon, label: 'Calendario General' },
+          ]
+        },
+        {
+          section: 'GESTIÓN',
+          items: [
+            { path: '/users', icon: UserGroupIcon, label: 'Usuarios', badge: '389', badgeColor: 'blue' },
+            { path: '/guides', icon: UserIcon, label: 'Guías', badge: '35', badgeColor: 'green' },
+            { path: '/providers', icon: BuildingOffice2Icon, label: 'Proveedores' },
+          ]
+        },
+        {
+          section: 'ANÁLISIS',
+          items: [
+            { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes', badge: 'Excel/PDF', badgeColor: 'green' },
+            { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
+          ]
+        },
+        {
+          section: 'COMUNICACIÓN',
+          items: [
+            { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat', badge: '8', badgeColor: 'red' },
+            { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' },
+          ]
+        },
+        {
+          section: 'CONFIGURACIÓN',
+          items: [
+            { path: '/settings', icon: CogIcon, label: 'Configuración' },
+            { path: '/profile', icon: UserIcon, label: 'Mi Perfil' }
+          ]
+        }
       ];
     }
     
@@ -96,10 +119,70 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </div>
       </div>
 
-      {/* MapIcon */}
+      {/* Navigation */}
       <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
         <ul className="space-y-2">
-          {menuItems.map((item) => {
+          {menuItems.map((item, index) => {
+            // Si es una sección (para admin)
+            if (item.section) {
+              return (
+                <li key={`section-${index}`} className="pt-4 first:pt-0">
+                  {isOpen && (
+                    <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      {item.section}
+                    </h3>
+                  )}
+                  <ul className="space-y-1">
+                    {item.items.map((subItem) => {
+                      const Icon = subItem.icon;
+                      return (
+                        <li key={subItem.path}>
+                          <NavLink
+                            to={subItem.path}
+                            end
+                            className={({ isActive }) =>
+                              `flex items-center px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-colors group relative ${
+                                isActive
+                                  ? 'bg-primary text-white'
+                                  : 'text-gray-700 hover:bg-gray-100'
+                              }`
+                            }
+                          >
+                            <Icon className="w-5 h-5 flex-shrink-0" />
+                            {isOpen && (
+                              <>
+                                <span className="ml-3 flex-1">{subItem.label}</span>
+                                {subItem.badge && (
+                                  <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+                                    subItem.badgeColor === 'red' 
+                                      ? 'bg-red-100 text-red-700'
+                                      : subItem.badgeColor === 'green'
+                                      ? 'bg-green-100 text-green-700'
+                                      : 'bg-blue-100 text-blue-700'
+                                  }`}>
+                                    {subItem.badge}
+                                  </span>
+                                )}
+                              </>
+                            )}
+                            
+                            {/* Tooltip for collapsed sidebar */}
+                            {!isOpen && (
+                              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-10">
+                                {subItem.label}
+                                {subItem.badge && ` (${subItem.badge})`}
+                              </div>
+                            )}
+                          </NavLink>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </li>
+              );
+            }
+            
+            // Si es un item normal (para otros roles)
             const Icon = item.icon;
             return (
               <li key={item.path}>

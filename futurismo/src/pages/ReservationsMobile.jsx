@@ -189,13 +189,13 @@ const ReservationsMobile = () => {
         </div>
 
         {/* Filtros */}
-        <div className="px-4 pb-3">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
+        <div className="px-4 pb-3 overflow-hidden">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
             {filters.map(filter => (
               <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                   activeFilter === filter.id
                     ? 'bg-primary-100 text-primary-700'
                     : 'bg-gray-100 text-gray-600'
@@ -294,6 +294,14 @@ const ReservationsMobile = () => {
         )}
       </div>
 
+      {/* Botón flotante para nueva reserva */}
+      <button
+        onClick={() => setShowWizard(true)}
+        className="fixed bottom-20 right-4 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary-700 transition-all transform hover:scale-110 z-30"
+        aria-label="Nueva reserva"
+      >
+        <PlusIcon className="w-6 h-6" />
+      </button>
     </div>
   );
 };
