@@ -6,7 +6,8 @@ const ProviderCard = ({
   categoryInfo, 
   onEdit, 
   onDelete, 
-  layout = 'card' 
+  layout = 'card',
+  isMobile = false
 }) => {
   const formatPrice = (pricing) => {
     if (!pricing) return 'No especificado';
@@ -51,40 +52,33 @@ const ProviderCard = ({
   if (layout === 'list') {
     return (
       <div className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4 flex-1">
-            {/* Categoría y estado */}
-            <div className="flex-shrink-0">
-              <div className={`
-                w-12 h-12 rounded-lg flex items-center justify-center text-2xl
-                bg-${categoryInfo?.color || 'gray'}-100
-              `}>
-                {categoryInfo?.icon || '📦'}
-              </div>
-            </div>
-
-            {/* Información principal */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2 mb-1">
-                <h3 className="text-lg font-semibold text-gray-900 truncate">
-                  {provider.name}
-                </h3>
-                <span className={`
-                  px-2 py-1 text-xs font-medium rounded-full
-                  ${provider.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
-                `}>
+        {isMobile ? (
+          /* Mobile List Layout */
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center space-x-3 flex-1">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl bg-gray-100">
+                    {categoryInfo?.icon || '📦'}
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 truncate">{provider.name}</h3>
+                  <p className="text-sm text-gray-600 flex items-center">
+                    <MapPinIcon className="w-3 h-3 mr-1" />
+                    {locationName}
+                  </p>
+                </div>
+                <span className={`px-2 py-1 text-xs font-medium rounded-full flex-shrink-0 ${
+                  provider.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                }`}>
                   {provider.active ? 'Activo' : 'Inactivo'}
                 </span>
               </div>
-
+            </div>
+            
+            <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 text-sm text-gray-600">
-                <span className="flex items-center">
-                  <MapPinIcon className="w-4 h-4 mr-1" />
-                  {locationName}
-                </span>
-                <span className="flex items-center">
-                  {categoryInfo?.icon} {categoryInfo?.name}
-                </span>
                 <span className="flex items-center">
                   <StarIcon className="w-4 h-4 mr-1 text-yellow-400" />
                   {provider.rating}
@@ -96,37 +90,100 @@ const ProviderCard = ({
                   </span>
                 )}
               </div>
+              
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => onEdit()}
+                  className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  <PencilIcon className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete()}
+                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <TrashIcon className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-
-            {/* Precio */}
-            <div className="text-right flex-shrink-0">
-              <div className="text-lg font-semibold text-gray-900">
+            
+            <div className="text-right">
+              <div className="font-semibold text-gray-900">
                 {formatPrice(provider.pricing)}
               </div>
-              <div className="text-sm text-gray-500">
-                {provider.contact.contactPerson}
-              </div>
             </div>
           </div>
+        ) : (
+          /* Desktop List Layout */
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4 flex-1">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl bg-gray-100">
+                  {categoryInfo?.icon || '📦'}
+                </div>
+              </div>
 
-          {/* Acciones */}
-          <div className="flex items-center space-x-2 ml-4">
-            <button
-              onClick={() => onEdit()}
-              className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-              title="Editar"
-            >
-              <PencilIcon className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => onDelete()}
-              className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-              title="Eliminar"
-            >
-              <TrashIcon className="w-4 h-4" />
-            </button>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center space-x-2 mb-1">
+                  <h3 className="text-lg font-semibold text-gray-900 truncate">
+                    {provider.name}
+                  </h3>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    provider.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {provider.active ? 'Activo' : 'Inactivo'}
+                  </span>
+                </div>
+
+                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  <span className="flex items-center">
+                    <MapPinIcon className="w-4 h-4 mr-1" />
+                    {locationName}
+                  </span>
+                  <span className="flex items-center">
+                    {categoryInfo?.icon} {categoryInfo?.name}
+                  </span>
+                  <span className="flex items-center">
+                    <StarIcon className="w-4 h-4 mr-1 text-yellow-400" />
+                    {provider.rating}
+                  </span>
+                  {provider.capacity && (
+                    <span className="flex items-center">
+                      <UserGroupIcon className="w-4 h-4 mr-1" />
+                      {provider.capacity}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="text-right flex-shrink-0">
+                <div className="text-lg font-semibold text-gray-900">
+                  {formatPrice(provider.pricing)}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {provider.contact.contactPerson}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2 ml-4">
+              <button
+                onClick={() => onEdit()}
+                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                title="Editar"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => onDelete()}
+                className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                title="Eliminar"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
@@ -136,23 +193,27 @@ const ProviderCard = ({
     <div className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow overflow-hidden">
       {/* Header con categoría */}
       <div className={`
-        p-4 border-b border-gray-100
+        ${isMobile ? 'p-3' : 'p-4'} border-b border-gray-100
         bg-${categoryInfo?.color || 'gray'}-50
       `}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-2xl">{categoryInfo?.icon || '📦'}</span>
-            <div>
-              <h3 className="font-semibold text-gray-900">{categoryInfo?.name}</h3>
-              <p className="text-sm text-gray-600 flex items-center">
-                <MapPinIcon className="w-3 h-3 mr-1" />
-                {locationName}
+          <div className="flex items-center space-x-2 flex-1 min-w-0">
+            <span className={`${isMobile ? 'text-xl' : 'text-2xl'} flex-shrink-0`}>
+              {categoryInfo?.icon || '📦'}
+            </span>
+            <div className="min-w-0 flex-1">
+              <h3 className={`font-semibold text-gray-900 ${isMobile ? 'text-sm truncate' : ''}`}>
+                {categoryInfo?.name}
+              </h3>
+              <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-gray-600 flex items-center`}>
+                <MapPinIcon className="w-3 h-3 mr-1 flex-shrink-0" />
+                <span className={isMobile ? 'truncate' : ''}>{locationName}</span>
               </p>
             </div>
           </div>
           
           <span className={`
-            px-2 py-1 text-xs font-medium rounded-full
+            px-2 py-1 text-xs font-medium rounded-full flex-shrink-0
             ${provider.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
           `}>
             {provider.active ? 'Activo' : 'Inactivo'}
@@ -161,9 +222,9 @@ const ProviderCard = ({
       </div>
 
       {/* Contenido principal */}
-      <div className="p-4">
-        <div className="mb-3">
-          <h4 className="text-lg font-semibold text-gray-900 mb-1">
+      <div className={isMobile ? 'p-3' : 'p-4'}>
+        <div className={isMobile ? 'mb-2' : 'mb-3'}>
+          <h4 className={`${isMobile ? 'text-base' : 'text-lg'} font-semibold text-gray-900 mb-1`}>
             {provider.name}
           </h4>
           
@@ -172,17 +233,19 @@ const ProviderCard = ({
             <div className="flex items-center space-x-1">
               {renderStars(provider.rating)}
             </div>
-            <span className="text-sm text-gray-600">
+            <span className={`${isMobile ? 'text-xs' : 'text-sm'} text-gray-600`}>
               ({provider.rating}/5)
             </span>
           </div>
         </div>
 
         {/* Servicios */}
-        <div className="mb-4">
-          <h5 className="text-sm font-medium text-gray-700 mb-2">Servicios:</h5>
+        <div className={isMobile ? 'mb-3' : 'mb-4'}>
+          <h5 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-gray-700 mb-2`}>
+            Servicios:
+          </h5>
           <div className="flex flex-wrap gap-1">
-            {provider.services.slice(0, 3).map((service, index) => (
+            {provider.services.slice(0, isMobile ? 2 : 3).map((service, index) => (
               <span
                 key={index}
                 className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full"
@@ -190,17 +253,17 @@ const ProviderCard = ({
                 {service}
               </span>
             ))}
-            {provider.services.length > 3 && (
+            {provider.services.length > (isMobile ? 2 : 3) && (
               <span className="inline-block px-2 py-1 text-xs bg-gray-200 text-gray-600 rounded-full">
-                +{provider.services.length - 3} más
+                +{provider.services.length - (isMobile ? 2 : 3)} más
               </span>
             )}
           </div>
         </div>
 
         {/* Información adicional */}
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center justify-between text-sm">
+        <div className={`space-y-2 ${isMobile ? 'mb-3' : 'mb-4'}`}>
+          <div className={`flex items-center justify-between ${isMobile ? 'text-xs' : 'text-sm'}`}>
             <span className="text-gray-600">Precio base:</span>
             <span className="font-medium text-gray-900">
               {formatPrice(provider.pricing)}
@@ -208,7 +271,7 @@ const ProviderCard = ({
           </div>
           
           {provider.capacity && (
-            <div className="flex items-center justify-between text-sm">
+            <div className={`flex items-center justify-between ${isMobile ? 'text-xs' : 'text-sm'}`}>
               <span className="text-gray-600">Capacidad:</span>
               <span className="font-medium text-gray-900 flex items-center">
                 <UserGroupIcon className="w-4 h-4 mr-1" />
@@ -218,24 +281,28 @@ const ProviderCard = ({
           )}
         </div>
 
-        {/* Contacto */}
-        <div className="space-y-1 mb-4 text-sm">
-          <div className="flex items-center text-gray-600">
-            <PhoneIcon className="w-3 h-3 mr-2" />
-            {provider.contact.phone}
+        {/* Contacto - Solo mostrar en desktop para ahorrar espacio en mobile */}
+        {!isMobile && (
+          <div className="space-y-1 mb-4 text-sm">
+            <div className="flex items-center text-gray-600">
+              <PhoneIcon className="w-3 h-3 mr-2" />
+              {provider.contact.phone}
+            </div>
+            <div className="flex items-center text-gray-600">
+              <EnvelopeIcon className="w-3 h-3 mr-2" />
+              {provider.contact.email}
+            </div>
           </div>
-          <div className="flex items-center text-gray-600">
-            <EnvelopeIcon className="w-3 h-3 mr-2" />
-            {provider.contact.email}
-          </div>
-        </div>
+        )}
 
         {/* Especialidades (si es guía) */}
         {provider.specialties && (
-          <div className="mb-4">
-            <h5 className="text-sm font-medium text-gray-700 mb-2">Especialidades:</h5>
+          <div className={isMobile ? 'mb-3' : 'mb-4'}>
+            <h5 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-gray-700 mb-2`}>
+              Especialidades:
+            </h5>
             <div className="flex flex-wrap gap-1">
-              {provider.specialties.slice(0, 2).map((specialty, index) => (
+              {provider.specialties.slice(0, isMobile ? 1 : 2).map((specialty, index) => (
                 <span
                   key={index}
                   className="inline-block px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full"
@@ -243,12 +310,17 @@ const ProviderCard = ({
                   {specialty}
                 </span>
               ))}
+              {provider.specialties.length > (isMobile ? 1 : 2) && (
+                <span className="inline-block px-2 py-1 text-xs bg-blue-200 text-blue-600 rounded-full">
+                  +{provider.specialties.length - (isMobile ? 1 : 2)} más
+                </span>
+              )}
             </div>
           </div>
         )}
 
-        {/* Idiomas (si es guía) */}
-        {provider.languages && (
+        {/* Idiomas (si es guía) - Solo en desktop para ahorrar espacio */}
+        {provider.languages && !isMobile && (
           <div className="mb-4">
             <h5 className="text-sm font-medium text-gray-700 mb-2">Idiomas:</h5>
             <div className="flex flex-wrap gap-1">
@@ -266,30 +338,65 @@ const ProviderCard = ({
       </div>
 
       {/* Footer con acciones */}
-      <div className="p-4 bg-gray-50 border-t border-gray-100">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">
-            Contacto: {provider.contact.contactPerson}
-          </span>
-          
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => onEdit()}
-              className="p-2 text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition-colors"
-              title="Editar proveedor"
-            >
-              <PencilIcon className="w-4 h-4" />
-            </button>
+      <div className={`${isMobile ? 'p-3' : 'p-4'} bg-gray-50 border-t border-gray-100`}>
+        {isMobile ? (
+          /* Mobile Footer - Más compacto */
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <div className="text-xs text-gray-600 truncate">
+                {provider.contact.contactPerson}
+              </div>
+              {/* Mostrar contacto básico en mobile */}
+              <div className="text-xs text-gray-500 truncate mt-1">
+                <PhoneIcon className="w-3 h-3 inline mr-1" />
+                {provider.contact.phone}
+              </div>
+            </div>
             
-            <button
-              onClick={() => onDelete()}
-              className="p-2 text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition-colors"
-              title="Eliminar proveedor"
-            >
-              <TrashIcon className="w-4 h-4" />
-            </button>
+            <div className="flex items-center space-x-1 ml-2">
+              <button
+                onClick={() => onEdit()}
+                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition-colors"
+                title="Editar"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+              
+              <button
+                onClick={() => onDelete()}
+                className="p-2 text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition-colors"
+                title="Eliminar"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          /* Desktop Footer */
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">
+              Contacto: {provider.contact.contactPerson}
+            </span>
+            
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => onEdit()}
+                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition-colors"
+                title="Editar proveedor"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+              
+              <button
+                onClick={() => onDelete()}
+                className="p-2 text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition-colors"
+                title="Eliminar proveedor"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -59,7 +59,7 @@ const AdaptiveNavigation = ({ children }) => {
         <div className="flex-1 flex flex-col overflow-hidden min-w-0">
           <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
           <NotificationsPanel />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden max-w-full pt-16">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden max-w-full content-with-header">
             <div className="max-w-full">
               {children}
             </div>
@@ -95,7 +95,7 @@ const AdaptiveNavigation = ({ children }) => {
       <NotificationsPanel />
       
       {/* Contenido principal */}
-      <main className={`${showBottomNav ? 'pb-16' : ''} ${!location.pathname.includes('/marketplace') ? 'pt-16' : ''} overflow-x-hidden max-w-full`}>
+      <main className={`mobile-main-content ${showBottomNav ? 'pb-16' : ''} ${location.pathname.includes('/marketplace') ? '!pt-0' : ''} overflow-x-hidden max-w-full`}>
         <div className="max-w-full">
           {children}
         </div>

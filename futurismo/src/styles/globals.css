@@ -196,6 +196,62 @@
 }
 
 @layer utilities {
+  /* Responsive filters for reservation list */
+  .reservation-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  /* Estilos para inputs combinados en desktop */
+  .combined-input input[type="date"]:focus,
+  .combined-input input[type="number"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  .combined-input:has(input:focus) {
+    ring: 2px;
+    ring-color: rgb(99 102 241);
+    ring-offset: 2px;
+  }
+  
+  @media (max-width: 639px) {
+    .reservation-filters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    
+    .reservation-filters > * {
+      width: 100% !important;
+    }
+  }
+  
+  @media (min-width: 640px) and (max-width: 767px) {
+    .reservation-filters {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .reservation-filters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .reservation-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  }
+  
   /* Animaciones personalizadas */
   .animate-slide-up {
     animation: slideUp 0.3s ease-out;
@@ -340,6 +396,35 @@
 /* Estilos específicos para PWA instalada */
 .pwa-standalone .install-prompt {
   display: none !important;
+}
+
+/* Header height fix - Universal solution for fixed headers */
+:root {
+  --header-height: 72px; /* Standard header height for desktop - py-4 + contenido + border */
+}
+
+/* Mobile header adjustments */
+@media (max-width: 767px) {
+  :root {
+    --header-height: 68px; /* Mobile header height - py-3 + contenido más real */
+  }
+}
+
+/* Universal class for content with fixed header */
+.content-with-header {
+  padding-top: var(--header-height) !important;
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* Alternative: margin-top based approach */
+.content-below-header {
+  margin-top: var(--header-height) !important;
+}
+
+/* Specific fix for mobile main content */
+.mobile-main-content {
+  padding-top: var(--header-height) !important;
+  min-height: calc(100vh - var(--header-height));
 }
 
 /* Mejoras para PWA en iOS */

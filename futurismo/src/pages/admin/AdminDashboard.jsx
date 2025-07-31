@@ -32,6 +32,9 @@ import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, R
 import UniversalExportService from '../../services/universalExportService';
 import SafeChart from '../../components/charts/SafeChart';
 import ExcelButton from '../../components/common/ExcelButton';
+import InteractiveServiceDistribution from '../../components/charts/InteractiveServiceDistribution';
+import InteractiveRevenueChart from '../../components/charts/InteractiveRevenueChart';
+import ToastContainer from '../../components/common/ToastContainer';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -495,60 +498,46 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* Gráficos */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Gráfico de ingresos */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Ingresos Mensuales</h3>
-          <SafeChart>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="mes" />
-                <YAxis />
-                <Tooltip formatter={(value) => `S/. ${value.toLocaleString()}`} />
-                <Line type="monotone" dataKey="valor" stroke="#3B82F6" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </SafeChart>
-        </div>
+      {/* Gráficos Interactivos */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {/* Gráfico de ingresos interactivo */}
+        <InteractiveRevenueChart 
+          data={revenueData}
+          title="Análisis de Ingresos"
+          showExport={true}
+          showFilters={true}
+          onDataPointClick={(data) => {
+            // Navegación a reportes detallados del mes
+            navigate(`/admin/reports?month=${data.mes}&year=2024&view=detailed`);
+          }}
+          className="xl:col-span-1"
+        />
 
-        {/* Distribución de servicios */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribución de Servicios</h3>
-          <SafeChart>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={serviceDistribution}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {serviceDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </SafeChart>
-          <div className="mt-4 space-y-2">
-            {serviceDistribution.map((item, index) => (
-              <div key={index} className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
-                  <span className="text-gray-700">{item.name}</span>
-                </div>
-                <span className="font-medium">{item.value}%</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Distribución de servicios interactiva */}
+        <InteractiveServiceDistribution 
+          data={serviceDistribution}
+          title="Distribución de Servicios"
+          showExport={true}
+          showFilters={true}
+          onSegmentClick={(data) => {
+            // Navegación personalizada según el servicio
+            const routes = {
+              'Tours Grupales': '/reservations?type=group',
+              'Tours Privados': '/reservations?type=private', 
+              'Actividades': '/reservations?type=activities',
+              'Transfers': '/reservations?type=transfers'
+            };
+            const route = routes[data.name];
+            if (route) {
+              navigate(route);
+            }
+          }}
+          className="xl:col-span-1"
+        />
       </div>
+      
+      {/* Toast Notifications - Solo para esta página si es necesario */}
+      <ToastContainer position="top-right" />
     </div>
   );
 };

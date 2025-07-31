@@ -21,19 +21,32 @@ import ExcelButton from '../components/common/ExcelButton';
 import UserList from '../components/users/UserList';
 import UserForm from '../components/users/UserFormSimple';
 import ExportImportModal from '../components/common/ExportImportModal';
+import ConfirmDialog from '../components/common/ConfirmDialog';
+import useInteractiveAdmin from '../hooks/useInteractiveAdmin';
 import { useUsersStore } from '../stores/usersStoreSimple';
 
 const Users = () => {
   const [currentView, setCurrentView] = useState('list'); // 'list', 'create', 'edit', 'view'
   const [selectedUser, setSelectedUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showExportModal, setShowExportModal] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   const { deleteUser, getUsersStatistics, getAllUsers, importUsers } = useUsersStore();
+  const { 
+    isLoading, 
+    confirmDialog, 
+    confirmDelete, 
+    handleSave, 
+    handleExport,
+    handleImport,
+    handleBulkOperation,
+    notify,
+    closeConfirmDialog 
+  } = useInteractiveAdmin();
 
   useEffect(() => {
     const handleResize = () => {
@@ -59,24 +72,39 @@ const Users = () => {
     setCurrentView('view');
   };
 
-  const handleDeleteUser = (user) => {
-    if (window.confirm(`¿Estás seguro de que quieres eliminar al usuario "${user.firstName} ${user.lastName}"?`)) {
-      deleteUser(user.id);
-    }
+  const handleDeleteUser = async (user) => {
+    const userName = `${user.firstName} ${user.lastName}`;
+    await confirmDelete(userName, async () => {
+      await deleteUser(user.id);
+    });
   };
 
   const handleFormSubmit = async (userData) => {
-    setIsLoading(true);
-    try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setCurrentView('list');
-      setSelectedUser(null);
-    } catch (error) {
-      console.error('Error al guardar usuario:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    const isEdit = currentView === 'edit';
+    await handleSave(
+      async () => {
+        // Simular API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setCurrentView('list');
+        setSelectedUser(null);
+      },
+      'usuario',
+      isEdit
+    );
+  };
+
+  // Función para manejar operaciones en lote
+  const handleBulkDelete = async () => {
+    await handleBulkOperation(
+      async (users) => {
+        for (const user of users) {
+          await deleteUser(user.id);
+        }
+      },
+      selectedUsers,
+      'Eliminar'
+    );
+    setSelectedUsers([]);
   };
 
   const handleCancel = () => {
@@ -84,15 +112,28 @@ const Users = () => {
     setSelectedUser(null);
   };
 
-  const handleImportSuccess = (importedData) => {
-    // Process imported data and update users store
+  const handleImportSuccess = async (importedData) => {
     if (importedData && Object.keys(importedData).length > 0) {
       const firstSheet = Object.values(importedData)[0];
-      if (importUsers && typeof importUsers === 'function') {
-        importUsers(firstSheet);
-      }
+      await handleImport(
+        async () => {
+          if (importUsers && typeof importUsers === 'function') {
+            await importUsers(firstSheet);
+          }
+        },
+        'usuarios.xlsx'
+      );
       setShowExportModal(false);
     }
+  };
+
+  const handleExportUsers = async () => {
+    await handleExport(async () => {
+      const users = getAllUsers ? getAllUsers() : [];
+      // Simular exportación
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      return users;
+    });
   };
 
   const stats = getUsersStatistics ? getUsersStatistics() : {
@@ -150,15 +191,38 @@ const Users = () => {
             )}
             
             <div className="flex gap-2">
+              {/* Botón de eliminar en lote - solo si hay seleccionados */}
+              {selectedUsers.length > 0 && (
+                <button
+                  onClick={handleBulkDelete}
+                  disabled={isLoading}
+                  className="inline-flex items-center justify-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors text-sm"
+                >
+                  <DocumentArrowDownIcon className="h-4 w-4 mr-1" />
+                  Eliminar ({selectedUsers.length})
+                </button>
+              )}
+              
               <ExcelButton
-                onClick={() => setShowExportModal(true)}
-                text="Exportar/Importar"
+                onClick={handleExportUsers}
+                disabled={isLoading}
+                text="Excel"
                 className="text-sm sm:text-base"
               />
               
               <button
+                onClick={() => setShowExportModal(true)}
+                disabled={isLoading}
+                className="inline-flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors text-sm"
+              >
+                <DocumentArrowUpIcon className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">Importar</span>
+              </button>
+              
+              <button
                 onClick={handleCreateUser}
-                className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-sm sm:text-base"
+                disabled={isLoading}
+                className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors text-sm sm:text-base disabled:opacity-50"
               >
                 <UserPlusIcon className="h-5 w-5 mr-2" />
                 <span className="hidden sm:inline">Nuevo Usuario</span>
@@ -554,6 +618,9 @@ const Users = () => {
               searchTerm={searchTerm}
               filterRole={filterRole}
               filterStatus={filterStatus}
+              selectedUsers={selectedUsers}
+              onSelectionChange={setSelectedUsers}
+              isLoading={isLoading}
             />
 
             {/* Mobile Stats Card */}
@@ -629,6 +696,23 @@ const Users = () => {
               </div>
             </div>
           </div>
+        )}
+        
+        {/* Componente de confirmación elegante */}
+        {confirmDialog && (
+          <ConfirmDialog
+            isOpen={true}
+            onClose={closeConfirmDialog}
+            onConfirm={confirmDialog.onConfirm}
+            title={confirmDialog.title}
+            message={confirmDialog.message}
+            type={confirmDialog.type}
+            confirmText={confirmDialog.confirmText}
+            cancelText={confirmDialog.cancelText}
+            loading={isLoading}
+            destructive={confirmDialog.destructive}
+            details={confirmDialog.details}
+          />
         )}
       </div>
     </div>

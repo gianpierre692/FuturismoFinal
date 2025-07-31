@@ -165,43 +165,55 @@ const ReservationsMobile = () => {
 
   return (
     <div className="fixed inset-0 top-14 flex flex-col bg-gray-50">
-      {/* Search Bar */}
+      {/* Header con búsqueda y botón nuevo */}
       <div className="bg-white shadow-sm z-20 flex-shrink-0">
         <div className="px-4 py-3">
-          <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por código, tour, agencia..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-              >
-                ✕
-              </button>
-            )}
+          <div className="flex gap-3 items-center">
+            <div className="relative flex-1">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Buscar por código, tour, agencia..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-2 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => setShowWizard(true)}
+              className="flex-shrink-0 p-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+              aria-label="Nueva reserva"
+            >
+              <PlusIcon className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
-        {/* Filtros */}
-        <div className="px-4 pb-3 overflow-hidden">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+        {/* Filtros Responsive */}
+        <div className="px-4 pb-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {filters.map(filter => (
               <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors text-center ${
                   activeFilter === filter.id
-                    ? 'bg-primary-100 text-primary-700'
-                    : 'bg-gray-100 text-gray-600'
+                    ? 'bg-primary-500 text-white shadow-sm'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
-                {filter.label} ({filter.count})
+                <div className="flex flex-col">
+                  <span className="text-xs opacity-75">{filter.label}</span>
+                  <span className="text-lg font-bold">{filter.count}</span>
+                </div>
               </button>
             ))}
           </div>
@@ -294,14 +306,6 @@ const ReservationsMobile = () => {
         )}
       </div>
 
-      {/* Botón flotante para nueva reserva */}
-      <button
-        onClick={() => setShowWizard(true)}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary-700 transition-all transform hover:scale-110 z-30"
-        aria-label="Nueva reserva"
-      >
-        <PlusIcon className="w-6 h-6" />
-      </button>
     </div>
   );
 };

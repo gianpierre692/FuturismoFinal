@@ -363,7 +363,15 @@
     "showing": "Mostrando",
     "of": "de",
     "reservationsPlural": "reservaciones",
-    "deleteConfirm": "¿Está seguro de eliminar esta reserva?"
+    "deleteConfirm": "¿Está seguro de eliminar esta reserva?",
+    "filters": "Filtros",
+    "status": "Estado",
+    "dateRange": "Rango de fechas",
+    "clientPlaceholder": "Buscar por nombre",
+    "min": "Mín",
+    "max": "Máx",
+    "clearAll": "Limpiar todo",
+    "apply": "Aplicar"
   },
   "roles": {
     "agency": "🏢 Agencia",

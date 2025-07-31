@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { useState, Fragment } from 'react';
+import { CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, CurrencyDollarIcon, EllipsisVerticalIcon, EyeIcon, PencilIcon, TrashIcon, DocumentTextIcon, MagnifyingGlassIcon, ArrowDownTrayIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon, HeartIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import { Popover, Transition } from '@headlessui/react';
 import ExcelButton from '../common/ExcelButton';
 import { useTranslation } from 'react-i18next';
 import { formatters } from '../../utils/formatters';
@@ -31,6 +32,28 @@ const ReservationList = () => {
   const [selectedService, setSelectedService] = useState(null);
 
   const itemsPerPage = 10;
+
+  // Calcular filtros activos
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (statusFilter !== 'all') count++;
+    if (dateFrom) count++;
+    if (dateTo) count++;
+    if (customerFilter) count++;
+    if (minPassengers) count++;
+    if (maxPassengers) count++;
+    return count;
+  };
+
+  const clearAllFilters = () => {
+    setStatusFilter('all');
+    setDateFrom('');
+    setDateTo('');
+    setCustomerFilter('');
+    setMinPassengers('');
+    setMaxPassengers('');
+    setCurrentPage(1);
+  };
 
   // Mock data para demostración
   const mockReservations = [
@@ -409,139 +432,184 @@ const ReservationList = () => {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow">
+      <div className="bg-white rounded-lg shadow h-full flex flex-col" style={{ marginTop: '2rem' }}>
         {/* Header con búsqueda y filtros */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex flex-col gap-4">
-            {/* Primera fila: Búsqueda y Exportar */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-between">
-              <div className="flex-1 max-w-md">
-                <div className="relative">
-                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    placeholder={t('search.searchByTour')}
-                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <ExcelButton
-                onClick={handleExport}
-                text={`${t('search.export')} (${filteredReservations.length})`}
-                title="Exportar reservas filtradas en Excel, PDF o CSV"
+        <div className="p-4 sm:p-6 md:p-4 lg:p-6 border-b border-gray-200 flex-shrink-0">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-6">
+            {/* Búsqueda siempre visible */}
+            <div className="relative flex-1 max-w-md">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder={t('search.searchByTour')}
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            {/* Segunda fila: Filtros */}
-            <div className="flex flex-wrap gap-3">
-              <select
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
+            <div className="flex items-center gap-3">
+              {/* Dropdown de filtros */}
+              <Popover className="relative">
+                <Popover.Button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <FunnelIcon className="w-5 h-5 text-gray-500" />
+                <span className="font-medium">
+                  {t('search.filters')} 
+                  {getActiveFiltersCount() > 0 && (
+                    <span className="ml-1 px-2 py-0.5 text-xs bg-primary-100 text-primary-700 rounded-full">
+                      {getActiveFiltersCount()}
+                    </span>
+                  )}
+                </span>
+              </Popover.Button>
+
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-200"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
               >
-                <option value="all">{t('search.allStatuses')}</option>
-                <option value="pendiente">{t('reservations.pending')}</option>
-                <option value="confirmada">{t('reservations.confirmed')}</option>
-                <option value="cancelada">{t('reservations.cancelled')}</option>
-                <option value="completada">{t('reservations.completed')}</option>
-              </select>
+                <Popover.Panel className="absolute right-0 z-10 mt-2 w-80 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                  <div className="p-4 space-y-4">
+                    {/* Estado */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('search.status')}
+                      </label>
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                      >
+                        <option value="all">{t('search.allStatuses')}</option>
+                        <option value="pendiente">{t('reservations.pending')}</option>
+                        <option value="confirmada">{t('reservations.confirmed')}</option>
+                        <option value="cancelada">{t('reservations.cancelled')}</option>
+                        <option value="completada">{t('reservations.completed')}</option>
+                      </select>
+                    </div>
 
-              <input
-                type="date"
-                placeholder="Fecha desde"
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                title={t('search.dateFrom')}
+                    {/* Rango de fechas */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('search.dateRange')}
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="date"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          value={dateFrom}
+                          onChange={(e) => setDateFrom(e.target.value)}
+                          title={t('search.dateFrom')}
+                        />
+                        <span className="text-gray-400">-</span>
+                        <input
+                          type="date"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          value={dateTo}
+                          onChange={(e) => setDateTo(e.target.value)}
+                          title={t('search.dateTo')}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Cliente */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('search.client')}
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={t('search.clientPlaceholder')}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        value={customerFilter}
+                        onChange={(e) => setCustomerFilter(e.target.value)}
+                      />
+                    </div>
+
+                    {/* Rango de pasajeros */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('search.passengers')}
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          placeholder={t('search.min')}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          value={minPassengers}
+                          onChange={(e) => setMinPassengers(e.target.value)}
+                          min="1"
+                        />
+                        <span className="text-gray-400">-</span>
+                        <input
+                          type="number"
+                          placeholder={t('search.max')}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                          value={maxPassengers}
+                          onChange={(e) => setMaxPassengers(e.target.value)}
+                          min="1"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Botones de acción */}
+                    <div className="flex gap-2 pt-2 border-t">
+                      <button
+                        onClick={clearAllFilters}
+                        className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        {t('search.clearAll')}
+                      </button>
+                      <Popover.Button className="flex-1 px-4 py-2 text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors">
+                        {t('search.apply')}
+                      </Popover.Button>
+                    </div>
+                  </div>
+                </Popover.Panel>
+              </Transition>
+            </Popover>
+
+              {/* Botón de exportar */}
+              <ExcelButton
+                onClick={handleExport}
+                text={`${t('search.export')} (${filteredReservations.length})`}
+                title="Exportar reservas filtradas"
               />
-
-              <input
-                type="date"
-                placeholder="Fecha hasta"
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                title={t('search.dateTo')}
-              />
-
-              <input
-                type="text"
-                placeholder={t('search.client')}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-40"
-                value={customerFilter}
-                onChange={(e) => setCustomerFilter(e.target.value)}
-              />
-
-              <input
-                type="number"
-                placeholder={t('search.minPassengers')}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-32"
-                value={minPassengers}
-                onChange={(e) => setMinPassengers(e.target.value)}
-                min="1"
-              />
-
-              <input
-                type="number"
-                placeholder={t('search.maxPassengers')}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 w-32"
-                value={maxPassengers}
-                onChange={(e) => setMaxPassengers(e.target.value)}
-                min="1"
-              />
-
-              {/* Botón para limpiar filtros */}
-              {(dateFrom || dateTo || customerFilter || minPassengers || maxPassengers) && (
-                <button
-                  onClick={() => {
-                    setDateFrom('');
-                    setDateTo('');
-                    setCustomerFilter('');
-                    setMinPassengers('');
-                    setMaxPassengers('');
-                    setCurrentPage(1);
-                  }}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800 flex items-center gap-1"
-                  title={t('search.clear')}
-                >
-                  <XMarkIcon className="w-4 h-4" />
-                  {t('search.clear')}
-                </button>
-              )}
             </div>
           </div>
         </div>
 
         {/* Tabla de reservaciones */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto flex-1 min-h-0">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('search.code')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('search.tourClient')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('search.dateTime')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('search.passengers')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('search.total')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('reservations.status')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('reservations.payment')}
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 md:px-3 lg:px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {t('search.actions')}
                 </th>
               </tr>
@@ -549,16 +617,16 @@ const ReservationList = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {paginatedReservations.map((reservation) => (
                 <tr key={reservation.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap">
                     <span className="text-sm font-medium text-gray-900">{reservation.id}</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4">
                     <div>
                       <p className="text-sm font-medium text-gray-900">{reservation.tourName}</p>
                       <p className="text-sm text-gray-500">{reservation.clientName}</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap">
                     <div className="text-sm">
                       <div className="flex items-center gap-1 text-gray-900">
                         <CalendarIcon className="w-4 h-4" />
@@ -570,7 +638,7 @@ const ReservationList = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-1 text-sm">
                       <UserGroupIcon className="w-4 h-4 text-gray-400" />
                       <span>
@@ -579,22 +647,22 @@ const ReservationList = () => {
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap">
                     <span className="text-sm font-medium text-gray-900">
                       ${reservation.total}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap">
                     <span className={`badge ${getStatusBadge(reservation.status)}`}>
                       {getStatusLabel(reservation.status)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap">
                     <span className={`badge ${getPaymentBadge(reservation.paymentStatus)}`}>
                       {getPaymentLabel(reservation.paymentStatus)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <td className="px-3 sm:px-6 md:px-3 lg:px-4 py-4 whitespace-nowrap text-right">
                     <div className="relative">
                       <button
                         onClick={() => setShowActions(showActions === reservation.id ? null : reservation.id)}
@@ -666,7 +734,7 @@ const ReservationList = () => {
 
         {/* Paginación */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-gray-200">
+          <div className="px-4 sm:px-6 md:px-4 lg:px-6 py-4 border-t border-gray-200 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-700">
                 {t('search.showing')} {startIndex + 1} a {Math.min(startIndex + itemsPerPage, filteredReservations.length)} {t('search.of')} {filteredReservations.length} {t('search.reservationsPlural')}

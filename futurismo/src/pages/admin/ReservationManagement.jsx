@@ -669,8 +669,8 @@ const ReservationManagement = () => {
 
   return (
     <>
-      <div className="px-4 sm:px-6 lg:px-8 py-2 sm:py-4 bg-gray-50 min-h-screen">
-        <div className="max-w-7xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-2 sm:py-4 bg-gray-50 min-h-screen">
+        <div className="max-w-7xl xl:max-w-full mx-auto">
           {/* Header */}
           <div className="mb-6 lg:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -735,7 +735,7 @@ const ReservationManagement = () => {
 
           {/* Stats Cards - Desktop */}
           {!isMobile && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 mb-6">
               <StatCard
                 title="Total Reservas"
                 value={filteredReservations.length}
@@ -813,7 +813,7 @@ const ReservationManagement = () => {
                 <h3 className="text-lg font-semibold text-gray-800">Filtros</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Fecha desde
@@ -871,7 +871,7 @@ const ReservationManagement = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Tipo de tour
@@ -932,7 +932,7 @@ const ReservationManagement = () => {
 
           {/* Revenue Stats - Desktop Only */}
           {!isMobile && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mb-8">
               <StatCard
                 title="Total de Clientes"
                 value={stats.totalClients}

@@ -87,7 +87,7 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
       baseStructure.main.items.push(
         { icon: BriefcaseIcon, label: 'Operaciones', action: () => navigateToPanel('operations'), badge: 3 },
         { icon: MagnifyingGlassIcon, label: 'Marketplace', action: () => navigateToPanel('marketplace') },
-        { icon: ChartBarIcon, label: 'Análisis', action: () => navigateToPanel('analytics') },
+        { icon: ChartBarIcon, label: 'Reportes', action: () => handleNavigate('/agency/reports'), direct: true },
         { icon: UserCircleIcon, label: 'Mi Cuenta', action: () => navigateToPanel('account'), badge: unreadCount }
       );
 
@@ -110,14 +110,6 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
         ]
       };
 
-      baseStructure.analytics = {
-        title: 'Análisis',
-        items: [
-          { icon: ChartBarIcon, label: 'Dashboard Analytics', action: () => handleNavigate('/agency/reports') },
-          { icon: DocumentTextIcon, label: 'Reportes', action: () => handleNavigate('/reports') },
-          { icon: CurrencyDollarIcon, label: 'Finanzas', action: () => handleNavigate('/finances') }
-        ]
-      };
     } else if (user?.role === 'guide') {
       baseStructure.main.items.push(
         { icon: CalendarDaysIcon, label: 'Mi Agenda', action: () => handleNavigate('/agenda'), badge: 3 },
@@ -148,16 +140,15 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
       baseStructure.main.items.push(
         { icon: UserGroupIcon, label: 'Usuarios', action: () => navigateToPanel('users') },
         { icon: BuildingOffice2Icon, label: 'Gestión', action: () => navigateToPanel('management') },
-        { icon: ChartBarIcon, label: 'Analytics', action: () => navigateToPanel('analytics') },
+        { icon: ChartBarIcon, label: 'Reportes', action: () => handleNavigate('/admin/reports'), direct: true },
         { icon: CogIcon, label: 'Configuración', action: () => handleNavigate('/settings'), direct: true }
       );
 
       baseStructure.users = {
         title: 'Gestión de Usuarios',
         items: [
-          { icon: UserGroupIcon, label: 'Lista de Usuarios', action: () => handleNavigate('/users') },
-          { icon: UserCircleIcon, label: 'Roles y Permisos', action: () => handleNavigate('/roles') },
-          { icon: DocumentTextIcon, label: 'Logs de Actividad', action: () => handleNavigate('/logs') }
+          { icon: UserGroupIcon, label: 'Gestión de Usuarios', action: () => handleNavigate('/users') },
+          { icon: DocumentTextIcon, label: 'Historial de Usuarios', action: () => handleNavigate('/history') }
         ]
       };
 
@@ -171,15 +162,6 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
         ]
       };
 
-      baseStructure.analytics = {
-        title: 'Analytics',
-        items: [
-          { icon: ChartBarIcon, label: 'Dashboard General', action: () => handleNavigate('/admin/dashboard') },
-          { icon: DocumentTextIcon, label: 'Reportes', action: () => handleNavigate('/admin/reports') },
-          { icon: CurrencyDollarIcon, label: 'Finanzas', action: () => handleNavigate('/admin/finances') },
-          { icon: StarIcon, label: 'KPIs', action: () => handleNavigate('/admin/kpis') }
-        ]
-      };
     }
 
     // Panel de cuenta común para todos

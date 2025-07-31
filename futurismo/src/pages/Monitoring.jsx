@@ -33,9 +33,9 @@ const Monitoring = () => {
   const isGuide = user?.role === 'guide';
 
   return (
-    <div className="h-full flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
       {/* Container with max width and better padding */}
-      <div className="h-full flex flex-col max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
+      <div className="flex-1 flex flex-col max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
         {/* Header con opciones de vista */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-6 lg:mb-8">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
@@ -71,12 +71,11 @@ const Monitoring = () => {
         </div>
 
         {/* Contenido principal with better spacing */}
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 h-full">
           {activeView === 'map' && (
-            <div className="h-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="h-full w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
               <LiveMapUnified 
-                mode='cdn' // Usando modo CDN para mejor rendimiento
-                updateInterval={5000} // 5 segundos para tiempo real
+                mode='cdn'
                 showSidebar={true}
                 height="h-full"
               />

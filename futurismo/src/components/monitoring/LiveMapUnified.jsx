@@ -24,13 +24,16 @@ const LiveMapUnified = memo(({
   const [mapCenter] = useState([-13.5169, -71.9788]); // Plaza de Armas Cusco
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const mapId = useRef(`map-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
 
-  // Inicializar datos mock si es necesario
+  // Inicializar datos mock si es necesario (solo una vez)
   useEffect(() => {
+    console.log('LiveMapUnified - activeServices:', activeServices.length);
     if (activeServices.length === 0) {
+      console.log('Inicializando datos mock...');
       initializeMockData();
     }
-  }, [activeServices.length, initializeMockData]);
+  }, []); // Solo ejecutar una vez al montar
 
   // Filtrar servicios según filtros
   const filteredServices = activeServices.filter(service => {
@@ -158,22 +161,81 @@ const LiveMapUnified = memo(({
       
       return () => {
         if (mapInstanceRef.current) {
-          mapInstanceRef.current.remove();
-          mapInstanceRef.current = null;
+          try {
+            mapInstanceRef.current.remove();
+            mapInstanceRef.current = null;
+          } catch (error) {
+            console.warn('Error al limpiar el mapa:', error);
+          }
         }
         markersRef.current = [];
+        
+        // Limpiar el ID de Leaflet
+        if (mapRef.current && mapRef.current._leaflet_id) {
+          delete mapRef.current._leaflet_id;
+        }
       };
     }, []);
 
-    const initializeLeafletMap = () => {
-      if (!mapRef.current || !window.L || mapInstanceRef.current) return;
+    const initializeLeafletMap = (retryCount = 0) => {
+      if (!mapRef.current || !window.L) return;
 
-      const map = window.L.map(mapRef.current).setView(mapCenter, 13);
-      mapInstanceRef.current = map;
+      // Si ya existe una instancia, no crear otra
+      if (mapInstanceRef.current) return;
+
+      // Verificar que el contenedor tenga dimensiones
+      const rect = mapRef.current.getBoundingClientRect();
+      if ((rect.width === 0 || rect.height === 0) && retryCount < 10) {
+        console.log(`Contenedor sin dimensiones (${rect.width}x${rect.height}), reintento ${retryCount + 1}/10`);
+        setTimeout(() => initializeLeafletMap(retryCount + 1), 200);
+        return;
+      }
+
+      // Si después de 10 intentos no tiene dimensiones, forzar inicialización
+      if (rect.width === 0 || rect.height === 0) {
+        console.warn('Forzando inicialización del mapa sin dimensiones detectadas');
+      }
+
+      // Limpiar cualquier inicialización previa del contenedor
+      if (mapRef.current._leaflet_id) {
+        delete mapRef.current._leaflet_id;
+      }
+
+      try {
+        const map = window.L.map(mapRef.current).setView(mapCenter, 13);
+        mapInstanceRef.current = map;
       
-      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
+        window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(mapInstanceRef.current);
+
+        console.log('Mapa inicializado correctamente');
+        setIsMapLoaded(true);
+        
+        // Invalidar el tamaño del mapa después de un pequeño delay para asegurar que el DOM esté listo
+        setTimeout(() => {
+          if (mapInstanceRef.current) {
+            mapInstanceRef.current.invalidateSize();
+          }
+        }, 100);
+        
+        updateMarkers();
+      } catch (error) {
+        console.error('Error al inicializar el mapa:', error);
+        // Limpiar referencias en caso de error
+        mapInstanceRef.current = null;
+        if (mapRef.current && mapRef.current._leaflet_id) {
+          delete mapRef.current._leaflet_id;
+        }
+      }
+    };
+
+    const updateMarkers = () => {
+      if (!mapInstanceRef.current) return;
+
+      // Limpiar marcadores existentes
+      markersRef.current.forEach(marker => marker.remove());
+      markersRef.current = [];
 
       // Agregar marcadores con coordenadas reales
       filteredServices.forEach((service, index) => {
@@ -197,7 +259,7 @@ const LiveMapUnified = memo(({
         });
         
         const marker = window.L.marker([lat, lng], { icon })
-          .addTo(map)
+          .addTo(mapInstanceRef.current)
           .bindPopup(`
             <div style="min-width: 200px;">
               <b>${service.code}</b><br>
@@ -215,18 +277,59 @@ const LiveMapUnified = memo(({
       });
     };
 
-    if (!isMapLoaded) {
-      return (
-        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando mapa...</p>
-          </div>
-        </div>
-      );
-    }
+    // useEffect para actualizar marcadores cuando cambian los servicios
+    useEffect(() => {
+      if (isMapLoaded && mapInstanceRef.current) {
+        updateMarkers();
+      }
+    }, [filteredServices, isMapLoaded]);
 
-    return <div ref={mapRef} className="w-full h-full rounded-lg" />;
+    // useEffect para manejar cambios de tamaño
+    useEffect(() => {
+      const handleResize = () => {
+        if (mapInstanceRef.current) {
+          setTimeout(() => {
+            mapInstanceRef.current.invalidateSize();
+          }, 100);
+        }
+      };
+
+      // Observar cambios en el contenedor
+      const resizeObserver = new ResizeObserver(handleResize);
+      if (mapRef.current) {
+        resizeObserver.observe(mapRef.current);
+      }
+
+      // También escuchar eventos de resize de la ventana
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        resizeObserver.disconnect();
+        window.removeEventListener('resize', handleResize);
+      };
+    }, [isMapLoaded]);
+
+    return (
+      <div className="w-full h-full relative">
+        <div 
+          id={mapId.current} 
+          ref={mapRef} 
+          className="w-full h-full rounded-lg" 
+          style={{ 
+            minHeight: '500px',
+            backgroundColor: '#f0f0f0' 
+          }}
+        />
+        {!isMapLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-600">Cargando mapa...</p>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   // Componente de mapa con NPM (React Leaflet)
@@ -246,15 +349,15 @@ const LiveMapUnified = memo(({
   ];
 
   return (
-    <div className="flex gap-4 h-full">
+    <div className="flex gap-4 h-full w-full">
       {/* Mapa */}
-      <div className={`flex-1 ${height || 'h-full'} bg-white rounded-lg shadow-md overflow-hidden relative`}>
+      <div className={`flex-1 h-full bg-white rounded-lg shadow-md overflow-hidden relative`}>
         {renderMap()}
       </div>
 
       {/* Sidebar con servicios activos */}
       {showSidebar && (
-        <div className="w-96 bg-white rounded-lg shadow-md p-4 overflow-y-auto">
+        <div className="w-80 bg-white rounded-lg shadow-md p-4 overflow-y-auto flex-shrink-0">
           <h3 className="text-lg font-semibold mb-4">Servicios Activos</h3>
           
           {/* Leyenda */}

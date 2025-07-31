@@ -19,6 +19,7 @@ import GeneralSettings from '../components/settings/GeneralSettings';
 import ToursSettings from '../components/settings/ToursSettings';
 import NotificationsSettings from '../components/settings/NotificationsSettings';
 import { useSettingsStore } from '../stores/settingsStore';
+import useAuthStore from '../stores/authStore';
 import UniversalExportService from '../services/universalExportService';
 
 const Settings = () => {
@@ -28,6 +29,7 @@ const Settings = () => {
   const [showImportSuccess, setShowImportSuccess] = useState(false);
   const [showExportSuccess, setShowExportSuccess] = useState(false);
   const { hasUnsavedChanges, exportSettings, importSettings } = useSettingsStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     const handleResize = () => {
@@ -249,34 +251,37 @@ const Settings = () => {
             )}
           </div>
 
-          <div className="flex gap-2 sm:gap-3">
-            <button
-              onClick={handleExportSettings}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-              <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
-              <span>Excel</span>
-            </button>
+          {/* Solo mostrar botones de exportar/importar para administradores */}
+          {user?.role === 'admin' && (
+            <div className="flex gap-2 sm:gap-3">
+              <button
+                onClick={handleExportSettings}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
+                <span>Excel</span>
+              </button>
 
-            <button
-              onClick={handleExportPDF}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
-              <span>PDF</span>
-            </button>
-            
-            <label className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
-              <ArrowUpTrayIcon className="w-4 h-4 mr-1.5" />
-              <span>Importar</span>
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleFileImport}
-                className="sr-only"
-              />
-            </label>
-          </div>
+              <button
+                onClick={handleExportPDF}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
+                <span>PDF</span>
+              </button>
+              
+              <label className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
+                <ArrowUpTrayIcon className="w-4 h-4 mr-1.5" />
+                <span>Importar</span>
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileImport}
+                  className="sr-only"
+                />
+              </label>
+            </div>
+          )}
         </div>
 
         {/* Warning banner */}
