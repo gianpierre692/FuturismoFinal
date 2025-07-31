@@ -42,7 +42,7 @@ const Reservations = () => {
   return (
     <div className="h-full max-h-screen flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="px-4 sm:px-6 md:px-0 pb-4 md:pb-6 lg:pb-8 xl:pb-10 flex-shrink-0">
+      <div className="px-4 sm:px-6 md:px-0 pt-6 pb-4 md:pb-6 lg:pb-8 xl:pb-10 flex-shrink-0">
         {/* Título y Botones separados */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6 !mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('reservations.reservations')}</h1>
