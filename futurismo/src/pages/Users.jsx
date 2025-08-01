@@ -240,7 +240,14 @@ const Users = () => {
 
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <button 
+          onClick={() => {
+            setFilterRole('all');
+            setFilterStatus('all');
+            setSearchTerm('');
+          }}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-300 transition-all duration-200 text-left w-full"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Usuarios</p>
@@ -248,9 +255,16 @@ const Users = () => {
             </div>
             <UsersIcon className="h-8 w-8 text-blue-500 opacity-20" />
           </div>
-        </div>
+        </button>
         
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <button 
+          onClick={() => {
+            setFilterRole('all');
+            setFilterStatus('active');
+            setSearchTerm('');
+          }}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-green-300 transition-all duration-200 text-left w-full"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Activos</p>
@@ -258,9 +272,16 @@ const Users = () => {
             </div>
             <UserCircleIcon className="h-8 w-8 text-green-500 opacity-20" />
           </div>
-        </div>
+        </button>
 
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <button 
+          onClick={() => {
+            setFilterRole('all');
+            setFilterStatus('inactive');
+            setSearchTerm('');
+          }}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-red-300 transition-all duration-200 text-left w-full"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Inactivos</p>
@@ -268,9 +289,16 @@ const Users = () => {
             </div>
             <UserCircleIcon className="h-8 w-8 text-red-500 opacity-20" />
           </div>
-        </div>
+        </button>
 
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <button 
+          onClick={() => {
+            setFilterRole('admin');
+            setFilterStatus('all');
+            setSearchTerm('');
+          }}
+          className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-purple-300 transition-all duration-200 text-left w-full"
+        >
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Administradores</p>
@@ -278,7 +306,7 @@ const Users = () => {
             </div>
             <ShieldCheckIcon className="h-8 w-8 text-purple-500 opacity-20" />
           </div>
-        </div>
+        </button>
       </div>
     );
   };

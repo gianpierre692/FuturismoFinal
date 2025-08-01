@@ -57,7 +57,7 @@ const UnifiedLayout = ({ children }) => {
             />
           )
         ) : (
-          <Header />
+          <Header onMenuClick={() => setDrawerOpen(true)} />
         )}
       </header>
 

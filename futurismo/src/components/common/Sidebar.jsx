@@ -90,18 +90,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <aside className="w-64 bg-white shadow-lg flex-col h-full hidden lg:flex desktop-only">
-      {/* Logo */}
-      <div className="p-4 lg:p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <span className="text-2xl">🌎</span>
-            <h1 className="ml-3 text-xl font-bold text-gray-900">Futurismo</h1>
-          </div>
-        </div>
-      </div>
-
       {/* Navigation */}
-      <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
+      <nav className="flex-1 p-3 lg:p-4 overflow-y-auto pt-6">
         <ul className="space-y-2">
           {menuItems.map((item, index) => {
             // Si es una sección (para admin)

@@ -1,18 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { BellIcon, MagnifyingGlassIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon } from '@heroicons/react/24/outline';
+import { BellIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon, Bars3Icon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
 import LanguageToggle from './LanguageToggle';
 
-const Header = () => {
+const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { unreadCount, toggleVisibility, isVisible } = useNotificationsStore();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const profileMenuRef = useRef(null);
   const { t } = useTranslation();
 
@@ -33,32 +32,15 @@ const Header = () => {
     navigate('/login');
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/monitoring?search=${encodeURIComponent(searchQuery)}`);
-    }
-  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white shadow-sm border-b border-gray-200 z-50">
       <div className="px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-          {/* Left side */}
+          {/* Left side - Logo and brand */}
           <div className="flex items-center">
-            {/* Search bar - Hidden on mobile */}
-            <form onSubmit={handleSearch} className="hidden sm:block">
-              <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={t('search.searchServices')}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary w-48 md:w-64 lg:w-80"
-                />
-              </div>
-            </form>
+            <span className="text-2xl mr-3">🌎</span>
+            <h1 className="text-xl font-bold text-gray-900">Futurismo</h1>
           </div>
 
           {/* Right side */}
@@ -148,6 +130,8 @@ const Header = () => {
   );
 };
 
-Header.propTypes = {};
+Header.propTypes = {
+  onMenuClick: PropTypes.func
+};
 
 export default Header;
