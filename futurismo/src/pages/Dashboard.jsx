@@ -115,20 +115,21 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
-      {/* Header */}
-      <div className="mb-6 sm:mb-8 group">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">
-          {getGreeting()}, {user?.name || 'Usuario'}
-        </h1>
-        <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2 group-hover:text-gray-700 transition-colors duration-200">
-          {t('dashboard.todaySummary')}
-        </p>
-        <div className="mt-3 h-1 w-0 bg-gradient-to-r from-primary-500 to-secondary-500 group-hover:w-20 transition-all duration-500 rounded-full"></div>
-      </div>
+    <div className="page-container">
+      <div className="page-content-none">
+        {/* Header */}
+        <div className="page-header-none group">
+          <h1 className="page-title group-hover:text-primary-600 transition-colors duration-300">
+            {getGreeting()}, {user?.name || 'Usuario'}
+          </h1>
+          <p className="page-subtitle group-hover:text-gray-700 transition-colors duration-200">
+            {t('dashboard.todaySummary')}
+          </p>
+          <div className="mt-3 h-1 w-0 bg-gradient-to-r from-primary-500 to-secondary-500 group-hover:w-20 transition-all duration-500 rounded-full"></div>
+        </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+        {/* Stats Cards */}
+        <div className="page-section grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6">
         {user?.role === 'guide' ? (
           <>
             <StatsCard
@@ -376,6 +377,7 @@ const Dashboard = () => {
                     </tr>
                 </tbody>
               </table>
+              </div>
             </div>
             
             <div className="mt-4 text-center">
@@ -393,14 +395,15 @@ const Dashboard = () => {
 
         {/* Right Column - ChartBarIcon & Quick Actions */}
         <div className="space-y-6">
-          <RecentActivity />
-          {user?.role !== 'guide' && <QuickActions />}
-          {(user?.role === 'agency' || user?.role === 'admin') && <ExportPanel />}
+            <RecentActivity />
+            {user?.role !== 'guide' && <QuickActions />}
+            {(user?.role === 'agency' || user?.role === 'admin') && <ExportPanel />}
+          </div>
         </div>
       </div>
 
-      {/* Bottom Section - Alerts or Announcements */}
-      <div className="mt-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-all duration-300 group">
+        {/* Bottom Section - Alerts or Announcements */}
+        <div className="page-section bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-all duration-300 group">
         <div className="flex items-start gap-4">
           <div className="p-3 bg-white bg-opacity-20 rounded-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
             <ExclamationTriangleIcon className="w-6 h-6 animate-pulse" />

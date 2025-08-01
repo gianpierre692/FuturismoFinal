@@ -20,7 +20,7 @@ import SkeletonLoader from './components/common/SkeletonLoader';
 
 // Lazy loading de páginas con chunks nombrados
 const LoginRegister = lazy(() => import(/* webpackChunkName: "auth" */ './pages/LoginRegister'));
-const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages/DashboardSimple'));
+const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages/Dashboard'));
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './pages/Monitoring'));
 const Reservations = lazy(() => import(/* webpackChunkName: "reservations" */ './pages/Reservations'));
 const History = lazy(() => import('./pages/History'));
@@ -40,6 +40,12 @@ const ReservationManagement = lazy(() => import('./pages/admin/ReservationManage
 const ResourcesManagement = lazy(() => import('./pages/admin/ResourcesManagement'));
 const Reports = lazy(() => import('./pages/admin/Reports'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AlertsCenter = lazy(() => import('./pages/admin/AlertsCenter'));
+const ConflictManagement = lazy(() => import('./pages/admin/ConflictManagement'));
+const TourReassignment = lazy(() => import('./pages/admin/TourReassignment'));
+const AgencyApproval = lazy(() => import('./pages/admin/AgencyApproval'));
+const MassNotifications = lazy(() => import('./pages/admin/MassNotifications'));
+const RouteAnalytics = lazy(() => import('./pages/admin/RouteAnalytics'));
 const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
 const PointsStore = lazy(() => import('./pages/guide/PointsStore'));
 const ResponsiveTest = lazy(() => import('./pages/ResponsiveTest'));
@@ -270,6 +276,54 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <Reports />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/alerts" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AlertsCenter />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/conflicts" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ConflictManagement />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/tour-reassignment" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <TourReassignment />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/agency-approval" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AgencyApproval />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/mass-notifications" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <MassNotifications />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/route-analytics" 
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <RouteAnalytics />
                 </ProtectedRoute>
               } 
             />

@@ -5,8 +5,8 @@ import {
 } from 'recharts';
 import { 
   CurrencyDollarIcon, 
-  TrendingUpIcon, 
-  TrendingDownIcon,
+  ArrowTrendingUpIcon, 
+  ArrowTrendingDownIcon,
   CalendarDaysIcon,
   ChartBarIcon,
   EyeIcon,
@@ -323,8 +323,14 @@ const WeeklyIncomeChart = () => {
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="day" stroke="#6B7280" />
             <YAxis 
+              yAxisId="left"
               stroke="#6B7280"
               tickFormatter={(value) => `$${(value/1000).toFixed(1)}k`}
+            />
+            <YAxis 
+              yAxisId="right"
+              orientation="right"
+              stroke="#10B981"
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
@@ -334,6 +340,7 @@ const WeeklyIncomeChart = () => {
               name="Ingresos ($)"
               radius={[4, 4, 0, 0]}
               fillOpacity={0.6}
+              yAxisId="left"
             />
             <Line
               type="monotone"
@@ -387,7 +394,7 @@ const WeeklyIncomeChart = () => {
             {[
               { key: 'area', label: 'Área', icon: ChartBarIcon },
               { key: 'bar', label: 'Barras', icon: ChartBarIcon },
-              { key: 'line', label: 'Línea', icon: TrendingUpIcon },
+              { key: 'line', label: 'Línea', icon: ArrowTrendingUpIcon },
               { key: 'composed', label: 'Mixto', icon: EyeIcon }
             ].map(({ key, label, icon: Icon }) => (
               <InteractiveButton
@@ -441,7 +448,7 @@ const WeeklyIncomeChart = () => {
                 ${weekStats.promedio}
               </p>
             </div>
-            <TrendingUpIcon className="w-8 h-8 text-green-400 group-hover/stat:text-green-600 group-hover/stat:animate-bounce transition-all" />
+            <ArrowTrendingUpIcon className="w-8 h-8 text-green-400 group-hover/stat:text-green-600 group-hover/stat:animate-bounce transition-all" />
           </div>
         </InteractiveCard>
 

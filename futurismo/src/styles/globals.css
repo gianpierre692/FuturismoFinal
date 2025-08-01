@@ -198,6 +198,66 @@
   .badge-blue {
     @apply bg-blue-100 text-blue-800;
   }
+
+  /* Page Container Standards - Consistent spacing across all pages */
+  .page-container {
+    @apply w-full min-h-screen flex flex-col;
+  }
+
+  /* Main content wrapper with consistent padding */
+  .page-content {
+    @apply w-full max-w-7xl mx-auto px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 flex-1;
+  }
+
+  /* Compact version for pages with more content */
+  .page-content-compact {
+    @apply w-full max-w-7xl mx-auto px-2 py-2 sm:px-3 sm:py-2 lg:px-4 lg:py-3 flex-1;
+  }
+
+  /* Ultra compact version for full-screen pages like chat/monitoring */
+  .page-content-minimal {
+    @apply w-full h-full px-2 py-1 sm:px-3 sm:py-2 lg:px-4 lg:py-2 flex-1;
+  }
+
+  /* Ultra compact - sin padding como la página de usuarios */
+  .page-content-none {
+    @apply w-full h-full flex-1;
+  }
+
+  /* Page header with consistent spacing */
+  .page-header {
+    @apply mb-3 sm:mb-4 lg:mb-5;
+  }
+
+  /* Minimal header for compact pages */
+  .page-header-minimal {
+    @apply mb-2 sm:mb-3;
+  }
+
+  /* Ultra minimal header - sin margen bottom */
+  .page-header-none {
+    @apply mb-0;
+  }
+
+  /* Page title */
+  .page-title {
+    @apply text-xl sm:text-2xl font-bold text-gray-900 mb-1;
+  }
+
+  /* Page subtitle */
+  .page-subtitle {
+    @apply text-sm text-gray-600;
+  }
+
+  /* Page sections */
+  .page-section {
+    @apply mb-4 sm:mb-5 lg:mb-6;
+  }
+
+  /* Page section compact */
+  .page-section-compact {
+    @apply mb-3 sm:mb-4 lg:mb-5;
+  }
   
   .badge-red {
     @apply bg-red-100 text-red-800;

@@ -278,6 +278,40 @@ const useUsersStore = create((set, get) => ({
     }));
   },
 
+  suspendUser: (userId, reason, expirationDate = null) => {
+    set((state) => ({
+      users: state.users.map(user =>
+        user.id === userId 
+          ? { 
+              ...user, 
+              status: 'suspendido',
+              suspension: {
+                reason: reason,
+                suspendedAt: new Date(),
+                expiresAt: expirationDate,
+                suspendedBy: 'admin' // En producción sería el usuario actual
+              }
+            }
+          : user
+      )
+    }));
+  },
+
+  reactivateUser: (userId) => {
+    set((state) => ({
+      users: state.users.map(user =>
+        user.id === userId 
+          ? { 
+              ...user, 
+              status: 'activo',
+              suspension: null,
+              reactivatedAt: new Date()
+            }
+          : user
+      )
+    }));
+  },
+
   getRoles: () => {
     const { roles } = get();
     return roles;

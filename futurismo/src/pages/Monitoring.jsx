@@ -30,16 +30,21 @@ const Monitoring = () => {
   
   // Para guías, solo mostrar sus propios tours
   const isGuide = user?.role === 'guide';
+  const isAdmin = user?.role === 'admin' || user?.role === 'administrador';
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
-      {/* Container with max width and better padding */}
-      <div className="flex-1 flex flex-col max-w-[1920px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+    <div className="page-container bg-gray-50">
+      <div className="page-content-none flex flex-col h-full">
         {/* Header con opciones de vista */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-6 lg:mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
-            {isGuide ? t('monitoring.myTours') : t('monitoring.liveMonitoring')}
-          </h1>
+        <div className="page-header-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="page-title">
+              {isGuide ? t('monitoring.myTours') : isAdmin ? 'Monitoreo Global de Tours' : t('monitoring.liveMonitoring')}
+            </h1>
+            {isAdmin && (
+              <p className="text-sm text-gray-600 mt-1">Vista administrativa de todos los tours activos en tiempo real</p>
+            )}
+          </div>
           
           <div className="flex items-center gap-4">
             <div className="flex bg-white rounded-xl shadow-sm border border-gray-200 p-1.5">
@@ -69,6 +74,63 @@ const Monitoring = () => {
           </div>
         </div>
 
+        {/* Admin Stats Panel */}
+        {isAdmin && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Tours Activos</p>
+                  <p className="text-2xl font-bold text-gray-900">24</p>
+                  <p className="text-xs text-green-600 mt-1">+12% vs ayer</p>
+                </div>
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <MapIcon className="h-6 w-6 text-green-600" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Turistas en Ruta</p>
+                  <p className="text-2xl font-bold text-gray-900">287</p>
+                  <p className="text-xs text-blue-600 mt-1">15 grupos</p>
+                </div>
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <UserGroupIcon className="h-6 w-6 text-blue-600" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Guías Activos</p>
+                  <p className="text-2xl font-bold text-gray-900">18</p>
+                  <p className="text-xs text-gray-500 mt-1">de 35 totales</p>
+                </div>
+                <div className="p-3 bg-purple-100 rounded-lg">
+                  <UserGroupIcon className="h-6 w-6 text-purple-600" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Zonas Activas</p>
+                  <p className="text-2xl font-bold text-gray-900">7</p>
+                  <p className="text-xs text-orange-600 mt-1">Cusco, Lima, Arequipa...</p>
+                </div>
+                <div className="p-3 bg-orange-100 rounded-lg">
+                  <MapIcon className="h-6 w-6 text-orange-600" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Contenido principal with better spacing */}
         <div className="flex-1 min-h-0 h-full">
           {activeView === 'map' && (
@@ -77,6 +139,7 @@ const Monitoring = () => {
                 mode='cdn'
                 showSidebar={true}
                 height="h-full"
+                showAllTours={isAdmin}
               />
             </div>
           )}
@@ -86,10 +149,10 @@ const Monitoring = () => {
               {/* Lista de tours activos */}
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 lg:p-8 overflow-hidden flex flex-col">
                 <h3 className="text-xl font-semibold mb-6 text-gray-900">
-                  {isGuide ? t('monitoring.myToursInProgress') : t('monitoring.toursInProgress')}
+                  {isGuide ? t('monitoring.myToursInProgress') : isAdmin ? 'Todos los Tours Activos' : t('monitoring.toursInProgress')}
                 </h3>
                 <div className="space-y-4 overflow-y-auto flex-1 pr-2">
-                  {[1, 2, 3].map((id) => (
+                  {(isAdmin ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 2, 3]).map((id) => (
                     <div
                       key={id}
                       className={`p-5 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
@@ -101,8 +164,21 @@ const Monitoring = () => {
                     >
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
-                          <p className="font-semibold text-gray-900">Tour Lima Histórica #{id}</p>
-                          <p className="text-sm text-gray-600">12 {t('monitoring.tourists')} • Guía: Carlos Mendoza</p>
+                          <p className="font-semibold text-gray-900">
+                            {isAdmin && id > 3 
+                              ? ['Machu Picchu Express', 'Valle Sagrado VIP', 'City Tour Cusco', 'Laguna Humantay', 'Montaña 7 Colores'][id - 4] + ` #${id}`
+                              : `Tour Lima Histórica #${id}`}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {isAdmin && id > 3 
+                              ? `${8 + id} turistas • Guía: ${['Ana Rodriguez', 'Pedro Silva', 'Maria Torres', 'Juan Castro', 'Luis Vargas'][id - 4]}`
+                              : `12 ${t('monitoring.tourists')} • Guía: Carlos Mendoza`}
+                          </p>
+                          {isAdmin && (
+                            <p className="text-xs text-gray-500">
+                              Agencia: {id > 3 ? ['Peru Travel', 'Cusco Adventures', 'Inca Trail Tours', 'Andes Explorer', 'Mystic Peru'][id - 4] : 'Viajes El Dorado'}
+                            </p>
+                          )}
                         </div>
                         <div className="text-right space-y-1">
                           <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">

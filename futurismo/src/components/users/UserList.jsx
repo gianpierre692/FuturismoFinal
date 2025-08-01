@@ -8,7 +8,9 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   KeyIcon,
-  FunnelIcon
+  FunnelIcon,
+  NoSymbolIcon,
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { useUsersStore } from '../../stores/usersStoreSimple';
 
@@ -19,6 +21,8 @@ const UserList = ({ onEdit, onView, onDelete }) => {
     getRoleStatistics,
     getRoles,
     toggleUserStatus,
+    suspendUser,
+    reactivateUser,
     resetUserPassword,
     filters,
     setFilters,
@@ -30,6 +34,10 @@ const UserList = ({ onEdit, onView, onDelete }) => {
   const [roleStats, setRoleStats] = useState({});
   const [roles, setRoles] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [showSuspendModal, setShowSuspendModal] = useState(false);
+  const [selectedUserForSuspension, setSelectedUserForSuspension] = useState(null);
+  const [suspendReason, setSuspendReason] = useState('');
+  const [suspendDuration, setSuspendDuration] = useState('permanent');
 
   useEffect(() => {
     loadData();
@@ -65,6 +73,43 @@ const UserList = ({ onEdit, onView, onDelete }) => {
       resetUserPassword(userId, 'temporal123');
       alert('Contraseña reseteada. Nueva contraseña temporal: temporal123');
     }
+  };
+
+  const handleSuspendClick = (user) => {
+    setSelectedUserForSuspension(user);
+    setShowSuspendModal(true);
+    setSuspendReason('');
+    setSuspendDuration('permanent');
+  };
+
+  const handleSuspendConfirm = () => {
+    if (!suspendReason.trim()) {
+      alert('Por favor, proporciona una razón para la suspensión');
+      return;
+    }
+
+    let expirationDate = null;
+    if (suspendDuration !== 'permanent') {
+      expirationDate = new Date();
+      switch (suspendDuration) {
+        case '1day':
+          expirationDate.setDate(expirationDate.getDate() + 1);
+          break;
+        case '1week':
+          expirationDate.setDate(expirationDate.getDate() + 7);
+          break;
+        case '1month':
+          expirationDate.setMonth(expirationDate.getMonth() + 1);
+          break;
+        case '3months':
+          expirationDate.setMonth(expirationDate.getMonth() + 3);
+          break;
+      }
+    }
+
+    suspendUser(selectedUserForSuspension.id, suspendReason, expirationDate);
+    setShowSuspendModal(false);
+    loadData();
   };
 
   const getRoleColor = (roleId) => {
@@ -219,6 +264,7 @@ const UserList = ({ onEdit, onView, onDelete }) => {
                 <option value="">Todos los estados</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
+                <option value="suspendido">Suspendido</option>
               </select>
             </div>
 
@@ -328,10 +374,19 @@ const UserList = ({ onEdit, onView, onDelete }) => {
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       user.status === 'activo'
                         ? 'bg-green-100 text-green-800'
+                        : user.status === 'suspendido'
+                        ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-red-100 text-red-800'
                     }`}>
-                      {user.status === 'activo' ? 'Activo' : 'Inactivo'}
+                      {user.status === 'activo' ? 'Activo' : 
+                       user.status === 'suspendido' ? 'Suspendido' : 'Inactivo'}
                     </span>
+                    {user.status === 'suspendido' && user.suspension && (
+                      <div className="mt-1 text-xs text-gray-500">
+                        <ExclamationTriangleIcon className="h-3 w-3 inline mr-1" />
+                        {user.suspension.reason}
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatLastLogin(user.lastLogin)}
@@ -361,6 +416,24 @@ const UserList = ({ onEdit, onView, onDelete }) => {
                       >
                         <KeyIcon className="h-4 w-4" />
                       </button>
+                      
+                      {user.status === 'suspendido' ? (
+                        <button
+                          onClick={() => reactivateUser(user.id)}
+                          className="text-green-600 hover:text-green-900 p-1 rounded"
+                          title="Reactivar usuario"
+                        >
+                          <CheckCircleIcon className="h-4 w-4" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleSuspendClick(user)}
+                          className="text-yellow-600 hover:text-yellow-900 p-1 rounded"
+                          title="Suspender usuario"
+                        >
+                          <NoSymbolIcon className="h-4 w-4" />
+                        </button>
+                      )}
                       
                       <button
                         onClick={() => handleStatusToggle(user.id)}
@@ -406,6 +479,70 @@ const UserList = ({ onEdit, onView, onDelete }) => {
           </div>
         )}
       </div>
+
+      {/* Modal de suspensión */}
+      {showSuspendModal && selectedUserForSuspension && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-md w-full p-6">
+            <div className="flex items-center mb-4">
+              <NoSymbolIcon className="h-8 w-8 text-yellow-600 mr-3" />
+              <h3 className="text-lg font-semibold text-gray-900">Suspender Usuario</h3>
+            </div>
+            
+            <p className="text-sm text-gray-600 mb-6">
+              Estás a punto de suspender a <strong>{selectedUserForSuspension.firstName} {selectedUserForSuspension.lastName}</strong>.
+              Esta acción impedirá que el usuario acceda al sistema.
+            </p>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Razón de la suspensión *
+                </label>
+                <textarea
+                  value={suspendReason}
+                  onChange={(e) => setSuspendReason(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  placeholder="Ej: Incumplimiento de políticas, comportamiento inadecuado, etc."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Duración de la suspensión
+                </label>
+                <select
+                  value={suspendDuration}
+                  onChange={(e) => setSuspendDuration(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                >
+                  <option value="1day">1 día</option>
+                  <option value="1week">1 semana</option>
+                  <option value="1month">1 mes</option>
+                  <option value="3months">3 meses</option>
+                  <option value="permanent">Permanente</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowSuspendModal(false)}
+                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSuspendConfirm}
+                className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                Suspender Usuario
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

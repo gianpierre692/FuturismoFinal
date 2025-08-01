@@ -26,7 +26,12 @@ import {
   BanknotesIcon,
   ChartPieIcon,
   TableCellsIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  ScaleIcon,
+  XCircleIcon,
+  PlusCircleIcon,
+  MegaphoneIcon,
+  TrendingUpIcon
 } from '@heroicons/react/24/outline';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import UniversalExportService from '../../services/universalExportService';
@@ -109,6 +114,15 @@ const AdminDashboard = () => {
           path: '/users',
           stats: { total: 12, active: 10 },
           color: 'purple'
+        },
+        {
+          title: 'Aprobar Agencias',
+          subtitle: 'Solicitudes de nuevas agencias',
+          icon: PlusCircleIcon,
+          path: '/admin/agency-approval',
+          stats: { pending: 2, total: 4 },
+          color: 'indigo',
+          badge: '2 pendientes'
         }
       ]
     },
@@ -166,6 +180,15 @@ const AdminDashboard = () => {
           color: 'orange',
         },
         {
+          title: 'Análisis de Rutas',
+          subtitle: 'Rutas rentables y desempeño',
+          icon: TrendingUpIcon,
+          path: '/admin/route-analytics',
+          stats: { profitable: 8, analyzed: 15 },
+          color: 'indigo',
+          badge: 'Nuevo'
+        },
+        {
           title: 'Configuración',
           subtitle: 'Ajustes del sistema',
           icon: CogIcon,
@@ -188,6 +211,41 @@ const AdminDashboard = () => {
           stats: { unread: 8, conversations: 24 },
           color: 'blue',
           badge: '8 nuevos'
+        },
+        {
+          title: 'Centro de Alertas',
+          subtitle: 'Gestionar alertas y emergencias',
+          icon: BellIcon,
+          path: '/admin/alerts',
+          stats: { active: stats.systemAlerts, resolved: 24 },
+          color: 'red',
+          badge: stats.systemAlerts > 0 ? `${stats.systemAlerts} activas` : null
+        },
+        {
+          title: 'Gestión de Conflictos',
+          subtitle: 'Mediación entre partes',
+          icon: ScaleIcon,
+          path: '/admin/conflicts',
+          stats: { open: 2, resolved: 15 },
+          color: 'orange',
+          badge: '2 abiertos'
+        },
+        {
+          title: 'Reasignar Tours',
+          subtitle: 'Tours cancelados sin guía',
+          icon: XCircleIcon,
+          path: '/admin/tour-reassignment',
+          stats: { urgent: 1, pending: 3 },
+          color: 'red',
+          badge: '1 urgente'
+        },
+        {
+          title: 'Notificaciones Masivas',
+          subtitle: 'Enviar mensajes a todos',
+          icon: MegaphoneIcon,
+          path: '/admin/mass-notifications',
+          stats: { sent: 3, users: 389 },
+          color: 'purple'
         },
         {
           title: 'Protocolos',

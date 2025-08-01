@@ -43,6 +43,9 @@ const mockGuides = [
       certifications: 3
     },
     status: 'active',
+    todayStatus: 'active',
+    lastActivity: new Date().toISOString(),
+    tourAssignments: 2,
     createdAt: '2019-03-15T00:00:00.000Z',
     updatedAt: '2024-01-15T00:00:00.000Z'
   },
@@ -72,6 +75,10 @@ const mockGuides = [
       certifications: 5
     },
     status: 'active',
+    todayStatus: 'on_tour',
+    lastActivity: new Date(Date.now() - 30 * 60000).toISOString(),
+    tourAssignments: 1,
+    currentTour: 'City Tour Lima - 10:00 AM',
     createdAt: '2016-08-20T00:00:00.000Z',
     updatedAt: '2024-01-10T00:00:00.000Z'
   },
@@ -101,6 +108,10 @@ const mockGuides = [
       certifications: 2
     },
     status: 'active',
+    todayStatus: 'inactive',
+    lastActivity: new Date(Date.now() - 24 * 60 * 60000).toISOString(),
+    tourAssignments: 0,
+    inactiveReason: 'Sin tours asignados',
     createdAt: '2021-06-10T00:00:00.000Z',
     updatedAt: '2024-01-05T00:00:00.000Z'
   }

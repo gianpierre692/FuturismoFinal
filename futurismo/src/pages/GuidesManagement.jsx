@@ -20,20 +20,27 @@ import {
   Squares2X2Icon,
   StarIcon,
   XMarkIcon,
-  DocumentArrowDownIcon
+  DocumentArrowDownIcon,
+  ExclamationTriangleIcon,
+  ChatBubbleLeftRightIcon,
+  PaperAirplaneIcon
 } from '@heroicons/react/24/outline';
 import useGuidesStore from '../stores/guidesStore';
 import GuideForm from '../components/guides/GuideForm';
 import GuideProfile from '../components/guides/GuideProfile';
 import ExportImportModal from '../components/common/ExportImportModal';
 import AdvancedDataTable from '../components/common/AdvancedDataTable';
+import InteractiveButton from '../components/common/InteractiveButton';
+import useNotificationsStore from '../stores/notificationsStore';
 
 const GuidesManagement = () => {
   const { guides = [], languages = [], museums = [], actions } = useGuidesStore();
+  const { addNotification } = useNotificationsStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterLanguage, setFilterLanguage] = useState('');
   const [filterMuseum, setFilterMuseum] = useState('');
+  const [filterStatus, setFilterStatus] = useState(''); // all, active, inactive
   const [isEditing, setIsEditing] = useState(false);
   const [editingGuide, setEditingGuide] = useState(null);
   const [selectedGuide, setSelectedGuide] = useState(null);
@@ -41,6 +48,10 @@ const GuidesManagement = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showFilters, setShowFilters] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSubject, setContactSubject] = useState('');
+  const [selectedInactiveGuides, setSelectedInactiveGuides] = useState([]);
 
   const handleImportSuccess = (importedData) => {
     if (importedData && Object.keys(importedData).length > 0) {
@@ -78,7 +89,13 @@ const GuidesManagement = () => {
         museum.name?.toLowerCase().includes(filterMuseum.toLowerCase())
       );
     
-    return matchesSearch && matchesType && matchesLanguage && matchesMuseum;
+    // Filtrar por estado de actividad
+    const matchesStatus = !filterStatus || 
+      (filterStatus === 'all') ||
+      (filterStatus === 'active' && guide?.todayStatus === 'active') ||
+      (filterStatus === 'inactive' && (!guide?.todayStatus || guide?.todayStatus === 'inactive'));
+    
+    return matchesSearch && matchesType && matchesLanguage && matchesMuseum && matchesStatus;
   });
 
   const handleAddGuide = () => {
@@ -287,13 +304,29 @@ const GuidesManagement = () => {
           key: 'guideType',
           header: 'Tipo',
           render: (guide) => (
-            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-              guide?.guideType === 'planta' 
-                ? 'bg-green-100 text-green-800' 
-                : 'bg-yellow-100 text-yellow-800'
-            }`}>
-              {guide?.guideType === 'planta' ? 'Planta' : 'Freelance'}
-            </span>
+            <div className="space-y-1">
+              <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                guide?.guideType === 'planta' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}>
+                {guide?.guideType === 'planta' ? 'Planta' : 'Freelance'}
+              </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                  guide?.todayStatus === 'active' ? 'bg-green-100 text-green-700' :
+                  guide?.todayStatus === 'on_tour' ? 'bg-blue-100 text-blue-700' :
+                  'bg-gray-100 text-gray-700'
+                }`}>
+                  {guide?.todayStatus === 'active' ? '● Disponible' :
+                   guide?.todayStatus === 'on_tour' ? '● En Tour' :
+                   '● Inactivo'}
+                </span>
+                {guide?.todayStatus === 'inactive' && guide?.inactiveReason && (
+                  <span className="text-xs text-gray-500">- {guide.inactiveReason}</span>
+                )}
+              </div>
+            </div>
           )
         },
         {
@@ -367,6 +400,18 @@ const GuidesManagement = () => {
       ]}
       filters={[
         {
+          key: 'todayStatus',
+          label: 'Estado Hoy',
+          type: 'select',
+          options: [
+            { value: 'all', label: 'Todos' },
+            { value: 'active', label: 'Activos' },
+            { value: 'on_tour', label: 'En Tour' },
+            { value: 'inactive', label: 'Inactivos' }
+          ],
+          filterFn: (guide, value) => value === 'all' || guide.todayStatus === value
+        },
+        {
           key: 'guideType',
           label: 'Tipo de Guía',
           type: 'select',
@@ -398,17 +443,25 @@ const GuidesManagement = () => {
     />
   );
 
+  // Calcular estadísticas
+  const stats = {
+    total: guides.length,
+    active: guides.filter(g => g.todayStatus === 'active').length,
+    onTour: guides.filter(g => g.todayStatus === 'on_tour').length,
+    inactive: guides.filter(g => g.todayStatus === 'inactive').length
+  };
+
   return (
-    <div className="p-2 sm:p-4 lg:p-6 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="page-container bg-white">
+      <div className="page-content-none">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <div className="page-header-none flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 flex items-center">
+            <h1 className="page-title flex items-center">
               <UserGroupIcon className="w-6 sm:w-8 h-6 sm:h-8 mr-2 sm:mr-3 text-blue-500" />
               Gestión de Guías
             </h1>
-            <p className="text-sm sm:text-base text-gray-600 mt-1">
+            <p className="page-subtitle">
               Administra guías, idiomas y especialidades
             </p>
           </div>
@@ -454,15 +507,65 @@ const GuidesManagement = () => {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+        {/* Stats Cards con Estado de Hoy */}
+        <div className="page-section-compact grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs sm:text-sm text-gray-600">Total Guías</p>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900">{guides.length}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{stats.total}</p>
               </div>
               <UserGroupIcon className="w-8 h-8 text-blue-500 opacity-20" />
+            </div>
+          </div>
+          
+          <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+               onClick={() => setFilterStatus('active')}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm text-gray-600">Disponibles</p>
+                <p className="text-xl sm:text-2xl font-bold text-green-600">{stats.active}</p>
+                <p className="text-xs text-gray-500 mt-1">Activos hoy</p>
+              </div>
+              <CheckBadgeIcon className="w-8 h-8 text-green-500 opacity-20" />
+            </div>
+          </div>
+          
+          <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+               onClick={() => setFilterStatus('on_tour')}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm text-gray-600">En Tour</p>
+                <p className="text-xl sm:text-2xl font-bold text-blue-600">{stats.onTour}</p>
+                <p className="text-xs text-gray-500 mt-1">Trabajando ahora</p>
+              </div>
+              <MapPinIcon className="w-8 h-8 text-blue-500 opacity-20" />
+            </div>
+          </div>
+          
+          <div className="bg-red-50 p-3 sm:p-4 rounded-lg shadow-sm border border-red-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs sm:text-sm text-red-700 font-medium">Inactivos Hoy</p>
+                <p className="text-xl sm:text-2xl font-bold text-red-600">{stats.inactive}</p>
+                <p className="text-xs text-red-600 mt-1">Sin asignaciones</p>
+                {stats.inactive > 0 && (
+                  <button
+                    onClick={() => {
+                      const inactiveGuides = guides.filter(g => g.todayStatus === 'inactive');
+                      setSelectedInactiveGuides(inactiveGuides);
+                      setContactSubject('Disponibilidad para tours');
+                      setContactMessage('Hola,\n\nNotamos que no has tenido asignaciones el día de hoy. Queremos verificar tu disponibilidad para próximos tours.\n\nPor favor, confírmanos si estás disponible para trabajar en los próximos días.\n\nSaludos,\nAdministración');
+                      setShowContactModal(true);
+                    }}
+                    className="mt-2 text-xs bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 transition-colors flex items-center gap-1"
+                  >
+                    <ChatBubbleLeftRightIcon className="w-3 h-3" />
+                    Contactar
+                  </button>
+                )}
+              </div>
+              <ExclamationTriangleIcon className="w-8 h-8 text-red-500 opacity-30" />
             </div>
           </div>
           
@@ -502,7 +605,7 @@ const GuidesManagement = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="page-section-compact bg-white rounded-lg shadow-sm border border-gray-200 p-4">
           <div className="space-y-3">
             {/* Search Bar */}
             <div className="relative">
@@ -731,17 +834,131 @@ const GuidesManagement = () => {
             {!isMobile && viewMode === 'list' && <DesktopListView />}
           </>
         )}
+        
+        {/* Export/Import Modal */}
+        <ExportImportModal
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          data={guides || []}
+          dataType="guides"
+          title="Exportar/Importar Guías"
+          onImportSuccess={handleImportSuccess}
+        />
+
+        {/* Contact Inactive Guides Modal */}
+        {showContactModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <ChatBubbleLeftRightIcon className="h-8 w-8 text-red-600" />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Contactar Guías Inactivos</h3>
+                    <p className="text-sm text-gray-600">{selectedInactiveGuides.length} guías sin asignaciones hoy</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowContactModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <XMarkIcon className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Lista de guías inactivos */}
+              <div className="mb-6 max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3">
+                <p className="text-sm text-gray-700 font-medium mb-2">Guías que recibirán el mensaje:</p>
+                <div className="space-y-2">
+                  {selectedInactiveGuides.map(guide => (
+                    <div key={guide.id} className="flex items-center justify-between text-sm">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white text-xs font-medium">
+                          {guide.fullName.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{guide.fullName}</p>
+                          <p className="text-xs text-gray-500">{guide.email} • {guide.phone}</p>
+                        </div>
+                      </div>
+                      <span className="text-xs text-red-600">{guide.inactiveReason || 'Sin asignaciones'}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Formulario de mensaje */}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Asunto del mensaje
+                  </label>
+                  <input
+                    type="text"
+                    value={contactSubject}
+                    onChange={(e) => setContactSubject(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="Ej: Verificación de disponibilidad"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Mensaje
+                  </label>
+                  <textarea
+                    value={contactMessage}
+                    onChange={(e) => setContactMessage(e.target.value)}
+                    rows={8}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                    placeholder="Escribe tu mensaje aquí..."
+                  />
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-sm text-blue-800">
+                    <strong>Canales de envío:</strong> El mensaje se enviará por email y SMS a todos los guías seleccionados.
+                    También aparecerá en el chat interno del sistema.
+                  </p>
+                </div>
+              </div>
+
+              {/* Botones de acción */}
+              <div className="mt-6 flex justify-end gap-3">
+                <InteractiveButton
+                  variant="secondary"
+                  onClick={() => setShowContactModal(false)}
+                >
+                  Cancelar
+                </InteractiveButton>
+                <InteractiveButton
+                  variant="primary"
+                  icon={PaperAirplaneIcon}
+                  onClick={() => {
+                    // Simular envío de mensajes
+                    selectedInactiveGuides.forEach(guide => {
+                      console.log(`Enviando mensaje a ${guide.fullName}: ${contactSubject}`);
+                    });
+                    
+                    addNotification({
+                      type: 'success',
+                      title: 'Mensajes enviados',
+                      message: `Se enviaron ${selectedInactiveGuides.length} mensajes a guías inactivos`
+                    });
+                    
+                    setShowContactModal(false);
+                    setContactMessage('');
+                    setContactSubject('');
+                    setSelectedInactiveGuides([]);
+                  }}
+                  disabled={!contactSubject.trim() || !contactMessage.trim()}
+                >
+                  Enviar mensaje
+                </InteractiveButton>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      
-      {/* Export/Import Modal */}
-      <ExportImportModal
-        isOpen={showExportModal}
-        onClose={() => setShowExportModal(false)}
-        data={guides || []}
-        dataType="guides"
-        title="Exportar/Importar Guías"
-        onImportSuccess={handleImportSuccess}
-      />
     </div>
   );
 };

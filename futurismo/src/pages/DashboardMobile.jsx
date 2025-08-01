@@ -139,20 +139,21 @@ const DashboardMobile = () => {
   }
 
   return (
-    <div className="fixed inset-0 top-16 flex flex-col bg-white overflow-y-auto">
-      {/* Header con saludo */}
-      <div className="bg-gradient-to-r from-primary to-primary-600 px-4 pt-4 pb-8">
-        <h1 className="text-xl font-bold text-white">
-          {getGreeting()}, {user?.name?.split(' ')[0]}
-        </h1>
-        <p className="text-primary-100 text-sm mt-0.5">
-          {new Date().toLocaleDateString('es', { 
-            weekday: 'long', 
-            day: 'numeric', 
-            month: 'long' 
-          })}
-        </p>
-      </div>
+    <div className="page-container">
+      <div className="page-content-none">
+        {/* Header con saludo */}
+        <div className="bg-gradient-to-r from-primary to-primary-600 -mx-3 px-4 pt-4 pb-8 mb-4">
+          <h1 className="text-xl font-bold text-white">
+            {getGreeting()}, {user?.name?.split(' ')[0]}
+          </h1>
+          <p className="text-primary-100 text-sm mt-0.5">
+            {new Date().toLocaleDateString('es', { 
+              weekday: 'long', 
+              day: 'numeric', 
+              month: 'long' 
+            })}
+          </p>
+        </div>
 
       {/* Stats Cards - Grid 2x2 */}
       <div className="px-4 -mt-4">
@@ -268,6 +269,7 @@ const DashboardMobile = () => {
             </>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

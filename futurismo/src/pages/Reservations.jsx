@@ -40,12 +40,12 @@ const Reservations = () => {
   };
 
   return (
-    <div className="h-full max-h-screen flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="px-4 sm:px-6 md:px-4 lg:px-6 pt-6 pb-4 flex-shrink-0">
-        {/* Título y Botones separados */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6 !mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('reservations.reservations')}</h1>
+    <div className="page-container">
+      <div className="page-content-none flex flex-col h-full">
+        {/* Header */}
+        <div className="page-header-none">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
+            <h1 className="page-title">{t('reservations.reservations')}</h1>
           
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto lg:w-auto">
               <div className="flex bg-gray-100 rounded-lg p-1 w-full sm:w-auto">
@@ -92,11 +92,11 @@ const Reservations = () => {
                 </button>
               </div>
             </div>
+          </div>
         </div>
-      </div>
 
-      {/* Content */}
-      <div className="flex-1 min-h-0 overflow-hidden px-4 sm:px-6 md:px-4 lg:px-6">
+        {/* Content */}
+        <div className="flex-1 min-h-0 overflow-hidden">
         {showWizard ? (
           <ReservationWizard onClose={() => setShowWizard(false)} />
         ) : (
@@ -110,17 +110,18 @@ const Reservations = () => {
             )}
           </>
         )}
+        </div>
+        
+        {/* Export/Import Modal */}
+        <ExportImportModal
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          data={reservations || []}
+          dataType="reservations"
+          title="Exportar/Importar Reservaciones"
+          onImportSuccess={handleImportSuccess}
+        />
       </div>
-      
-      {/* Export/Import Modal */}
-      <ExportImportModal
-        isOpen={showExportModal}
-        onClose={() => setShowExportModal(false)}
-        data={reservations || []}
-        dataType="reservations"
-        title="Exportar/Importar Reservaciones"
-        onImportSuccess={handleImportSuccess}
-      />
     </div>
   );
 };

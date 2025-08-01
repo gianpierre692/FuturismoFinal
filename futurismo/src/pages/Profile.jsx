@@ -151,8 +151,11 @@ const Profile = () => {
   };
 
   return (
-    <div className="page-content">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('profile.administration')}</h1>
+    <div className="page-container">
+      <div className="page-content-none">
+        <div className="page-header-none">
+          <h1 className="page-title">{t('profile.administration')}</h1>
+        </div>
       
       {/* Tabs */}
       <div className="mb-8">
@@ -270,16 +273,17 @@ const Profile = () => {
         </div>
       )}
 
-      {activeTab === 'guides' && (
-        <FreelanceAvailabilityView />
-      )}
+        {activeTab === 'guides' && (
+          <FreelanceAvailabilityView />
+        )}
 
-      {activeTab === 'settings' && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">{t('profile.systemConfig')}</h2>
-          <p className="text-gray-600">{t('profile.generalConfig')}</p>
-        </div>
-      )}
+        {activeTab === 'settings' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">{t('profile.systemConfig')}</h2>
+            <p className="text-gray-600">{t('profile.generalConfig')}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

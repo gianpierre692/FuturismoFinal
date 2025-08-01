@@ -383,20 +383,20 @@ const History = () => {
   }, [filteredTrips]);
 
   return (
-    <div className="p-2 sm:p-4 lg:p-6 bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="page-container bg-white">
+      <div className="page-content-none">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="page-header-none">
+          <h1 className="page-title">
             Historial de Viajes Asignados
           </h1>
-          <p className="text-gray-600">
+          <p className="page-subtitle">
             Registro completo de todos los viajes asignados y completados
           </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        <div className="page-section grid grid-cols-1 md:grid-cols-5 gap-4">
           <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
             <div className="flex items-center justify-between">
               <div>
@@ -453,7 +453,7 @@ const History = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="page-section-compact bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center gap-2 mb-4">
             <FunnelIcon className="w-5 h-5 text-gray-500" />
             <h3 className="text-lg font-semibold text-gray-800">Filtros y Búsqueda</h3>
