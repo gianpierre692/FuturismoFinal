@@ -432,7 +432,7 @@ const ReservationList = () => {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow h-full flex flex-col" style={{ marginTop: '2rem' }}>
+      <div className="bg-white rounded-lg shadow h-full flex flex-col">
         {/* Header con búsqueda y filtros */}
         <div className="p-4 sm:p-6 md:p-4 lg:p-6 border-b border-gray-200 flex-shrink-0">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 lg:gap-6">

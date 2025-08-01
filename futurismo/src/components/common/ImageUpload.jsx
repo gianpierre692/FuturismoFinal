@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react';
-import { PhotoIcon, XMarkIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { PhotoIcon, XMarkIcon, ExclamationTriangleIcon, QuestionMarkCircleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 
 const ImageUpload = ({ onImageSelect, initialImage = null, error = null }) => {
   const [dragActive, setDragActive] = useState(false);
   const [preview, setPreview] = useState(initialImage);
   const [uploading, setUploading] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const fileInputRef = useRef(null);
   const { t } = useTranslation();
 
@@ -187,6 +188,40 @@ const ImageUpload = ({ onImageSelect, initialImage = null, error = null }) => {
           {error}
         </div>
       )}
+
+      {/* Panel de ayuda expandible */}
+      <div className="mt-3">
+        <button
+          type="button"
+          onClick={() => setShowHelp(!showHelp)}
+          className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          <QuestionMarkCircleIcon className="w-4 h-4" />
+          {t('upload.helpTitle')}
+          {showHelp ? (
+            <ChevronUpIcon className="w-4 h-4" />
+          ) : (
+            <ChevronDownIcon className="w-4 h-4" />
+          )}
+        </button>
+
+        {showHelp && (
+          <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="space-y-2 text-sm text-blue-800">
+              <div className="font-medium text-blue-900 mb-3 flex items-center gap-2">
+                <PhotoIcon className="w-4 h-4" />
+                Especificaciones recomendadas:
+              </div>
+              <p>{t('upload.helpResolution')}</p>
+              <p>{t('upload.helpFormat')}</p>
+              <p>{t('upload.helpSize')}</p>
+              <p>{t('upload.helpComposition')}</p>
+              <p>{t('upload.helpLighting')}</p>
+              <p>{t('upload.helpQuality')}</p>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Ayuda adicional */}
       <p className="mt-2 text-xs text-gray-500">

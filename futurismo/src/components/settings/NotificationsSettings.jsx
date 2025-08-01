@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { 
   BellIcon,
   EnvelopeIcon,
-  PhoneIcon,
-  DevicePhoneMobileIcon,
-  ChatBubbleLeftRightIcon
+  DevicePhoneMobileIcon
 } from '@heroicons/react/24/outline';
 import { useSettingsStore } from '../../stores/settingsStore';
 
@@ -65,25 +63,11 @@ const NotificationsSettings = () => {
       description: 'Notificaciones por correo electrónico'
     },
     {
-      key: 'sms',
-      label: 'SMS',
-      icon: PhoneIcon,
-      color: 'green',
-      description: 'Notificaciones por mensaje de texto'
-    },
-    {
       key: 'push',
       label: 'Push',
       icon: DevicePhoneMobileIcon,
       color: 'purple',
       description: 'Notificaciones push en dispositivos móviles'
-    },
-    {
-      key: 'whatsapp',
-      label: 'WhatsApp',
-      icon: ChatBubbleLeftRightIcon,
-      color: 'green',
-      description: 'Notificaciones por WhatsApp Business'
     }
   ];
 
@@ -130,38 +114,6 @@ const NotificationsSettings = () => {
               {formData[channel.key].enabled && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
                   {notificationTypes.map((notificationType) => {
-                    // Solo mostrar notificaciones específicas para SMS
-                    if (channel.key === 'sms' && !['cancellation', 'reminder2h', 'emergencyOnly'].includes(notificationType.key)) {
-                      return null;
-                    }
-                    
-                    // Solo mostrar notificaciones específicas para WhatsApp
-                    if (channel.key === 'whatsapp' && !['newReservation', 'reminder24h', 'tourComplete'].includes(notificationType.key)) {
-                      return null;
-                    }
-
-                    // Agregar emergencyOnly solo para SMS
-                    if (channel.key === 'sms' && notificationType.key === 'emergencyOnly') {
-                      return (
-                        <div key="emergencyOnly" className="flex items-center justify-between">
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Solo Emergencias
-                            </label>
-                            <p className="text-xs text-gray-500">
-                              Enviar SMS solo en caso de emergencias
-                            </p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={formData[channel.key].emergencyOnly || false}
-                            onChange={(e) => handleNotificationToggle(channel.key, 'emergencyOnly', e.target.checked)}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                          />
-                        </div>
-                      );
-                    }
-
                     if (formData[channel.key][notificationType.key] !== undefined) {
                       return (
                         <div key={notificationType.key} className="flex items-center justify-between">
@@ -205,9 +157,8 @@ const NotificationsSettings = () => {
                 <h4 className="font-medium mb-1">Configuración de Notificaciones</h4>
                 <ul className="space-y-1">
                   <li>• Las notificaciones por email están siempre disponibles</li>
-                  <li>• SMS requiere configuración de proveedor de telefonía</li>
-                  <li>• Push requiere aplicación móvil instalada</li>
-                  <li>• WhatsApp requiere WhatsApp Business API configurado</li>
+                  <li>• Las notificaciones push se muestran en el navegador</li>
+                  <li>• Todas las comunicaciones se realizan a través del sistema interno</li>
                 </ul>
               </div>
             </div>

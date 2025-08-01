@@ -5,6 +5,8 @@ import {
 } from 'recharts';
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon, CalendarIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
+import InteractiveButton from '../common/InteractiveButton';
+import InteractiveCard from '../common/InteractiveCard';
 
 const ServiceChart = () => {
   const [chartType, setChartType] = useState('line');
@@ -75,10 +77,10 @@ const ServiceChart = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <InteractiveCard className="bg-white p-6 group">
       {/* Header con controles */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold">Análisis de Servicios</h3>
+        <h3 className="text-lg font-semibold group-hover:text-primary-600 transition-colors duration-300">Análisis de Servicios</h3>
         
         <div className="flex items-center gap-4">
           {/* Selector de rango de tiempo */}
@@ -95,8 +97,10 @@ const ServiceChart = () => {
 
           {/* Selector de tipo de gráfico */}
           <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+            <InteractiveButton
+              variant={chartType === 'line' ? 'primary' : 'ghost'}
+              size="sm"
+              className={`px-3 py-1 text-sm font-medium ${
                 chartType === 'line'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
@@ -104,9 +108,11 @@ const ServiceChart = () => {
               onClick={() => setChartType('line')}
             >
               Líneas
-            </button>
-            <button
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+            </InteractiveButton>
+            <InteractiveButton
+              variant={chartType === 'bar' ? 'primary' : 'ghost'}
+              size="sm"
+              className={`px-3 py-1 text-sm font-medium ${
                 chartType === 'bar'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
@@ -114,9 +120,11 @@ const ServiceChart = () => {
               onClick={() => setChartType('bar')}
             >
               Barras
-            </button>
-            <button
-              className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+            </InteractiveButton>
+            <InteractiveButton
+              variant={chartType === 'pie' ? 'primary' : 'ghost'}
+              size="sm"
+              className={`px-3 py-1 text-sm font-medium ${
                 chartType === 'pie'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
@@ -124,94 +132,94 @@ const ServiceChart = () => {
               onClick={() => setChartType('pie')}
             >
               Torta
-            </button>
+            </InteractiveButton>
           </div>
         </div>
       </div>
 
       {/* KPIs principales */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-primary-50 rounded-lg p-4">
+        <InteractiveCard className="bg-primary-50 p-4 group/kpi cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-primary-900">Total Reservas</p>
-            <div className={`flex items-center text-xs font-medium ${
+            <p className="text-sm font-medium text-primary-900 group-hover/kpi:text-primary-800 transition-colors">Total Reservas</p>
+            <div className={`flex items-center text-xs font-medium group-hover/kpi:scale-110 transition-transform duration-200 ${
               kpiData.totalReservas.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.totalReservas.crecimiento >= 0 ? (
-                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1 animate-bounce" />
               ) : (
-                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1 animate-pulse" />
               )}
               {Math.abs(kpiData.totalReservas.crecimiento)}%
             </div>
           </div>
-          <p className="text-2xl font-bold text-primary-800">{kpiData.totalReservas.actual}</p>
-          <p className="text-xs text-primary-700 mt-1">
+          <p className="text-2xl font-bold text-primary-800 group-hover/kpi:scale-105 transition-transform duration-200">{kpiData.totalReservas.actual}</p>
+          <p className="text-xs text-primary-700 mt-1 group-hover/kpi:text-primary-600 transition-colors">
             vs. {kpiData.totalReservas.anterior} mes anterior
           </p>
-        </div>
+        </InteractiveCard>
 
-        <div className="bg-secondary-50 rounded-lg p-4">
+        <InteractiveCard className="bg-secondary-50 p-4 group/kpi cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-secondary-900">Total Turistas</p>
-            <div className={`flex items-center text-xs font-medium ${
+            <p className="text-sm font-medium text-secondary-900 group-hover/kpi:text-secondary-800 transition-colors">Total Turistas</p>
+            <div className={`flex items-center text-xs font-medium group-hover/kpi:scale-110 transition-transform duration-200 ${
               kpiData.totalTuristas.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.totalTuristas.crecimiento >= 0 ? (
-                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1 animate-bounce" />
               ) : (
-                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1 animate-pulse" />
               )}
               {Math.abs(kpiData.totalTuristas.crecimiento)}%
             </div>
           </div>
-          <p className="text-2xl font-bold text-secondary-800">{kpiData.totalTuristas.actual}</p>
-          <p className="text-xs text-secondary-700 mt-1">
+          <p className="text-2xl font-bold text-secondary-800 group-hover/kpi:scale-105 transition-transform duration-200">{kpiData.totalTuristas.actual}</p>
+          <p className="text-xs text-secondary-700 mt-1 group-hover/kpi:text-secondary-600 transition-colors">
             vs. {kpiData.totalTuristas.anterior} mes anterior
           </p>
-        </div>
+        </InteractiveCard>
 
-        <div className="bg-success-50 rounded-lg p-4">
+        <InteractiveCard className="bg-success-50 p-4 group/kpi cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-success-900">Ingresos Totales</p>
-            <div className={`flex items-center text-xs font-medium ${
+            <p className="text-sm font-medium text-success-900 group-hover/kpi:text-success-800 transition-colors">Ingresos Totales</p>
+            <div className={`flex items-center text-xs font-medium group-hover/kpi:scale-110 transition-transform duration-200 ${
               kpiData.ingresosTotales.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.ingresosTotales.crecimiento >= 0 ? (
-                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1 animate-bounce" />
               ) : (
-                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1 animate-pulse" />
               )}
               {Math.abs(kpiData.ingresosTotales.crecimiento)}%
             </div>
           </div>
-          <p className="text-2xl font-bold text-success-800">
+          <p className="text-2xl font-bold text-success-800 group-hover/kpi:scale-105 transition-transform duration-200">
             ${formatters.formatCurrency(kpiData.ingresosTotales.actual)}
           </p>
-          <p className="text-xs text-success-700 mt-1">
+          <p className="text-xs text-success-700 mt-1 group-hover/kpi:text-success-600 transition-colors">
             vs. ${formatters.formatCurrency(kpiData.ingresosTotales.anterior)} mes anterior
           </p>
-        </div>
+        </InteractiveCard>
 
-        <div className="bg-purple-50 rounded-lg p-4">
+        <InteractiveCard className="bg-purple-50 p-4 group/kpi cursor-pointer">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-purple-900">Tasa Ocupación</p>
-            <div className={`flex items-center text-xs font-medium ${
+            <p className="text-sm font-medium text-purple-900 group-hover/kpi:text-purple-800 transition-colors">Tasa Ocupación</p>
+            <div className={`flex items-center text-xs font-medium group-hover/kpi:scale-110 transition-transform duration-200 ${
               kpiData.tasaOcupacion.crecimiento >= 0 ? 'text-green-600' : 'text-red-600'
             }`}>
               {kpiData.tasaOcupacion.crecimiento >= 0 ? (
-                <ArrowTrendingUpIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingUpIcon className="w-3 h-3 mr-1 animate-bounce" />
               ) : (
-                <ArrowTrendingDownIcon className="w-3 h-3 mr-1" />
+                <ArrowTrendingDownIcon className="w-3 h-3 mr-1 animate-pulse" />
               )}
               {Math.abs(kpiData.tasaOcupacion.crecimiento)}%
             </div>
           </div>
-          <p className="text-2xl font-bold text-purple-800">{kpiData.tasaOcupacion.actual}%</p>
-          <p className="text-xs text-purple-700 mt-1">
+          <p className="text-2xl font-bold text-purple-800 group-hover/kpi:scale-105 transition-transform duration-200">{kpiData.tasaOcupacion.actual}%</p>
+          <p className="text-xs text-purple-700 mt-1 group-hover/kpi:text-purple-600 transition-colors">
             vs. {kpiData.tasaOcupacion.anterior}% mes anterior
           </p>
-        </div>
+        </InteractiveCard>
       </div>
 
       {/* Gráfico principal */}
@@ -286,25 +294,25 @@ const ServiceChart = () => {
       {/* Resumen inferior */}
       <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          <div>
-            <p className="text-sm text-gray-600">Tour más popular</p>
-            <p className="font-semibold text-gray-900">City Tour Lima</p>
+          <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150 group cursor-pointer">
+            <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors">Tour más popular</p>
+            <p className="font-semibold text-gray-900 group-hover:text-primary-600 group-hover:scale-105 transition-all duration-200">City Tour Lima</p>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">Promedio por reserva</p>
-            <p className="font-semibold text-gray-900">$420</p>
+          <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150 group cursor-pointer">
+            <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors">Promedio por reserva</p>
+            <p className="font-semibold text-gray-900 group-hover:text-green-600 group-hover:scale-105 transition-all duration-200">$420</p>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">Mejor día</p>
-            <p className="font-semibold text-gray-900">Sábados</p>
+          <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150 group cursor-pointer">
+            <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors">Mejor día</p>
+            <p className="font-semibold text-gray-900 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-200">Sábados</p>
           </div>
-          <div>
-            <p className="text-sm text-gray-600">Tasa conversión</p>
-            <p className="font-semibold text-gray-900">23.5%</p>
+          <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150 group cursor-pointer">
+            <p className="text-sm text-gray-600 group-hover:text-gray-700 transition-colors">Tasa conversión</p>
+            <p className="font-semibold text-gray-900 group-hover:text-purple-600 group-hover:scale-105 transition-all duration-200">23.5%</p>
           </div>
         </div>
       </div>
-    </div>
+    </InteractiveCard>
   );
 };
 

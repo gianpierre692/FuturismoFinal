@@ -72,17 +72,17 @@ const MarketplaceHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-cyan-700 text-white">
         <div className="absolute inset-0 bg-black/20" />
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-8 sm:py-12 lg:py-20">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-3xl sm:text-5xl font-bold mb-4">
+            <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-3 sm:mb-4">
               Encuentra el Guía Perfecto para tu Aventura
             </h1>
-            <p className="text-lg sm:text-xl text-white/90 mb-8">
+            <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-6 sm:mb-8">
               Conecta con guías turísticos profesionales verificados en Cusco
             </p>
 
@@ -95,11 +95,11 @@ const MarketplaceHome = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Busca por destino, tipo de tour o nombre del guía..."
-                  className="w-full pl-12 pr-32 py-4 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30"
+                  className="w-full pl-10 sm:pl-12 pr-24 sm:pr-32 py-3 sm:py-4 text-sm sm:text-base rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-primary-600 hover:bg-primary-700 rounded-md font-medium transition-colors"
+                  className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 px-3 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base bg-primary-600 hover:bg-primary-700 rounded-md font-medium transition-colors"
                 >
                   Buscar
                 </button>
@@ -107,22 +107,22 @@ const MarketplaceHome = () => {
             </form>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">{stats.activeGuides}</div>
-                <div className="text-sm text-white/80">Guías Activos</div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-8 sm:mt-12">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.activeGuides}</div>
+                <div className="text-xs sm:text-sm text-white/80">Guías Activos</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">{stats.verifiedGuides}</div>
-                <div className="text-sm text-white/80">Verificados</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold">{stats.verifiedGuides}</div>
+                <div className="text-xs sm:text-sm text-white/80">Verificados</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">4.8</div>
-                <div className="text-sm text-white/80">Rating Promedio</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold">4.8</div>
+                <div className="text-xs sm:text-sm text-white/80">Rating Promedio</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">2.5k+</div>
-                <div className="text-sm text-white/80">Tours Completados</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl lg:text-3xl font-bold">2.5k+</div>
+                <div className="text-xs sm:text-sm text-white/80">Tours Completados</div>
               </div>
             </div>
           </div>
@@ -130,20 +130,20 @@ const MarketplaceHome = () => {
       </div>
 
       {/* Popular Tours */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Tours Populares</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-6 sm:py-8 lg:py-12">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Tours Populares</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {popularTours.map((tour) => (
             <button
               key={tour.id}
               onClick={() => handleQuickSearch(tour.id)}
-              className="bg-white rounded-lg p-4 sm:p-6 shadow-sm hover:shadow-md transition-all group"
+              className="bg-white rounded-lg p-3 sm:p-4 lg:p-6 shadow-sm hover:shadow-md transition-all group"
             >
-              <div className="text-3xl sm:text-4xl mb-2">{tour.icon}</div>
-              <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+              <div className="text-2xl sm:text-3xl lg:text-4xl mb-2">{tour.icon}</div>
+              <h3 className="text-sm sm:text-base font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                 {tour.name}
               </h3>
-              <p className="text-sm text-gray-500 mt-1">{tour.count} guías</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">{tour.count} guías</p>
             </button>
           ))}
         </div>
@@ -151,16 +151,16 @@ const MarketplaceHome = () => {
 
       {/* Featured Guides */}
       {featuredGuides.length > 0 && (
-        <div className="bg-white py-8 sm:py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <SparklesIcon className="h-6 w-6 text-yellow-500" />
+        <div className="bg-white py-6 sm:py-8 lg:py-12">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <SparklesIcon className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-500" />
                 Guías Destacados
               </h2>
               <button
                 onClick={() => navigate('/marketplace/search')}
-                className="text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
+                className="text-sm sm:text-base text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
               >
                 Ver todos
                 <ChevronRightIcon className="h-4 w-4" />

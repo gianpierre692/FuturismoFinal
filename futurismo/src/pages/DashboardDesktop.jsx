@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   ChartBarIcon,
   UsersIcon,
@@ -17,6 +17,8 @@ import {
   UserGroupIcon
 } from '@heroicons/react/24/outline';
 import useAuthStore from '../stores/authStore';
+import QuickActions from '../components/dashboard/QuickActions';
+import AdvancedDataTable from '../components/common/AdvancedDataTable';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -78,7 +80,7 @@ const DashboardDesktop = () => {
   const maxValue = Math.max(...chartData.map(d => d.value));
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
@@ -244,69 +246,94 @@ const DashboardDesktop = () => {
                 </span>
               </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gray-50 text-left">
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tour
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Guía
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Hora
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Turistas
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estado
-                    </th>
-                    <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {activeTours.map((tour) => (
-                    <tr key={tour.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <MapPinIcon className="h-5 w-5 text-gray-400 mr-2" />
-                          <span className="font-medium text-gray-900">{tour.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {tour.guide}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <ClockIcon className="h-4 w-4 mr-1" />
-                          {tour.time}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <UsersIcon className="h-4 w-4 mr-1" />
-                          {tour.tourists}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 inline-flex text-xs font-medium rounded-full ${getStatusColor(tour.status)}`}>
-                          {getStatusText(tour.status)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <button className="text-primary hover:text-primary-dark">
-                          Ver detalles
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            
+            <AdvancedDataTable
+              data={activeTours}
+              columns={[
+                {
+                  key: 'name',
+                  header: 'Tour',
+                  render: (tour) => (
+                    <div className="flex items-center">
+                      <MapPinIcon className="h-5 w-5 text-gray-400 mr-2" />
+                      <span className="font-medium text-gray-900">{tour.name}</span>
+                    </div>
+                  )
+                },
+                {
+                  key: 'guide',
+                  header: 'Guía',
+                  render: (tour) => (
+                    <span className="text-sm text-gray-600">{tour.guide}</span>
+                  )
+                },
+                {
+                  key: 'time',
+                  header: 'Hora',
+                  sortType: 'text',
+                  render: (tour) => (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <ClockIcon className="h-4 w-4 mr-1" />
+                      {tour.time}
+                    </div>
+                  )
+                },
+                {
+                  key: 'tourists',
+                  header: 'Turistas',
+                  sortType: 'numeric',
+                  render: (tour) => (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <UsersIcon className="h-4 w-4 mr-1" />
+                      {tour.tourists}
+                    </div>
+                  )
+                },
+                {
+                  key: 'status',
+                  header: 'Estado',
+                  render: (tour) => (
+                    <span className={`px-3 py-1 inline-flex text-xs font-medium rounded-full ${getStatusColor(tour.status)}`}>
+                      {getStatusText(tour.status)}
+                    </span>
+                  )
+                }
+              ]}
+              actions={[
+                {
+                  label: 'Ver detalles',
+                  icon: <EyeIcon className="w-4 h-4" />,
+                  onClick: (tour) => {
+                    console.log('Ver detalles del tour:', tour);
+                    // Aquí iría la lógica para ver detalles
+                  },
+                  className: 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+                }
+              ]}
+              filters={[
+                {
+                  key: 'status',
+                  label: 'Estado',
+                  type: 'select',
+                  options: [
+                    { value: 'active', label: 'En curso' },
+                    { value: 'pending', label: 'Pendiente' },
+                    { value: 'completed', label: 'Completado' }
+                  ],
+                  filterFn: (tour, value) => tour.status === value
+                },
+                {
+                  key: 'guide',
+                  label: 'Guía',
+                  type: 'text',
+                  placeholder: 'Buscar por guía...',
+                  filterFn: (tour, value) => tour.guide.toLowerCase().includes(value.toLowerCase())
+                }
+              ]}
+              searchPlaceholder="Buscar tours por nombre, guía..."
+              pageSize={10}
+              className="border-0 shadow-none"
+            />
           </div>
 
           {/* Monthly Performance */}
@@ -396,32 +423,7 @@ const DashboardDesktop = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Acciones Rápidas</h2>
-            <div className="space-y-3">
-              <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
-                <span className="flex items-center">
-                  <CalendarIcon className="h-5 w-5 text-gray-600 mr-3" />
-                  <span className="text-sm font-medium text-gray-900">Nueva Reserva</span>
-                </span>
-                <ArrowRightIcon className="h-4 w-4 text-gray-400" />
-              </button>
-              <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
-                <span className="flex items-center">
-                  <UserGroupIcon className="h-5 w-5 text-gray-600 mr-3" />
-                  <span className="text-sm font-medium text-gray-900">Asignar Guía</span>
-                </span>
-                <ArrowRightIcon className="h-4 w-4 text-gray-400" />
-              </button>
-              <button className="w-full flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
-                <span className="flex items-center">
-                  <ChartBarIcon className="h-5 w-5 text-gray-600 mr-3" />
-                  <span className="text-sm font-medium text-gray-900">Generar Reporte</span>
-                </span>
-                <ArrowRightIcon className="h-4 w-4 text-gray-400" />
-              </button>
-            </div>
-          </div>
+          <QuickActions />
 
           {/* Top Guides */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">

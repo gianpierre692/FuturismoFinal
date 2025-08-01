@@ -1,9 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 import { 
   Bars3Icon, 
   ArrowLeftIcon, 
   BellIcon,
-  MagnifyingGlassIcon 
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
@@ -11,8 +15,28 @@ import useNotificationsStore from '../../stores/notificationsStore';
 const MobileHeader = ({ onMenuClick, showMenu = true }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const { unreadCount, toggleVisibility } = useNotificationsStore();
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef(null);
+
+  // Cerrar menú al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+    setProfileMenuOpen(false);
+  };
 
   // Configuración de título según ruta
   const getPageTitle = () => {
@@ -75,6 +99,46 @@ const MobileHeader = ({ onMenuClick, showMenu = true }) => {
               </span>
             )}
           </button>
+
+          {/* Profile Menu */}
+          <div className="relative" ref={profileMenuRef}>
+            <button
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <UserCircleIcon className="w-5 h-5 text-gray-700" />
+              <ChevronDownIcon className="w-3 h-3 text-gray-500" />
+            </button>
+
+            {/* Dropdown Menu */}
+            {profileMenuOpen && (
+              <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                <div className="px-3 py-2 border-b border-gray-100">
+                  <p className="text-sm font-medium text-gray-900">{user?.name || user?.email}</p>
+                  <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                </div>
+                
+                <button
+                  onClick={() => {
+                    navigate('/profile');
+                    setProfileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <UserCircleIcon className="w-4 h-4" />
+                  Mi Perfil
+                </button>
+                
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                >
+                  <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                  Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

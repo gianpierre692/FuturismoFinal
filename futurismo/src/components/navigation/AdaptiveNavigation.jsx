@@ -3,12 +3,11 @@ import { useLocation } from 'react-router-dom';
 import useAuthStore from '../../stores/authStore';
 import DesktopSidebar from '../common/Sidebar';
 import BottomNavigation from './BottomNavigation';
-import SlidePanelsNavigation from './SlidePanelsNavigation';
+import CompactHamburgerMenu from './CompactHamburgerMenu';
 import MobileHeader from './MobileHeader';
 import Header from '../common/Header';
 import NotificationsPanel from '../common/NotificationsPanel';
 import ResponsiveDebug from '../debug/ResponsiveDebug';
-import BackToTopButton from '../common/BackToTopButton';
 
 const AdaptiveNavigation = ({ children }) => {
   const { user } = useAuthStore();
@@ -51,7 +50,7 @@ const AdaptiveNavigation = ({ children }) => {
   // DESKTOP - Sidebar tradicional con Header
   if (!isMobile) {
     return (
-      <div className="flex h-screen bg-gray-50 overflow-x-hidden max-w-full">
+      <div className="flex h-screen bg-white overflow-x-hidden max-w-full">
         <DesktopSidebar 
           isOpen={sidebarOpen} 
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
@@ -65,8 +64,6 @@ const AdaptiveNavigation = ({ children }) => {
             </div>
           </div>
         </div>
-        {/* Botón Back to Top para desktop */}
-        <BackToTopButton />
       </div>
     );
   }
@@ -76,7 +73,7 @@ const AdaptiveNavigation = ({ children }) => {
   const showBottomNav = isGuide || user?.role === 'driver';
   
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden max-w-full">
+    <div className="min-h-screen bg-white overflow-x-hidden max-w-full">
       {/* Header móvil - oculto en marketplace */}
       {!location.pathname.includes('/marketplace') && (
         <MobileHeader 
@@ -85,8 +82,8 @@ const AdaptiveNavigation = ({ children }) => {
         />
       )}
 
-      {/* Slide Panels para todos los roles en móvil */}
-      <SlidePanelsNavigation 
+      {/* Menú hamburguesa compacto para todos los roles en móvil */}
+      <CompactHamburgerMenu 
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
@@ -104,8 +101,6 @@ const AdaptiveNavigation = ({ children }) => {
       {/* Bottom Navigation para guías */}
       {showBottomNav && <BottomNavigation userRole={user?.role} />}
 
-      {/* Botón Back to Top */}
-      <BackToTopButton />
 
       {/* FAB Contextual - DESHABILITADO para diseño más limpio */}
       {/* <ContextualFAB userRole={user?.role} currentPath={location.pathname} /> */}

@@ -1,5 +1,7 @@
 import { CalendarIcon, UserIcon, CurrencyDollarIcon, MapPinIcon, ClockIcon, CheckCircleIcon, XCircleIcon, ExclamationTriangleIcon, ChatBubbleLeftRightIcon, ArrowTrendingUpIcon, UserGroupIcon, StarIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
+import InteractiveButton from '../common/InteractiveButton';
+import InteractiveCard from '../common/InteractiveCard';
 
 const RecentActivity = () => {
   // Datos mock de actividad reciente
@@ -103,8 +105,8 @@ const RecentActivity = () => {
   const getActivityIcon = (activity) => {
     const Icon = activity.icon;
     return (
-      <div className={`p-2 rounded-full ${activity.iconBg}`}>
-        <Icon className={`w-5 h-5 ${activity.iconColor}`} />
+      <div className={`p-2 rounded-full ${activity.iconBg} group-hover:scale-110 transition-transform duration-200`}>
+        <Icon className={`w-5 h-5 ${activity.iconColor} group-hover:animate-pulse`} />
       </div>
     );
   };
@@ -130,51 +132,51 @@ const RecentActivity = () => {
 
         {/* Mini estadísticas */}
         <div className="grid grid-cols-3 gap-4 mt-4">
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center justify-center gap-1 text-green-600">
-              <ArrowTrendingUpIcon className="w-4 h-4" />
+          <InteractiveCard className="text-center p-3 bg-gray-50 group">
+            <div className="flex items-center justify-center gap-1 text-green-600 group-hover:scale-105 transition-transform duration-200">
+              <ArrowTrendingUpIcon className="w-4 h-4 animate-bounce" />
               <span className="text-lg font-semibold">+15%</span>
             </div>
-            <p className="text-xs text-gray-600 mt-1">vs. ayer</p>
-          </div>
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center justify-center gap-1 text-blue-600">
-              <UserGroupIcon className="w-4 h-4" />
+            <p className="text-xs text-gray-600 mt-1 group-hover:text-gray-700 transition-colors">vs. ayer</p>
+          </InteractiveCard>
+          <InteractiveCard className="text-center p-3 bg-gray-50 group">
+            <div className="flex items-center justify-center gap-1 text-blue-600 group-hover:scale-105 transition-transform duration-200">
+              <UserGroupIcon className="w-4 h-4 group-hover:animate-pulse" />
               <span className="text-lg font-semibold">84</span>
             </div>
-            <p className="text-xs text-gray-600 mt-1">turistas hoy</p>
-          </div>
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center justify-center gap-1 text-purple-600">
-              <StarIcon className="w-4 h-4" />
+            <p className="text-xs text-gray-600 mt-1 group-hover:text-gray-700 transition-colors">turistas hoy</p>
+          </InteractiveCard>
+          <InteractiveCard className="text-center p-3 bg-gray-50 group">
+            <div className="flex items-center justify-center gap-1 text-purple-600 group-hover:scale-105 transition-transform duration-200">
+              <StarIcon className="w-4 h-4 group-hover:animate-spin" />
               <span className="text-lg font-semibold">4.8</span>
             </div>
-            <p className="text-xs text-gray-600 mt-1">rating promedio</p>
-          </div>
+            <p className="text-xs text-gray-600 mt-1 group-hover:text-gray-700 transition-colors">rating promedio</p>
+          </InteractiveCard>
         </div>
       </div>
 
       {/* Lista de actividades */}
       <div className="divide-y divide-gray-200 max-h-96 overflow-y-auto">
         {activities.map((activity) => (
-          <div key={activity.id} className="p-4 hover:bg-gray-50 transition-colors">
+          <div key={activity.id} className="relative p-4 hover:bg-gray-50 transition-all duration-150 group cursor-pointer hover:shadow-sm border-r-2 border-transparent hover:border-blue-500">
             <div className="flex gap-4">
               {getActivityIcon(activity)}
               
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-gray-900 group-hover:text-gray-800 transition-colors">
                       {activity.title}
                     </p>
-                    <p className="text-sm text-gray-600 mt-0.5">
+                    <p className="text-sm text-gray-600 mt-0.5 group-hover:text-gray-700 transition-colors">
                       {activity.description}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-1 group-hover:text-gray-600 transition-colors">
                       {activity.user}
                     </p>
                   </div>
-                  <span className="text-xs text-gray-500 whitespace-nowrap ml-4">
+                  <span className="text-xs text-gray-500 whitespace-nowrap ml-4 group-hover:text-gray-600 transition-colors group-hover:scale-105 transform duration-200">
                     {formatters.formatRelativeTime(activity.time)}
                   </span>
                 </div>
@@ -186,9 +188,13 @@ const RecentActivity = () => {
 
       {/* Footer */}
       <div className="p-4 border-t border-gray-200 bg-gray-50">
-        <button className="w-full text-sm font-medium text-primary-600 hover:text-primary-700">
+        <InteractiveButton
+          variant="ghost"
+          size="sm"
+          className="w-full text-sm font-medium text-primary-600 hover:text-primary-700 justify-center"
+        >
           Ver toda la actividad →
-        </button>
+        </InteractiveButton>
       </div>
     </div>
   );

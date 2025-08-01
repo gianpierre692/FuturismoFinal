@@ -134,7 +134,7 @@ const ReservationsMobile = () => {
   // Vista del wizard
   if (showWizard) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <ReservationWizard onClose={() => setShowWizard(false)} />
       </div>
     );
@@ -143,7 +143,7 @@ const ReservationsMobile = () => {
   // Vista de detalle
   if (selectedReservation) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="min-h-screen bg-white pb-16">
         <div className="bg-white shadow-sm sticky top-14 z-20">
           <div className="px-4 py-3 flex items-center">
             <button
@@ -164,7 +164,7 @@ const ReservationsMobile = () => {
   }
 
   return (
-    <div className="fixed inset-0 top-14 flex flex-col bg-gray-50">
+    <div className="fixed inset-0 top-14 flex flex-col bg-white">
       {/* Header con búsqueda y botón nuevo */}
       <div className="bg-white shadow-sm z-20 flex-shrink-0">
         <div className="px-4 py-3">

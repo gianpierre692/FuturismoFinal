@@ -26,6 +26,7 @@ import useGuidesStore from '../stores/guidesStore';
 import GuideForm from '../components/guides/GuideForm';
 import GuideProfile from '../components/guides/GuideProfile';
 import ExportImportModal from '../components/common/ExportImportModal';
+import AdvancedDataTable from '../components/common/AdvancedDataTable';
 
 const GuidesManagement = () => {
   const { guides = [], languages = [], museums = [], actions } = useGuidesStore();
@@ -262,123 +263,143 @@ const GuidesManagement = () => {
     </div>
   );
 
-  // Desktop List View
+  // Desktop List View with AdvancedDataTable
   const DesktopListView = () => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Guía
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tipo
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Idiomas
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Estadísticas
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Calificación
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredGuides.map((guide) => (
-              <tr key={guide.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-                      {(guide?.fullName || 'G').split(' ').map(name => name[0]).join('').substring(0, 2)}
-                    </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">{guide?.fullName || 'Sin nombre'}</div>
-                      <div className="text-sm text-gray-500">{guide?.email}</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                    guide?.guideType === 'planta' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {guide?.guideType === 'planta' ? 'Planta' : 'Freelance'}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex flex-wrap gap-1 max-w-xs">
-                    {(guide?.specializations?.languages || []).slice(0, 3).map((lang, index) => (
-                      <span key={index} className="bg-blue-50 px-2 py-0.5 rounded text-xs">
-                        {getLanguageLabel(lang.code)}
-                      </span>
-                    ))}
-                    {(guide?.specializations?.languages?.length || 0) > 3 && (
-                      <span className="text-xs text-gray-500">
-                        +{(guide?.specializations?.languages?.length || 0) - 3}
-                      </span>
-                    )}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center">
-                      <ChartBarIcon className="w-4 h-4 mr-1 text-gray-400" />
-                      <span>{guide?.stats?.toursCompleted || 0} tours</span>
-                    </div>
-                    <div className="flex items-center">
-                      <ClockIcon className="w-4 h-4 mr-1 text-gray-400" />
-                      <span>{guide?.stats?.yearsExperience || 0} años</span>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <StarIcon className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="ml-1 text-sm font-medium">{guide?.stats?.rating || 0}/5</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => handleViewProfile(guide)}
-                      className="text-blue-600 hover:text-blue-900"
-                      title="Ver perfil"
-                    >
-                      <EyeIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => handleEditGuide(guide)}
-                      className="text-yellow-600 hover:text-yellow-900"
-                      title="Editar"
-                    >
-                      <PencilIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteGuide(guide.id)}
-                      className="text-red-600 hover:text-red-900"
-                      title="Eliminar"
-                    >
-                      <TrashIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <AdvancedDataTable
+      data={filteredGuides}
+      columns={[
+        {
+          key: 'fullName',
+          header: 'Guía',
+          render: (guide) => (
+            <div className="flex items-center">
+              <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                {(guide?.fullName || 'G').split(' ').map(name => name[0]).join('').substring(0, 2)}
+              </div>
+              <div className="ml-4">
+                <div className="text-sm font-medium text-gray-900">{guide?.fullName || 'Sin nombre'}</div>
+                <div className="text-sm text-gray-500">{guide?.email}</div>
+              </div>
+            </div>
+          )
+        },
+        {
+          key: 'guideType',
+          header: 'Tipo',
+          render: (guide) => (
+            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+              guide?.guideType === 'planta' 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-yellow-100 text-yellow-800'
+            }`}>
+              {guide?.guideType === 'planta' ? 'Planta' : 'Freelance'}
+            </span>
+          )
+        },
+        {
+          key: 'languages',
+          header: 'Idiomas',
+          sortable: false,
+          render: (guide) => (
+            <div className="flex flex-wrap gap-1 max-w-xs">
+              {(guide?.specializations?.languages || []).slice(0, 3).map((lang, index) => (
+                <span key={index} className="bg-blue-50 px-2 py-0.5 rounded text-xs">
+                  {getLanguageLabel(lang.code)}
+                </span>
+              ))}
+              {(guide?.specializations?.languages?.length || 0) > 3 && (
+                <span className="text-xs text-gray-500">
+                  +{(guide?.specializations?.languages?.length || 0) - 3}
+                </span>
+              )}
+            </div>
+          )
+        },
+        {
+          key: 'stats',
+          header: 'Estadísticas',
+          sortable: false,
+          render: (guide) => (
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center">
+                <ChartBarIcon className="w-4 h-4 mr-1 text-gray-400" />
+                <span>{guide?.stats?.toursCompleted || 0} tours</span>
+              </div>
+              <div className="flex items-center">
+                <ClockIcon className="w-4 h-4 mr-1 text-gray-400" />
+                <span>{guide?.stats?.yearsExperience || 0} años</span>
+              </div>
+            </div>
+          )
+        },
+        {
+          key: 'rating',
+          header: 'Calificación',
+          sortType: 'numeric',
+          accessor: (guide) => guide?.stats?.rating || 0,
+          render: (guide) => (
+            <div className="flex items-center">
+              <StarIcon className="w-4 h-4 text-yellow-400 fill-current" />
+              <span className="ml-1 text-sm font-medium">{guide?.stats?.rating || 0}/5</span>
+            </div>
+          )
+        }
+      ]}
+      actions={[
+        {
+          label: 'Ver perfil',
+          icon: <EyeIcon className="w-4 h-4" />,
+          onClick: handleViewProfile,
+          className: 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+        },
+        {
+          label: 'Editar',
+          icon: <PencilIcon className="w-4 h-4" />,
+          onClick: handleEditGuide,
+          className: 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
+        },
+        {
+          label: 'Eliminar',
+          icon: <TrashIcon className="w-4 h-4" />,
+          onClick: (guide) => handleDeleteGuide(guide.id),
+          className: 'text-red-600 hover:text-red-700 hover:bg-red-50'
+        }
+      ]}
+      filters={[
+        {
+          key: 'guideType',
+          label: 'Tipo de Guía',
+          type: 'select',
+          options: [
+            { value: 'planta', label: 'Planta' },
+            { value: 'freelance', label: 'Freelance' }
+          ],
+          filterFn: (guide, value) => guide.guideType === value
+        },
+        {
+          key: 'language',
+          label: 'Idioma',
+          type: 'select',
+          options: languages.map(lang => ({ value: lang.code, label: lang.name })),
+          filterFn: (guide, value) => 
+            guide?.specializations?.languages?.some(lang => lang.code === value)
+        },
+        {
+          key: 'experience',
+          label: 'Años de Experiencia (mínimo)',
+          type: 'number',
+          placeholder: 'Ej: 5',
+          filterFn: (guide, value) => (guide?.stats?.yearsExperience || 0) >= parseInt(value)
+        }
+      ]}
+      searchPlaceholder="Buscar por nombre, email, DNI..."
+      pageSize={10}
+      emptyMessage="No se encontraron guías con los filtros aplicados"
+    />
   );
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
+    <div className="p-2 sm:p-4 lg:p-6 bg-white min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">

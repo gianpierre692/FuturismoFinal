@@ -4,7 +4,7 @@
 
 Este documento detalla el plan completo para refactorizar el código frontend de Futurismo hacia un código más limpio, mantenible y escalable.
 
-## 🎯 Objetivos
+* [ ] 🎯 Objetivos
 
 1. **Eliminar duplicación** de componentes y páginas
 2. **Unificar patrones** de desarrollo
@@ -15,25 +15,28 @@ Este documento detalla el plan completo para refactorizar el código frontend de
 ## 🔍 Problemas Identificados
 
 ### 1. Componentes Duplicados
+
 ```
 ❌ ACTUAL                          ✅ OBJETIVO
 LiveMap.jsx                        LiveMap.jsx (unificado)
 LiveMapCDN.jsx                     con props: strategy="cdn|resilient|simple"
-LiveMapResilient.jsx               
-LiveMapSimple.jsx                  
-LiveMapUnified.jsx                 
+LiveMapResilient.jsx             
+LiveMapSimple.jsx                
+LiveMapUnified.jsx               
 ```
 
 ### 2. Páginas Desktop/Mobile Separadas
+
 ```
 ❌ ACTUAL                          ✅ OBJETIVO
 Dashboard.jsx                      Dashboard.jsx (responsive)
 DashboardDesktop.jsx              con hooks useResponsive()
-DashboardMobile.jsx               
-DashboardSimple.jsx               
+DashboardMobile.jsx             
+DashboardSimple.jsx             
 ```
 
 ### 3. Estructura Inconsistente
+
 ```
 ❌ ACTUAL                          ✅ OBJETIVO
 pages/                             pages/
@@ -80,6 +83,7 @@ src/
 ### Semana 1: Preparación y Componentes Core
 
 #### Día 1-2: Setup y Estándares
+
 ```bash
 # 1. Crear archivos de configuración
 touch .prettierrc
@@ -91,12 +95,14 @@ npm install -D eslint-plugin-react-hooks eslint-plugin-jsx-a11y
 ```
 
 **Tareas:**
+
 - [ ] Configurar aliases de importación (@components, @pages, etc.)
 - [ ] Definir guía de estilo de código
 - [ ] Crear componentes base (Button, Input, Card)
 - [ ] Implementar sistema de diseño con Tailwind
 
 #### Día 3-5: Unificar Componentes de Mapas
+
 ```javascript
 // Crear un único LiveMap con estrategias
 const LiveMap = ({ strategy = 'default', ...props }) => {
@@ -115,6 +121,7 @@ const LiveMap = ({ strategy = 'default', ...props }) => {
 ### Semana 2: Páginas y Responsive Design
 
 #### Día 1-3: Implementar Sistema Responsive
+
 ```javascript
 // hooks/ui/useResponsive.js
 export const useResponsive = () => {
@@ -134,6 +141,7 @@ export const useResponsive = () => {
 ```
 
 #### Día 4-5: Unificar Páginas Desktop/Mobile
+
 ```javascript
 // pages/Dashboard.jsx (unificado)
 const Dashboard = () => {
@@ -150,6 +158,7 @@ const Dashboard = () => {
 ### Semana 3: Servicios y Estado
 
 #### Día 1-2: Refactorizar Stores
+
 ```javascript
 // stores/index.js - Crear store centralizado
 import { create } from 'zustand';
@@ -168,6 +177,7 @@ const useStore = create(
 ```
 
 #### Día 3-5: Crear Capa de Servicios
+
 ```javascript
 // services/api/reservations.service.js
 class ReservationsService {
@@ -186,6 +196,7 @@ export default new ReservationsService();
 ### Semana 4: Testing y Documentación
 
 #### Día 1-3: Implementar Testing Básico
+
 ```bash
 # Instalar dependencias
 npm install -D vitest @testing-library/react @testing-library/user-event
@@ -200,6 +211,7 @@ src/
 ```
 
 #### Día 4-5: Documentación y Limpieza
+
 - [ ] Actualizar README.md
 - [ ] Documentar componentes con JSDoc
 - [ ] Eliminar código muerto
@@ -208,6 +220,7 @@ src/
 ## 🛠️ Tareas Específicas de Refactorización
 
 ### 1. Eliminar Credenciales Hardcodeadas
+
 ```javascript
 // ❌ ANTES
 const testCredentials = {
@@ -223,6 +236,7 @@ const testCredentials = {
 ```
 
 ### 2. Unificar Formularios
+
 ```javascript
 // Crear un FormBuilder genérico
 const FormBuilder = ({ fields, onSubmit, validation }) => {
@@ -238,6 +252,7 @@ const FormBuilder = ({ fields, onSubmit, validation }) => {
 ```
 
 ### 3. Implementar Lazy Loading Consistente
+
 ```javascript
 // utils/lazyImport.js
 export const lazyImport = (path) => {
@@ -250,6 +265,7 @@ export const lazyImport = (path) => {
 ```
 
 ### 4. Crear Sistema de Feature Flags
+
 ```javascript
 // config/features.js
 export const features = {
@@ -264,12 +280,14 @@ export const features = {
 ## 📊 Métricas de Éxito
 
 ### Antes de Refactorización
+
 - 5 versiones de LiveMap
 - 4 versiones de Dashboard
 - 0% coverage de tests
 - ~50 componentes duplicados
 
 ### Después de Refactorización
+
 - 1 LiveMap configurable
 - 1 Dashboard responsive
 - 70% coverage en componentes críticos
@@ -279,16 +297,15 @@ export const features = {
 
 1. **Riesgo**: Romper funcionalidad existente
    **Mitigación**: Implementar tests antes de refactorizar
-
 2. **Riesgo**: Merge conflicts con desarrollo activo
    **Mitigación**: Refactorizar por módulos pequeños
-
 3. **Riesgo**: Resistencia del equipo
    **Mitigación**: Involucrar al equipo en decisiones
 
 ## ✅ Checklist de Refactorización
 
 ### Componentes
+
 - [ ] Unificar LiveMap (5 → 1)
 - [ ] Unificar Dashboard (4 → 1)
 - [ ] Unificar UserForm (2 → 1)
@@ -296,24 +313,28 @@ export const features = {
 - [ ] Eliminar componentes no usados
 
 ### Estructura
+
 - [ ] Reorganizar páginas por rol
 - [ ] Crear carpeta constants
 - [ ] Mover hooks a subcarpetas
 - [ ] Unificar estructura de features
 
 ### Código
+
 - [ ] Eliminar console.logs
 - [ ] Eliminar credenciales hardcodeadas
 - [ ] Implementar PropTypes o TypeScript
 - [ ] Añadir JSDoc a funciones principales
 
 ### Testing
+
 - [ ] Configurar Vitest
 - [ ] Tests para autenticación
 - [ ] Tests para reservas
 - [ ] Tests para componentes críticos
 
 ### Documentación
+
 - [ ] Actualizar README
 - [ ] Crear CONTRIBUTING.md
 - [ ] Documentar arquitectura
@@ -322,6 +343,7 @@ export const features = {
 ## 🎯 Resultado Esperado
 
 Un código base:
+
 - **Mantenible**: Fácil de entender y modificar
 - **Escalable**: Preparado para crecer
 - **Testeable**: Con cobertura adecuada

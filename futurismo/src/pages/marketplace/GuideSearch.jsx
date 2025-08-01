@@ -357,11 +357,11 @@ const GuideSearch = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header de búsqueda */}
       <div className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
-          <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-2 sm:py-3 lg:py-4">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
             {isMobile && (
               <button onClick={() => navigate(-1)} className="p-1">
                 <ArrowLeftIcon className="h-5 w-5" />
@@ -370,20 +370,20 @@ const GuideSearch = () => {
             
             {/* Barra de búsqueda */}
             <div className="flex-1 relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <MagnifyingGlassIcon className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar guías, destinos o tipos de tour..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
 
             {/* Botón de filtros */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`p-2.5 rounded-lg border ${
+              className={`p-2 sm:p-2.5 rounded-lg border ${
                 showFilters ? 'bg-primary-50 border-primary-300' : 'border-gray-300'
               } hover:bg-gray-50 transition-colors relative`}
             >
@@ -416,9 +416,9 @@ const GuideSearch = () => {
       </div>
 
       {/* Contenido principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1 sm:py-2 lg:py-6">
         {/* Resultados y ordenamiento */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-1 sm:mb-2 lg:mb-4">
           <p className="text-sm text-gray-600">
             {filteredGuides.length} guías encontrados
           </p>
@@ -457,7 +457,7 @@ const GuideSearch = () => {
                 </button>
               </div>
             ) : (
-              <div className={`grid gap-4 ${
+              <div className={`grid gap-2 sm:gap-3 lg:gap-4 ${
                 viewLayout === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'
               }`}>
                 {filteredGuides.map((guide) => (

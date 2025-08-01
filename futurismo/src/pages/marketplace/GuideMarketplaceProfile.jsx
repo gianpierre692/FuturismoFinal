@@ -148,7 +148,7 @@ const GuideMarketplaceProfile = () => {
   // Vista móvil
   if (screenSize.isMobile) {
     return (
-      <div className="min-h-screen bg-gray-50 overflow-hidden flex flex-col">
+      <div className="min-h-screen bg-white overflow-hidden flex flex-col">
         {/* Header móvil con imagen */}
         <div className="relative">
           <img
@@ -379,7 +379,7 @@ const GuideMarketplaceProfile = () => {
 
   // Vista desktop
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header con imagen de fondo */}
       <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 bg-gray-900">
         <img

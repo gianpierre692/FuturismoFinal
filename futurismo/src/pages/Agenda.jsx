@@ -46,7 +46,7 @@ const Agenda = () => {
 
   if (!isFreelanceGuide && !isAdmin) {
     return (
-      <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-sm border p-6 sm:p-8 text-center">
             <CalendarDaysIcon className="mx-auto h-12 sm:h-16 w-12 sm:w-16 text-gray-400 mb-4" />
@@ -133,7 +133,7 @@ const Agenda = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

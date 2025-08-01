@@ -7,7 +7,10 @@ import ServiceChart from '../components/dashboard/ServiceChart';
 import RecentActivity from '../components/dashboard/RecentActivity';
 import QuickActions from '../components/dashboard/QuickActions';
 import ExportPanel from '../components/dashboard/ExportPanel';
+import WeeklyIncomeChart from '../components/dashboard/WeeklyIncomeChart';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import InteractiveButton from '../components/common/InteractiveButton';
+import InteractiveCard from '../components/common/InteractiveCard';
 import useAuthStore from '../stores/authStore';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
@@ -114,13 +117,14 @@ const Dashboard = () => {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-4">
       {/* Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+      <div className="mb-6 sm:mb-8 group">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-300">
           {getGreeting()}, {user?.name || 'Usuario'}
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+        <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2 group-hover:text-gray-700 transition-colors duration-200">
           {t('dashboard.todaySummary')}
         </p>
+        <div className="mt-3 h-1 w-0 bg-gradient-to-r from-primary-500 to-secondary-500 group-hover:w-20 transition-all duration-500 rounded-full"></div>
       </div>
 
       {/* Stats Cards */}
@@ -221,12 +225,12 @@ const Dashboard = () => {
 
       {/* Monthly Comparison Charts - Only for Agency and Admin */}
       {(user?.role === 'agency' || user?.role === 'admin') && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Reservas por Mes */}
-          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+          <InteractiveCard className="bg-white p-4 sm:p-6 group">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-sm sm:text-lg font-semibold text-gray-900">{t('dashboard.reservationsByMonth')}</h3>
-              <ChartBarIcon className="w-5 h-5 text-primary-600" />
+              <h3 className="text-sm sm:text-lg font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">{t('dashboard.reservationsByMonth')}</h3>
+              <ChartBarIcon className="w-5 h-5 text-primary-600 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
             </div>
             <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
@@ -249,13 +253,13 @@ const Dashboard = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </InteractiveCard>
 
           {/* Turistas por Mes */}
-          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+          <InteractiveCard className="bg-white p-4 sm:p-6 group">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-sm sm:text-lg font-semibold text-gray-900">{t('dashboard.touristsByMonth')}</h3>
-              <UserGroupIcon className="w-5 h-5 text-green-600" />
+              <h3 className="text-sm sm:text-lg font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">{t('dashboard.touristsByMonth')}</h3>
+              <UserGroupIcon className="w-5 h-5 text-green-600 group-hover:scale-110 group-hover:animate-pulse transition-all duration-300" />
             </div>
             <div className="h-40 sm:h-48">
               <ResponsiveContainer width="100%" height="100%">
@@ -278,42 +282,14 @@ const Dashboard = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </div>
+          </InteractiveCard>
+        </div>
+      )}
 
-          {/* Ingresos por Mes */}
-          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:col-span-2 lg:col-span-1">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h3 className="text-sm sm:text-lg font-semibold text-gray-900">{t('dashboard.incomeByMonth')}</h3>
-              <CurrencyDollarIcon className="w-5 h-5 text-purple-600" />
-            </div>
-            <div className="h-40 sm:h-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="month" 
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis 
-                    tick={{ fontSize: 12 }}
-                    tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
-                  />
-                  <Tooltip 
-                    formatter={(value) => [`$${value.toLocaleString()}`, t('dashboard.totalIncome')]}
-                    labelStyle={{ color: '#374151' }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="revenue" 
-                    stroke="#8B5CF6" 
-                    strokeWidth={3}
-                    dot={{ fill: '#8B5CF6', strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: '#8B5CF6', strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+      {/* Análisis Detallado de Ingresos - Solo para Agency y Admin */}
+      {(user?.role === 'agency' || user?.role === 'admin') && (
+        <div className="mb-6 sm:mb-8">
+          <WeeklyIncomeChart />
         </div>
       )}
 
@@ -324,10 +300,10 @@ const Dashboard = () => {
           <ServiceChart />
           
           {/* Tours activos mini table */}
-          <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
+          <InteractiveCard className="bg-white p-4 sm:p-6 group">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-2">
-              <h3 className="text-base sm:text-lg font-semibold">{t('dashboard.activeToursNow')}</h3>
-              <span className="text-sm text-gray-500">
+              <h3 className="text-base sm:text-lg font-semibold group-hover:text-gray-800 transition-colors">{t('dashboard.activeToursNow')}</h3>
+              <span className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors animate-pulse">
                 {new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
@@ -344,31 +320,41 @@ const Dashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    <tr>
+                    <tr className="hover:bg-gray-50 transition-colors duration-150 group/row cursor-pointer">
                       <td className="px-3 py-2 sm:py-3">
                         <div>
-                          <div className="font-medium">City Tour Lima</div>
+                          <div className="font-medium group-hover/row:text-primary-600 transition-colors">City Tour Lima</div>
                           <div className="text-xs text-gray-500 sm:hidden">Carlos Mendoza</div>
                         </div>
                       </td>
-                      <td className="px-3 py-2 sm:py-3 hidden sm:table-cell">Carlos Mendoza</td>
-                      <td className="px-3 py-2 sm:py-3 text-center">12</td>
+                      <td className="px-3 py-2 sm:py-3 hidden sm:table-cell group-hover/row:text-gray-800 transition-colors">Carlos Mendoza</td>
+                      <td className="px-3 py-2 sm:py-3 text-center">
+                        <span className="bg-gray-100 px-2 py-1 rounded-full text-xs font-medium group-hover/row:bg-primary-100 group-hover/row:text-primary-800 transition-all duration-150">12</span>
+                      </td>
                       <td className="px-3 py-2 sm:py-3">
-                        <span className="badge badge-green text-xs">{t('dashboard.enRoute')}</span>
+                        <span className="badge badge-green text-xs animate-pulse">{t('dashboard.enRoute')}</span>
                       </td>
                     </tr>
-                    <tr>
-                      <td className="px-4 py-3">Tour Gastronómico</td>
-                      <td className="px-4 py-3">María García</td>
-                      <td className="px-4 py-3 text-center">8</td>
+                    <tr className="hover:bg-gray-50 transition-colors duration-150 group/row cursor-pointer">
                       <td className="px-4 py-3">
-                        <span className="badge badge-yellow">{t('dashboard.atStop')}</span>
+                        <div className="font-medium group-hover/row:text-primary-600 transition-colors">Tour Gastronómico</div>
+                      </td>
+                      <td className="px-4 py-3 group-hover/row:text-gray-800 transition-colors">María García</td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="bg-gray-100 px-2 py-1 rounded-full text-xs font-medium group-hover/row:bg-primary-100 group-hover/row:text-primary-800 transition-all duration-150">8</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="badge badge-yellow animate-bounce">{t('dashboard.atStop')}</span>
                       </td>
                     </tr>
-                    <tr>
-                      <td className="px-4 py-3">Islas Palomino</td>
-                      <td className="px-4 py-3">Juan Pérez</td>
-                      <td className="px-4 py-3 text-center">15</td>
+                    <tr className="hover:bg-gray-50 transition-colors duration-150 group/row cursor-pointer">
+                      <td className="px-4 py-3">
+                        <div className="font-medium group-hover/row:text-primary-600 transition-colors">Islas Palomino</div>
+                      </td>
+                      <td className="px-4 py-3 group-hover/row:text-gray-800 transition-colors">Juan Pérez</td>
+                      <td className="px-4 py-3 text-center">
+                        <span className="bg-gray-100 px-2 py-1 rounded-full text-xs font-medium group-hover/row:bg-primary-100 group-hover/row:text-primary-800 transition-all duration-150">15</span>
+                      </td>
                       <td className="px-4 py-3">
                         <span className="badge badge-blue">{t('dashboard.starting')}</span>
                       </td>
@@ -378,11 +364,16 @@ const Dashboard = () => {
             </div>
             
             <div className="mt-4 text-center">
-              <a href="/monitoring" className="text-sm font-medium text-primary-600 hover:text-primary-700">
-                {t('dashboard.viewLiveMonitoring')}
-              </a>
+              <InteractiveButton
+                variant="ghost"
+                size="sm"
+                className="text-sm font-medium text-primary-600 hover:text-primary-700"
+                onClick={() => window.location.href = '/monitoring'}
+              >
+                {t('dashboard.viewLiveMonitoring')} →
+              </InteractiveButton>
             </div>
-          </div>
+          </InteractiveCard>
         </div>
 
         {/* Right Column - ChartBarIcon & Quick Actions */}
@@ -394,19 +385,23 @@ const Dashboard = () => {
       </div>
 
       {/* Bottom Section - Alerts or Announcements */}
-      <div className="mt-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-6 text-white">
+      <div className="mt-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-all duration-300 group">
         <div className="flex items-start gap-4">
-          <div className="p-3 bg-white bg-opacity-20 rounded-lg">
-            <ExclamationTriangleIcon className="w-6 h-6" />
+          <div className="p-3 bg-white bg-opacity-20 rounded-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+            <ExclamationTriangleIcon className="w-6 h-6 animate-pulse" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2">{t('dashboard.importantReminder')}</h3>
-            <p className="text-primary-100 mb-3">
+            <h3 className="text-lg font-semibold mb-2 group-hover:scale-105 transition-transform duration-200">{t('dashboard.importantReminder')}</h3>
+            <p className="text-primary-100 mb-3 group-hover:text-white transition-colors duration-200">
               {t('dashboard.holidayMessage')}
             </p>
-            <button className="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+            <InteractiveButton
+              variant="ghost"
+              size="sm"
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 text-sm font-medium text-white border-white border border-opacity-30 hover:border-opacity-50"
+            >
               {t('dashboard.viewHolidayCalendar')}
-            </button>
+            </InteractiveButton>
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ const Users = () => {
   const [users, setUsers] = useState(mockUsersData);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center mb-8">
           <UsersIcon className="h-8 w-8 text-blue-600 mr-3" />

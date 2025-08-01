@@ -16,7 +16,7 @@ const Providers = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 content-with-header">
+    <div className="min-h-screen bg-white">
       <ProvidersManager />
     </div>
   );

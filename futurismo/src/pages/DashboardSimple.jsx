@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardMobile from './DashboardMobile';
 import DashboardDesktop from './DashboardDesktop';
-import AdminDashboard from './admin/AdminDashboard';
 import useAuthStore from '../stores/authStore';
 
 const DashboardSimple = () => {
@@ -25,11 +24,6 @@ const DashboardSimple = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  // Si es admin, mostrar el dashboard especializado
-  if (user?.role === 'admin') {
-    return <AdminDashboard />;
-  }
 
   // Mobile version
   if (screenSize.isMobile) {

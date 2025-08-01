@@ -175,41 +175,41 @@ const MyBookings = () => {
     const StatusIcon = statusBadge.icon;
 
     return (
-      <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow">
+      <div className="bg-white rounded-lg shadow-sm p-4 sm:p-4 lg:p-6 hover:shadow-md transition-shadow">
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="font-semibold text-gray-900">
+        <div className="flex items-start justify-between mb-3 sm:mb-4 gap-3">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
               {booking.serviceDetails.tourName}
             </h3>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">
               Código: {booking.requestCode}
             </p>
           </div>
-          <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${statusBadge.color}`}>
-            <StatusIcon className="h-4 w-4" />
-            {statusBadge.text}
+          <span className={`inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${statusBadge.color} shrink-0`}>
+            <StatusIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="inline">{statusBadge.text}</span>
           </span>
         </div>
 
         {/* Guía info */}
         {booking.guide && (
-          <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3 sm:gap-3 mb-3 sm:mb-4 p-3 sm:p-3 bg-gray-50 rounded-lg">
             <img
               src={booking.guide.profile?.avatar || '/api/placeholder/40/40'}
               alt={booking.guide.fullName}
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 sm:w-10 sm:h-10 rounded-full"
             />
-            <div className="flex-1">
-              <p className="font-medium text-gray-900">{booking.guide.fullName}</p>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <StarIcon className="h-3.5 w-3.5 text-yellow-400 fill-current" />
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{booking.guide.fullName}</p>
+              <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
+                <StarIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-yellow-400 fill-current" />
                 <span>{booking.guide.ratings?.overall || 4.9}</span>
               </div>
             </div>
             <button
               onClick={() => handleContactGuide(booking)}
-              className="p-2 text-primary-600 hover:bg-primary-50 rounded-lg"
+              className="p-2 sm:p-2 text-primary-600 hover:bg-primary-50 rounded-lg min-w-[40px] sm:min-w-auto"
             >
               <PhoneIcon className="h-5 w-5" />
             </button>
@@ -217,57 +217,57 @@ const MyBookings = () => {
         )}
 
         {/* Detalles del tour */}
-        <div className="space-y-2 text-sm">
+        <div className="space-y-2 sm:space-y-2 text-sm">
           <div className="flex items-center gap-2 text-gray-600">
-            <CalendarIcon className="h-4 w-4" />
-            <span>
+            <CalendarIcon className="h-4 w-4 shrink-0" />
+            <span className="truncate">
               {new Date(booking.serviceDetails.date).toLocaleDateString('es-PE', {
-                weekday: 'long',
+                weekday: isMobile ? 'short' : 'long',
                 year: 'numeric',
-                month: 'long',
+                month: isMobile ? 'short' : 'long',
                 day: 'numeric'
               })}
             </span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
-            <ClockIcon className="h-4 w-4" />
-            <span>{booking.serviceDetails.time} • {booking.serviceDetails.duration} horas</span>
+            <ClockIcon className="h-4 w-4 shrink-0" />
+            <span>{booking.serviceDetails.startTime || booking.serviceDetails.time} • {booking.serviceDetails.duration} horas</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
-            <MapPinIcon className="h-4 w-4" />
+            <MapPinIcon className="h-4 w-4 shrink-0" />
             <span className="truncate">{booking.serviceDetails.location}</span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
-            <UserGroupIcon className="h-4 w-4" />
-            <span>{booking.serviceDetails.participants} participantes</span>
+            <UserGroupIcon className="h-4 w-4 shrink-0" />
+            <span>{booking.serviceDetails.groupSize || booking.serviceDetails.participants || 0} participantes</span>
           </div>
         </div>
 
         {/* Precio */}
-        <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500">Total</p>
-            <p className="text-xl font-bold text-gray-900">
-              ${booking.pricing?.totalPrice || 0}
+            <p className="text-xs sm:text-sm text-gray-500">Total</p>
+            <p className="text-lg sm:text-xl font-bold text-gray-900">
+              ${booking.pricing?.finalRate || booking.pricing?.proposedRate || booking.pricing?.totalPrice || 0}
             </p>
           </div>
 
           {/* Acciones */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-2">
             {booking.status === 'pending' && (
               <button
                 onClick={() => {
                   setSelectedBooking(booking);
                   setShowCancelModal(true);
                 }}
-                className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-3 sm:px-3 py-2 sm:py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 min-w-[80px] sm:min-w-auto"
               >
                 Cancelar
               </button>
             )}
             <button
               onClick={() => handleViewDetails(booking)}
-              className="px-3 py-1.5 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+              className="px-3 sm:px-3 py-2 sm:py-1.5 text-sm bg-primary-600 text-white rounded-lg hover:bg-primary-700 min-w-[90px] sm:min-w-auto"
             >
               Ver detalles
             </button>
@@ -278,40 +278,40 @@ const MyBookings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-3 sm:py-4">
+          <h1 className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-gray-900">
             Mis Reservas en el Marketplace
           </h1>
         </div>
       </div>
 
       {/* Filtros y búsqueda */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-3 sm:py-4 lg:py-6">
+        <div className="bg-white rounded-lg shadow-sm p-3 sm:p-4 mb-3 sm:mb-4 lg:mb-6">
           {/* Búsqueda */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <MagnifyingGlassIcon className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por código, guía o destino..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full pl-8 sm:pl-9 lg:pl-10 pr-3 sm:pr-4 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
           </div>
 
           {/* Tabs de filtro */}
-          <div className="flex overflow-x-auto gap-2">
+          <div className="flex overflow-x-auto gap-1 sm:gap-2 pb-1">
             {filterTabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveFilter(tab.id)}
-                className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap transition-colors text-sm sm:text-base ${
                   activeFilter === tab.id
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -319,7 +319,7 @@ const MyBookings = () => {
               >
                 {tab.name}
                 {tab.count > 0 && (
-                  <span className="ml-2 text-sm">({tab.count})</span>
+                  <span className="ml-1 sm:ml-2 text-xs sm:text-sm">({tab.count})</span>
                 )}
               </button>
             ))}

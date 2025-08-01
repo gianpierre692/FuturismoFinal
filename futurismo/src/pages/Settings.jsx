@@ -7,8 +7,6 @@ import {
   BellIcon,
   InformationCircleIcon,
   ChevronRightIcon,
-  ArrowDownTrayIcon,
-  ArrowUpTrayIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
   XMarkIcon,
@@ -20,15 +18,12 @@ import ToursSettings from '../components/settings/ToursSettings';
 import NotificationsSettings from '../components/settings/NotificationsSettings';
 import { useSettingsStore } from '../stores/settingsStore';
 import useAuthStore from '../stores/authStore';
-import UniversalExportService from '../services/universalExportService';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('general');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
-  const [showImportSuccess, setShowImportSuccess] = useState(false);
-  const [showExportSuccess, setShowExportSuccess] = useState(false);
-  const { hasUnsavedChanges, exportSettings, importSettings } = useSettingsStore();
+  const { hasUnsavedChanges } = useSettingsStore();
   const { user } = useAuthStore();
 
   useEffect(() => {
@@ -76,55 +71,7 @@ const Settings = () => {
     }
   ];
 
-  const handleFileImport = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = importSettings(e.target.result);
-        if (result.success) {
-          setShowImportSuccess(true);
-          setTimeout(() => setShowImportSuccess(false), 3000);
-        } else {
-          alert(`Error al importar: ${result.error}`);
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
 
-  const handleExportSettings = () => {
-    const settingsData = [{
-      'Configuración': 'General',
-      'Datos': JSON.stringify(settings?.general || {}, null, 2)
-    }, {
-      'Configuración': 'Tours',
-      'Datos': JSON.stringify(settings?.tours || {}, null, 2)
-    }, {
-      'Configuración': 'Notificaciones',
-      'Datos': JSON.stringify(settings?.notifications || {}, null, 2)
-    }];
-    
-    UniversalExportService.exportToExcel(settingsData, 'configuracion_sistema', 'Configuraciones');
-    setShowExportSuccess(true);
-    setTimeout(() => setShowExportSuccess(false), 3000);
-  };
-
-  const handleExportPDF = () => {
-    const settingsData = [
-      ['Configuración General', JSON.stringify(settings?.general || {}, null, 2)],
-      ['Configuración Tours', JSON.stringify(settings?.tours || {}, null, 2)],
-      ['Configuración Notificaciones', JSON.stringify(settings?.notifications || {}, null, 2)]
-    ];
-    
-    UniversalExportService.exportToPDF(settingsData, {
-      filename: 'configuracion_sistema',
-      title: 'Configuración del Sistema',
-      columns: [{ header: 'Tipo' }, { header: 'Configuración' }]
-    });
-    setShowExportSuccess(true);
-    setTimeout(() => setShowExportSuccess(false), 3000);
-  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -228,7 +175,7 @@ const Settings = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+    <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
@@ -251,37 +198,6 @@ const Settings = () => {
             )}
           </div>
 
-          {/* Solo mostrar botones de exportar/importar para administradores */}
-          {user?.role === 'admin' && (
-            <div className="flex gap-2 sm:gap-3">
-              <button
-                onClick={handleExportSettings}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-              >
-                <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
-                <span>Excel</span>
-              </button>
-
-              <button
-                onClick={handleExportPDF}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                <ArrowDownTrayIcon className="w-4 h-4 mr-1.5" />
-                <span>PDF</span>
-              </button>
-              
-              <label className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
-                <ArrowUpTrayIcon className="w-4 h-4 mr-1.5" />
-                <span>Importar</span>
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={handleFileImport}
-                  className="sr-only"
-                />
-              </label>
-            </div>
-          )}
         </div>
 
         {/* Warning banner */}
@@ -298,28 +214,7 @@ const Settings = () => {
           </div>
         )}
 
-        {/* Success notifications */}
-        {showImportSuccess && (
-          <div className="mb-4 sm:mb-6 bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
-            <div className="flex items-center">
-              <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2 sm:mr-3" />
-              <p className="text-xs sm:text-sm text-green-800">
-                Configuraciones importadas exitosamente
-              </p>
-            </div>
-          </div>
-        )}
         
-        {showExportSuccess && (
-          <div className="mb-4 sm:mb-6 bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
-            <div className="flex items-center">
-              <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2 sm:mr-3" />
-              <p className="text-xs sm:text-sm text-green-800">
-                Configuraciones exportadas exitosamente
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Mobile current tab indicator */}
         {isMobile && (
@@ -425,7 +320,7 @@ const Settings = () => {
                 </p>
                 <ul className="list-disc list-inside space-y-1 mt-3">
                   <li>Las configuraciones se guardan automáticamente<span className="hidden sm:inline"> cuando haces clic en "Guardar"</span></li>
-                  <li>Puedes exportar/importar configuraciones<span className="hidden sm:inline"> para respaldos o migración</span></li>
+                  <li>Los cambios se aplican inmediatamente<span className="hidden sm:inline"> al sistema</span></li>
                   <li className="hidden sm:list-item">Algunos cambios pueden requerir reiniciar sesiones activas</li>
                   <li className="hidden sm:list-item">Se recomienda probar cambios en un entorno de desarrollo primero</li>
                 </ul>

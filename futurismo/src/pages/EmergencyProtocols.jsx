@@ -7,6 +7,7 @@ import MaterialsManager from '../components/emergency/MaterialsManager';
 import emergencyPDFService from '../services/emergencyPDFService';
 import useAuthStore from '../stores/authStore';
 import AdminEmergency from './AdminEmergency';
+import AdvancedDataTable from '../components/common/AdvancedDataTable';
 
 const EmergencyProtocols = () => {
   const { user } = useAuthStore();
@@ -351,111 +352,140 @@ const EmergencyProtocols = () => {
           })}
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Protocolo
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Categoría
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Prioridad
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actualizado
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Acciones
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredProtocols.map(protocol => {
-                  const category = getCategoryInfo(protocol.category);
-                  return (
-                    <tr key={protocol.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{protocol.icon}</span>
-                          <div>
-                            <div className="font-medium text-gray-900">{protocol.title}</div>
-                            <div className="text-sm text-gray-500 line-clamp-1">{protocol.description}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <span>{category.icon}</span>
-                          <span className="text-sm text-gray-900">{category.name}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span 
-                          className={`px-2 py-1 text-xs font-medium rounded-full border ${getPriorityColor(protocol.priority)}`}
-                        >
-                          {protocol.priority?.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
-                        {protocol.lastUpdated}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => setSelectedProtocol(protocol)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            title="Ver protocolo"
-                          >
-                            <EyeIcon className="w-4 h-4" />
-                          </button>
-                          
-                          <button
-                            onClick={() => handleDownloadProtocol(protocol)}
-                            className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
-                            title="Descargar PDF"
-                          >
-                            <ArrowDownTrayIcon className="w-4 h-4" />
-                          </button>
-                          
-                          {user?.role === 'admin' && (
-                            <>
-                              <button
-                                onClick={() => {
-                                  setSelectedProtocol(protocol);
-                                  setIsEditing(true);
-                                }}
-                                className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
-                                title="Editar protocolo"
-                              >
-                                <PencilIcon className="w-4 h-4" />
-                              </button>
-                              
-                              <button
-                                onClick={() => {
-                                  if (confirm('¿Estás seguro de eliminar este protocolo?')) {
-                                    actions.deleteProtocol(protocol.id);
-                                  }
-                                }}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                title="Eliminar protocolo"
-                              >
-                                <TrashIcon className="w-4 h-4" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <AdvancedDataTable
+          data={filteredProtocols}
+          columns={[
+            {
+              key: 'title',
+              header: 'Protocolo',
+              render: (protocol) => (
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{protocol.icon}</span>
+                  <div>
+                    <div className="font-medium text-gray-900">{protocol.title}</div>
+                    <div className="text-sm text-gray-500 line-clamp-1">{protocol.description}</div>
+                  </div>
+                </div>
+              )
+            },
+            {
+              key: 'category',
+              header: 'Categoría',
+              render: (protocol) => {
+                const category = getCategoryInfo(protocol.category);
+                return (
+                  <div className="flex items-center space-x-2">
+                    <span>{category.icon}</span>
+                    <span className="text-sm text-gray-900">{category.name}</span>
+                  </div>
+                );
+              }
+            },
+            {
+              key: 'priority',
+              header: 'Prioridad',
+              render: (protocol) => (
+                <span 
+                  className={`px-2 py-1 text-xs font-medium rounded-full border ${getPriorityColor(protocol.priority)}`}
+                >
+                  {protocol.priority?.toUpperCase()}
+                </span>
+              )
+            },
+            {
+              key: 'lastUpdated',
+              header: 'Actualizado',
+              sortType: 'text',
+              render: (protocol) => (
+                <span className="text-sm text-gray-900">{protocol.lastUpdated}</span>
+              )
+            },
+            {
+              key: 'details',
+              header: 'Detalles',
+              sortable: false,
+              render: (protocol) => (
+                <div className="text-xs text-gray-500">
+                  <div className="flex items-center space-x-3">
+                    <span className="flex items-center">
+                      <CheckCircleIcon className="w-3 h-3 mr-1" />
+                      {protocol.content.steps.length} pasos
+                    </span>
+                    <span className="flex items-center">
+                      <PhoneIcon className="w-3 h-3 mr-1" />
+                      {protocol.content.contacts.length} contactos
+                    </span>
+                  </div>
+                </div>
+              )
+            }
+          ]}
+          actions={[
+            {
+              label: 'Ver protocolo',
+              icon: <EyeIcon className="w-4 h-4" />,
+              onClick: (protocol) => setSelectedProtocol(protocol),
+              className: 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+            },
+            {
+              label: 'Descargar PDF',
+              icon: <ArrowDownTrayIcon className="w-4 h-4" />,
+              onClick: handleDownloadProtocol,
+              className: 'text-gray-600 hover:text-gray-700 hover:bg-gray-50'
+            },
+            ...(user?.role === 'admin' ? [
+              {
+                label: 'Editar protocolo',
+                icon: <PencilIcon className="w-4 h-4" />,
+                onClick: (protocol) => {
+                  setSelectedProtocol(protocol);
+                  setIsEditing(true);
+                },
+                className: 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50'
+              },
+              {
+                label: 'Eliminar protocolo',
+                icon: <TrashIcon className="w-4 h-4" />,
+                onClick: (protocol) => {
+                  if (confirm('¿Estás seguro de eliminar este protocolo?')) {
+                    actions.deleteProtocol(protocol.id);
+                  }
+                },
+                className: 'text-red-600 hover:text-red-700 hover:bg-red-50'
+              }
+            ] : [])
+          ]}
+          filters={[
+            {
+              key: 'category',
+              label: 'Categoría',
+              type: 'select',
+              options: categories.map(cat => ({ value: cat.id, label: `${cat.icon} ${cat.name}` })),
+              filterFn: (protocol, value) => protocol.category === value
+            },
+            {
+              key: 'priority',
+              label: 'Prioridad',
+              type: 'select',
+              options: [
+                { value: 'alta', label: 'Alta' },
+                { value: 'media', label: 'Media' },
+                { value: 'baja', label: 'Baja' }
+              ],
+              filterFn: (protocol, value) => protocol.priority === value
+            },
+            {
+              key: 'steps',
+              label: 'Número de pasos (mínimo)',
+              type: 'number',
+              placeholder: 'Ej: 5',
+              filterFn: (protocol, value) => (protocol.content?.steps?.length || 0) >= parseInt(value)
+            }
+          ]}
+          searchPlaceholder="Buscar protocolos por título, descripción..."
+          pageSize={10}
+          emptyMessage="No se encontraron protocolos con los filtros aplicados"
+        />
       )}
     </div>
   );

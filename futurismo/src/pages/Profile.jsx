@@ -9,6 +9,7 @@ import PaymentDataSection from '../components/profile/PaymentDataSection';
 import AccountStatusSection from '../components/profile/AccountStatusSection';
 import DocumentsSection from '../components/profile/DocumentsSection';
 import FeedbackSection from '../components/profile/FeedbackSectionSimple';
+import ImageUpload from '../components/common/ImageUpload';
 import ProfileMobile from './ProfileMobile';
 
 const Profile = () => {
@@ -16,6 +17,8 @@ const Profile = () => {
   const { user, logout } = useAuthStore();
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [profileImage, setProfileImage] = useState(user?.avatar || null);
+  const [uploadError, setUploadError] = useState(null);
 
   // Detectar cambios de tamaño
   useEffect(() => {
@@ -26,6 +29,30 @@ const Profile = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Manejar cambio de imagen de perfil
+  const handleImageSelect = (file, error) => {
+    if (error) {
+      setUploadError(error);
+      return;
+    }
+
+    if (file) {
+      // En producción aquí harías el upload al servidor
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImage(e.target.result);
+        setUploadError(null);
+        
+        // Simular actualización del usuario en el store
+        // En producción actualizarías el usuario en authStore con la nueva imagen
+        console.log('Imagen de perfil actualizada:', file.name);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setProfileImage(null);
+    }
+  };
 
   // Usar versión móvil para pantallas pequeñas
   if (isMobile) {
@@ -77,14 +104,36 @@ const Profile = () => {
     
     return (
       <div className={`bg-gradient-to-r ${config.gradient} rounded-lg p-6 text-white`}>
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold mb-2">{config.title}</h2>
-            <p className="text-blue-100">{config.subtitle}</p>
+        <div className="flex items-center gap-6">
+          {/* Avatar Section */}
+          <div className="flex-shrink-0">
+            <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 overflow-hidden flex items-center justify-center">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <UserIcon className="w-12 h-12 text-white/70" />
+              )}
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-blue-100">{t('profile.activeUser')}</p>
-            <p className="text-lg font-semibold">{user?.name || 'Usuario'}</p>
+
+          {/* Profile Info */}
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold mb-1">{config.title}</h2>
+            <p className="text-white/80 mb-2">{config.subtitle}</p>
+            <div className="flex items-center gap-4">
+              <div>
+                <p className="text-sm text-white/70">{t('profile.activeUser')}</p>
+                <p className="text-lg font-semibold">{user?.name || 'Usuario'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-white/70">Email</p>
+                <p className="text-sm font-medium">{user?.email}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -102,7 +151,7 @@ const Profile = () => {
   };
 
   return (
-    <div>
+    <div className="page-content">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('profile.administration')}</h1>
       
       {/* Tabs */}
@@ -130,6 +179,37 @@ const Profile = () => {
         <div className="space-y-6">
           {/* Header del perfil - dinámico según el rol */}
           {getProfileHeader()}
+
+          {/* Foto de perfil */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <UserIcon className="w-5 h-5 text-blue-600" />
+                  Foto de Perfil
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Sube una foto para personalizar tu perfil y mejorar tu presencia profesional
+                </p>
+              </div>
+              
+              {/* Indicador de ejemplo */}
+              <div className="flex-shrink-0 text-center">
+                <div className="w-16 h-16 border-2 border-dashed border-blue-300 rounded-lg flex items-center justify-center bg-blue-50">
+                  <span className="text-xs text-blue-600 font-medium">800x800</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Ideal</p>
+              </div>
+            </div>
+            
+            <div className="max-w-md">
+              <ImageUpload
+                onImageSelect={handleImageSelect}
+                initialImage={profileImage}
+                error={uploadError}
+              />
+            </div>
+          </div>
 
           {/* Datos de empresa */}
           <CompanyDataSection />

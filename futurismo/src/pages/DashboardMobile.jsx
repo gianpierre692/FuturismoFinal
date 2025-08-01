@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../stores/authStore';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -13,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const DashboardMobile = () => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -80,7 +82,7 @@ const DashboardMobile = () => {
   }
 
   return (
-    <div className="fixed inset-0 top-14 flex flex-col bg-gray-50 overflow-y-auto">
+    <div className="fixed inset-0 top-14 flex flex-col bg-white overflow-y-auto">
       {/* Header con saludo */}
       <div className="bg-gradient-to-r from-primary to-primary-600 px-4 pt-4 pb-8">
         <h1 className="text-xl font-bold text-white">
@@ -161,22 +163,34 @@ const DashboardMobile = () => {
         <div className="grid grid-cols-2 gap-3">
           {user?.role === 'guide' ? (
             <>
-              <button className="bg-primary text-white rounded-lg p-4 text-center">
+              <button 
+                onClick={() => navigate('/agenda')}
+                className="bg-primary text-white rounded-lg p-4 text-center hover:bg-primary-600 transition-colors active:scale-95"
+              >
                 <CalendarIcon className="w-6 h-6 mx-auto mb-2" />
                 <span className="text-sm">Ver Agenda</span>
               </button>
-              <button className="bg-green-500 text-white rounded-lg p-4 text-center">
+              <button 
+                onClick={() => navigate('/monitoring')}
+                className="bg-green-500 text-white rounded-lg p-4 text-center hover:bg-green-600 transition-colors active:scale-95"
+              >
                 <CheckCircleIcon className="w-6 h-6 mx-auto mb-2" />
                 <span className="text-sm">Check-in</span>
               </button>
             </>
           ) : (
             <>
-              <button className="bg-primary text-white rounded-lg p-4 text-center">
+              <button 
+                onClick={() => navigate('/reservations')}
+                className="bg-primary text-white rounded-lg p-4 text-center hover:bg-primary-600 transition-colors active:scale-95"
+              >
                 <CalendarIcon className="w-6 h-6 mx-auto mb-2" />
                 <span className="text-sm">Nueva Reserva</span>
               </button>
-              <button className="bg-purple-500 text-white rounded-lg p-4 text-center">
+              <button 
+                onClick={() => navigate('/agency/reports')}
+                className="bg-purple-500 text-white rounded-lg p-4 text-center hover:bg-purple-600 transition-colors active:scale-95"
+              >
                 <ChartBarIcon className="w-6 h-6 mx-auto mb-2" />
                 <span className="text-sm">Ver Reportes</span>
               </button>

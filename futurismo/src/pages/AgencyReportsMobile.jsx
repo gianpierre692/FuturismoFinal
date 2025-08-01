@@ -97,7 +97,7 @@ const AgencyReportsMobile = () => {
   ];
 
   return (
-    <div className="fixed inset-0 top-14 flex flex-col bg-gray-50">
+    <div className="fixed inset-0 top-14 flex flex-col bg-white">
       {/* Header con controles */}
       <div className="bg-white shadow-sm z-20 flex-shrink-0">
         <div className="px-4 py-3">

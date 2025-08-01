@@ -197,7 +197,7 @@ const TourAssignments = () => {
 
   if (selectedReservation) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6">
+      <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center mb-6">
             <button
@@ -221,7 +221,7 @@ const TourAssignments = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

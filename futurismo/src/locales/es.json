@@ -77,7 +77,7 @@
     "removeLanguageExperience": "Eliminar idioma"
   },
   "upload": {
-    "profilePhoto": "Subir certificados",
+    "profilePhoto": "Foto de perfil",
     "dragOrClick": "Arrastra una imagen aquí o haz clic para seleccionar",
     "dropHere": "Suelta la imagen aquí",
     "supportedFormats": "JPG, PNG, GIF, WEBP hasta 5MB",
@@ -87,7 +87,14 @@
     "invalidFormat": "Formato de imagen no válido. Solo se permiten JPG, PNG, GIF y WEBP",
     "fileTooLarge": "El archivo es demasiado grande. Máximo 5MB",
     "uploadError": "Error al subir la imagen. Inténtalo de nuevo",
-    "recommendation": "Sube tus certificados, licencias o credenciales como guía turístico"
+    "recommendation": "Recomendamos usar una imagen cuadrada de buena calidad",
+    "helpTitle": "Consejos para una foto perfecta",
+    "helpResolution": "• Resolución: mínimo 400x400px, ideal 800x800px",
+    "helpFormat": "• Formato: JPG o PNG para mejor calidad",
+    "helpSize": "• Tamaño: máximo 5MB, recomendado 1-2MB",
+    "helpComposition": "• Composición: imagen cuadrada, rostro centrado",
+    "helpLighting": "• Iluminación: luz natural, fondo neutro",
+    "helpQuality": "• Calidad: imagen nítida, sin pixelado"
   },
   "dashboard": {
     "goodMorning": "Buenos días",

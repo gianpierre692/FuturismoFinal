@@ -5,9 +5,8 @@ import * as yup from 'yup';
 import { MapPinIcon, CalendarIcon, UserGroupIcon, ClockIcon, CurrencyDollarIcon, ChevronRightIcon, ChevronLeftIcon, CheckIcon, ExclamationTriangleIcon, UserIcon, PhoneIcon, PlusIcon, MinusIcon, UserPlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useReservationsStore } from '../../stores/reservationsStore';
-import { formatters, canBookDirectly, generateWhatsAppURL } from '../../utils/formatters';
+import { formatters, canBookDirectly } from '../../utils/formatters';
 import { validators } from '../../utils/validators';
-import WhatsAppConsultButton from './WhatsAppConsultButton';
 import toast from 'react-hot-toast';
 
 // Esquemas de validación para cada paso
@@ -308,12 +307,15 @@ const ReservationWizard = ({ onClose }) => {
                       Para tours full day después de las 5:00 PM, es necesario consultar disponibilidad 
                       antes de realizar la reserva.
                     </p>
-                    <WhatsAppConsultButton 
-                      message={`Hola, necesito consultar disponibilidad para el tour "${availableTours.find(t => t.id === selectedTour)?.name}" para la fecha ${watch('date')} a las ${watch('time')}`}
-                      variant="secondary"
-                      size="sm"
-                      className="w-full sm:w-auto"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        toast.info('Por favor contacte con administración para consultar disponibilidad');
+                      }}
+                      className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      Consultar Disponibilidad
+                    </button>
                   </div>
                 </div>
               </div>

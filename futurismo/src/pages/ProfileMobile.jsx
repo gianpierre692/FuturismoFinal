@@ -15,11 +15,13 @@ import {
   CameraIcon,
   CalendarIcon,
   MapPinIcon,
-  StarIcon
+  StarIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../stores/authStore';
 import useNotificationsStore from '../stores/notificationsStore';
+import ImageUpload from '../components/common/ImageUpload';
 
 const ProfileMobile = () => {
   const navigate = useNavigate();
@@ -27,6 +29,9 @@ const ProfileMobile = () => {
   const { unreadCount, toggleVisibility } = useNotificationsStore();
   const { t } = useTranslation();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [profileImage, setProfileImage] = useState(user?.avatar || null);
+  const [uploadError, setUploadError] = useState(null);
+  const [showImageUpload, setShowImageUpload] = useState(false);
 
   // Datos del usuario (mock para demo)
   const userData = {
@@ -44,6 +49,27 @@ const ProfileMobile = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  // Manejar cambio de imagen de perfil móvil
+  const handleImageSelect = (file, error) => {
+    if (error) {
+      setUploadError(error);
+      return;
+    }
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileImage(e.target.result);
+        setUploadError(null);
+        setShowImageUpload(false);
+        console.log('Imagen de perfil actualizada (móvil):', file.name);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setProfileImage(null);
+    }
   };
 
   // Secciones del menú según rol
@@ -116,16 +142,16 @@ const ProfileMobile = () => {
   const menuSections = getMenuSections();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header del perfil */}
       <div className="bg-gradient-to-b from-primary to-primary-600 px-4 pt-8 pb-20">
         <div className="text-center">
           {/* Avatar */}
           <div className="relative inline-block mb-4">
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center">
-              {userData.avatar ? (
+            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center overflow-hidden">
+              {profileImage ? (
                 <img 
-                  src={userData.avatar} 
+                  src={profileImage} 
                   alt={userData.name} 
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -133,7 +159,10 @@ const ProfileMobile = () => {
                 <UserIcon className="w-12 h-12 text-gray-400" />
               )}
             </div>
-            <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-lg">
+            <button 
+              onClick={() => setShowImageUpload(true)}
+              className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-lg hover:bg-gray-50 transition-colors"
+            >
               <CameraIcon className="w-4 h-4 text-gray-600" />
             </button>
           </div>
@@ -208,6 +237,40 @@ const ProfileMobile = () => {
           </div>
         ))}
       </div>
+
+      {/* Modal de upload de imagen */}
+      {showImageUpload && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end justify-center">
+          <div className="bg-white w-full max-h-[80vh] overflow-y-auto rounded-t-2xl">
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Cambiar Foto de Perfil
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Ideal: 800x800px, JPG/PNG, máx. 5MB
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowImageUpload(false)}
+                  className="p-2 rounded-full hover:bg-gray-100"
+                >
+                  <XMarkIcon className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <ImageUpload
+                onImageSelect={handleImageSelect}
+                initialImage={profileImage}
+                error={uploadError}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de confirmación de logout */}
       {showLogoutModal && (

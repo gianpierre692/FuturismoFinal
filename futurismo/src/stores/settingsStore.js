@@ -74,25 +74,12 @@ const defaultSettings = {
       lowCredit: true,
       systemAlerts: true
     },
-    sms: {
-      enabled: false,
-      newReservation: false,
-      cancellation: true,
-      reminder2h: true,
-      emergencyOnly: true
-    },
     push: {
       enabled: true,
       newReservation: true,
       tourUpdates: true,
       chat: true,
       systemAlerts: true
-    },
-    whatsapp: {
-      enabled: false,
-      newReservation: false,
-      reminder24h: false,
-      tourComplete: false
     }
   },
 

@@ -105,7 +105,7 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
         title: 'Marketplace',
         items: [
           { icon: MagnifyingGlassIcon, label: 'Buscar Guías', action: () => handleNavigate('/marketplace/search') },
-          { icon: BriefcaseIcon, label: 'Mis Reservas', action: () => handleNavigate('/marketplace/bookings'), badge: 2 },
+          { icon: BriefcaseIcon, label: 'Mis Contrataciones', action: () => handleNavigate('/marketplace/bookings'), badge: 2 },
           { icon: StarIcon, label: 'Guías Favoritos', action: () => handleNavigate('/marketplace/favorites') }
         ]
       };
@@ -200,7 +200,7 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
 
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 left-0 flex max-w-full pr-10">
+            <div className="pointer-events-none fixed inset-y-0 left-0 flex max-w-full pr-4">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-300"
@@ -210,7 +210,7 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-xs">
+                <Dialog.Panel className="pointer-events-auto relative w-screen max-w-sm">
                   <div className="flex h-full flex-col bg-white shadow-xl">
                     {/* Header */}
                     <div className="bg-primary px-4 py-6">
@@ -259,12 +259,12 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
 
                     {/* Navigation Items */}
                     <nav className="flex-1 overflow-y-auto">
-                      <div className="py-2">
+                      <div className="py-2 space-y-1">
                         {currentPanel.items.map((item, idx) => (
                           <button
                             key={idx}
                             onClick={item.action}
-                            className={`w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors ${
+                            className={`w-full flex items-center justify-between px-3 py-2.5 hover:bg-gray-50 transition-colors min-h-[60px] ${
                               item.className || ''
                             }`}
                           >
@@ -280,7 +280,7 @@ const SlidePanelsNavigation = ({ isOpen, onClose }) => {
                                   item.className || 'text-gray-600'
                                 }`} />
                               </div>
-                              <span className={`font-medium ${item.className || 'text-gray-900'}`}>
+                              <span className={`font-medium text-sm leading-tight ${item.className || 'text-gray-900'}`}>
                                 {item.label}
                               </span>
                             </div>

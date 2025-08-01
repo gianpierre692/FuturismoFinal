@@ -23,7 +23,7 @@ const Chat = () => {
   const isFromAgenda = searchParams.get('guide');
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col page-content">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Chat</h1>
         <p className="text-gray-600 mt-2">

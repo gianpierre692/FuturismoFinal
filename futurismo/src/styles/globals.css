@@ -25,7 +25,7 @@
 
 @layer base {
   body {
-    @apply antialiased bg-gray-50 text-gray-900;
+    @apply antialiased bg-white text-gray-900;
   }
   
   /* Estilo global para todos los selects - evitar doble flecha */
@@ -116,6 +116,24 @@
   
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-500;
+  }
+}
+
+/* Padding estándar SOLO para desktop - NO afecta móvil */
+.page-container {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+.page-content {
+  @apply px-4 sm:px-6;
+}
+
+/* Media query para aplicar padding top SOLO en desktop */
+@media (min-width: 768px) {
+  .page-container,
+  .page-content {
+    padding-top: 1.5rem; /* 24px - equivalente a pt-6 */
+    padding-bottom: 1rem; /* 16px - equivalente a pb-4 */
   }
 }
 
@@ -412,19 +430,19 @@
 
 /* Universal class for content with fixed header */
 .content-with-header {
-  padding-top: var(--header-height) !important;
-  min-height: calc(100vh - var(--header-height));
+  padding-top: 0 !important;
+  min-height: 100vh;
 }
 
 /* Alternative: margin-top based approach */
 .content-below-header {
-  margin-top: var(--header-height) !important;
+  margin-top: 0 !important;
 }
 
 /* Specific fix for mobile main content */
 .mobile-main-content {
-  padding-top: var(--header-height) !important;
-  min-height: calc(100vh - var(--header-height));
+  padding-top: 0 !important;
+  min-height: 100vh;
 }
 
 /* Mejoras para PWA en iOS */

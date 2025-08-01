@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
+import InteractiveCard from '../common/InteractiveCard';
 
 const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
   const colorClasses = {
@@ -12,18 +13,22 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
   const isPositiveTrend = trend && trend.startsWith('+');
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-lg transition-shadow">
+    <InteractiveCard className="p-4 sm:p-6 relative overflow-hidden group">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs sm:text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">{value}</p>
+        <div className="flex-1">
+          <p className="text-xs sm:text-sm font-medium text-gray-600 group-hover:text-gray-700 transition-colors">
+            {title}
+          </p>
+          <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2 group-hover:scale-105 transition-transform duration-200">
+            {value}
+          </p>
           
           {trend && (
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-2 animate-in fade-in slide-in-from-left-2 duration-300">
               {isPositiveTrend ? (
-                <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 mr-1" />
+                <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 mr-1 animate-bounce" />
               ) : (
-                <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 mr-1" />
+                <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 mr-1 animate-pulse" />
               )}
               <span className={`text-sm font-medium ${isPositiveTrend ? 'text-green-600' : 'text-red-600'}`}>
                 {trend}
@@ -33,11 +38,14 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
           )}
         </div>
         
-        <div className={`p-2 sm:p-3 rounded-lg ${colorClasses[color]}`}>
+        <div className={`p-2 sm:p-3 rounded-lg ${colorClasses[color]} group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
           <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
         </div>
       </div>
-    </div>
+
+      {/* Progress line animation */}
+      <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+    </InteractiveCard>
   );
 };
 

@@ -94,7 +94,7 @@ const ProvidersManager = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+    <div className="page-content max-w-7xl mx-auto">
       {/* Mobile Header */}
       {isMobile ? (
         <div className="mb-6">

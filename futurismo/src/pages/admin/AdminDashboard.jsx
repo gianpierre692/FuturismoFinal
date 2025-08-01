@@ -164,7 +164,6 @@ const AdminDashboard = () => {
           path: '/admin/reports',
           stats: { reports: 15, scheduled: 3 },
           color: 'orange',
-          badge: 'Excel/PDF'
         },
         {
           title: 'Configuración',
@@ -251,7 +250,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-white p-2 sm:p-4 lg:p-6">
       {/* Header mejorado */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

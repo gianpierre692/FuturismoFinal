@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         {
           section: 'ANÁLISIS',
           items: [
-            { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes', badge: 'Excel/PDF', badgeColor: 'green' },
+            { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes' },
             { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
           ]
         },

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { XMarkIcon, BellIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, BellIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { format, formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import useNotificationsStore from '../../stores/notificationsStore';
@@ -15,8 +15,6 @@ const NotificationsPanel = () => {
     setFilter,
     markAsRead,
     markAllAsRead,
-    deleteNotification,
-    clearAll,
     getFilteredNotifications,
     addMockNotifications
   } = useNotificationsStore();
@@ -181,15 +179,6 @@ const NotificationsPanel = () => {
                           })}
                         </p>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteNotification(notification.id);
-                        }}
-                        className="p-1 rounded hover:bg-red-100 transition-colors group"
-                      >
-                        <TrashIcon className="w-4 h-4 text-gray-400 group-hover:text-red-500" />
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -209,12 +198,6 @@ const NotificationsPanel = () => {
           >
             <CheckIcon className="w-4 h-4" />
             Marcar todas como leídas
-          </button>
-          <button
-            onClick={clearAll}
-            className="text-sm text-red-600 hover:text-red-700 transition-colors"
-          >
-            Limpiar todas
           </button>
         </div>
       )}
