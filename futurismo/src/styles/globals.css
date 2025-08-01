@@ -416,22 +416,149 @@
   display: none !important;
 }
 
-/* Header height fix - Universal solution for fixed headers */
+/* ========================================
+   UNIFIED LAYOUT SYSTEM
+   ======================================== */
+
+/* Variables CSS para layout consistente */
 :root {
-  --header-height: 72px; /* Standard header height for desktop - py-4 + contenido + border */
+  --header-height-mobile: 68px;
+  --header-height-desktop: 80px;
+  --sidebar-width: 256px;
+  --bottom-nav-height: 64px;
 }
 
-/* Mobile header adjustments */
+/* Variables dinámicas según viewport */
 @media (max-width: 767px) {
   :root {
-    --header-height: 68px; /* Mobile header height - py-3 + contenido más real */
+    --header-height: var(--header-height-mobile);
   }
 }
 
+@media (min-width: 768px) {
+  :root {
+    --header-height: var(--header-height-desktop);
+  }
+}
+
+/* ========================================
+   UNIFIED LAYOUT CLASSES
+   ======================================== */
+
+/* Layout principal unificado */
+.unified-app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+  border: none;
+}
+
+/* Header unificado - siempre fijo */
+.unified-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: var(--header-height);
+  background: white;
+  border: none;
+}
+
+/* Sidebar unificado - solo desktop */
+.unified-sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  z-index: 40;
+  background: white;
+}
+
+/* Contenido principal unificado */
+.unified-main {
+  flex: 1;
+  margin-top: var(--header-height);
+  overflow-x: hidden;
+  min-height: calc(100vh - var(--header-height));
+  border: none;
+}
+
+/* Con sidebar (desktop) */
+.unified-main.with-sidebar {
+  margin-left: var(--sidebar-width);
+}
+
+/* Con bottom navigation (mobile) */
+.unified-main.with-bottom-nav {
+  margin-bottom: var(--bottom-nav-height);
+}
+
+/* Sin header (marketplace mobile) */
+.unified-main.no-header {
+  margin-top: 0;
+  min-height: 100vh;
+}
+
+/* Contenedor de contenido */
+.unified-content {
+  margin: 0;
+  padding: 0.5rem;
+  width: 100%;
+  border: none;
+}
+
+@media (min-width: 640px) {
+  .unified-content {
+    padding: 0.125rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .unified-content {
+    padding: 0.125rem !important;
+  }
+}
+
+/* Bottom navigation unificado */
+.unified-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--bottom-nav-height);
+  z-index: 30;
+}
+
+/* Layout mínimo (login, register) */
+.app-layout-minimal {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ========================================
+   LEGACY CLASSES (mantener compatibilidad)
+   ======================================== */
+
 /* Universal class for content with fixed header */
 .content-with-header {
-  padding-top: 0 !important;
   min-height: 100vh;
+}
+
+/* Desktop - espacio para header fijo */
+@media (min-width: 1024px) {
+  .content-with-header {
+    padding-top: 80px !important;
+  }
+}
+
+/* Mobile - espacio para header móvil */
+@media (max-width: 1023px) {
+  .content-with-header {
+    padding-top: 72px !important; /* Espacio para MobileHeader */
+  }
 }
 
 /* Alternative: margin-top based approach */

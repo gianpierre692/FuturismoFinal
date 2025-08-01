@@ -371,6 +371,113 @@ const useAgencyStore = create(
           }));
         },
         
+        // === MÉTRICAS INTELIGENTES PARA AGENCIA B2B ===
+        getBusinessMetrics: () => {
+          const { reservations } = get();
+          const currentMonth = new Date().getMonth();
+          const currentYear = new Date().getFullYear();
+          const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+          const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+          
+          // Reservas del mes actual
+          const currentMonthReservations = reservations.filter(res => {
+            const resDate = new Date(res.date);
+            return resDate.getMonth() === currentMonth && 
+                   resDate.getFullYear() === currentYear && 
+                   res.status === 'confirmed';
+          });
+          
+          // Reservas del mes pasado
+          const lastMonthReservations = reservations.filter(res => {
+            const resDate = new Date(res.date);
+            return resDate.getMonth() === lastMonth && 
+                   resDate.getFullYear() === lastMonthYear && 
+                   res.status === 'confirmed';
+          });
+          
+          // 1. MARGEN DE GANANCIA PROMEDIO
+          const currentMonthRevenue = currentMonthReservations.reduce((sum, res) => sum + res.totalAmount, 0);
+          const currentMonthCosts = currentMonthReservations.reduce((sum, res) => sum + (res.totalAmount * 0.65), 0); // 65% son costos
+          const currentMargin = currentMonthRevenue > 0 ? ((currentMonthRevenue - currentMonthCosts) / currentMonthRevenue) * 100 : 0;
+          
+          const lastMonthRevenue = lastMonthReservations.reduce((sum, res) => sum + res.totalAmount, 0);
+          const lastMonthCosts = lastMonthReservations.reduce((sum, res) => sum + (res.totalAmount * 0.65), 0);
+          const lastMargin = lastMonthRevenue > 0 ? ((lastMonthRevenue - lastMonthCosts) / lastMonthRevenue) * 100 : 0;
+          
+          // 2. TOUR MÁS RENTABLE
+          const tourProfitability = {};
+          currentMonthReservations.forEach(res => {
+            if (!tourProfitability[res.serviceType]) {
+              tourProfitability[res.serviceType] = {
+                revenue: 0,
+                costs: 0,
+                count: 0
+              };
+            }
+            tourProfitability[res.serviceType].revenue += res.totalAmount;
+            tourProfitability[res.serviceType].costs += (res.totalAmount * 0.65);
+            tourProfitability[res.serviceType].count++;
+          });
+          
+          let mostProfitableTour = { name: 'N/A', margin: 0 };
+          Object.entries(tourProfitability).forEach(([tourType, data]) => {
+            const margin = ((data.revenue - data.costs) / data.revenue) * 100;
+            if (margin > mostProfitableTour.margin) {
+              mostProfitableTour = { name: tourType, margin };
+            }
+          });
+          
+          // 3. MEJOR DÍA DE VENTAS
+          const dailySales = {};
+          const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+          
+          currentMonthReservations.forEach(res => {
+            const dayOfWeek = new Date(res.date).getDay();
+            const dayName = dayNames[dayOfWeek];
+            if (!dailySales[dayName]) {
+              dailySales[dayName] = { total: 0, count: 0 };
+            }
+            dailySales[dayName].total += res.totalAmount;
+            dailySales[dayName].count++;
+          });
+          
+          let bestSalesDay = { name: 'N/A', average: 0 };
+          Object.entries(dailySales).forEach(([day, data]) => {
+            const average = data.count > 0 ? data.total / data.count : 0;
+            if (average > bestSalesDay.average) {
+              bestSalesDay = { name: day, average };
+            }
+          });
+          
+          // 4. META MENSUAL
+          const monthlyGoal = 15000; // Meta de S/. 15,000 mensuales
+          const goalProgress = (currentMonthRevenue / monthlyGoal) * 100;
+          const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+          const currentDay = new Date().getDate();
+          const daysRemaining = daysInMonth - currentDay;
+          
+          return {
+            profitMargin: {
+              current: currentMargin,
+              previous: lastMargin,
+              change: currentMargin - lastMargin
+            },
+            mostProfitableTour,
+            bestSalesDay,
+            monthlyGoal: {
+              target: monthlyGoal,
+              current: currentMonthRevenue,
+              progress: goalProgress,
+              daysRemaining
+            },
+            currentMonthStats: {
+              revenue: currentMonthRevenue,
+              reservations: currentMonthReservations.length,
+              averageTicket: currentMonthReservations.length > 0 ? currentMonthRevenue / currentMonthReservations.length : 0
+            }
+          };
+        },
+
         // === UTILIDADES ===
         getCalendarData: (startDate, endDate) => {
           const reservations = get().actions.getReservations({ startDate, endDate });

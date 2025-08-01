@@ -331,7 +331,7 @@ const AdminDashboard = () => {
       )}
 
       {/* KPIs principales */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
@@ -379,19 +379,47 @@ const AdminDashboard = () => {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Tasa de Satisfacción</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{stats.satisfactionRate}%</p>
-              <div className="flex items-center mt-2">
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-green-500 h-2 rounded-full"
-                    style={{ width: `${stats.satisfactionRate}%` }}
-                  />
-                </div>
+              <p className="text-sm text-gray-600">Tours Completados a Tiempo</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">96.5%</p>
+              <div className="flex items-center mt-2 text-sm">
+                <ClockIcon className="h-4 w-4 text-green-500 mr-1" />
+                <span className="text-gray-600">sin retrasos >30min</span>
               </div>
             </div>
-            <div className="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
-              <CheckCircleIcon className="h-6 w-6 text-yellow-600" />
+            <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
+              <ClockIcon className="h-6 w-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Tours Sin Cancelaciones</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">92.8%</p>
+              <div className="flex items-center mt-2 text-sm">
+                <CheckCircleIcon className="h-4 w-4 text-blue-500 mr-1" />
+                <span className="text-gray-600">cancelación último momento</span>
+              </div>
+            </div>
+            <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <CheckCircleIcon className="h-6 w-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Tours Sin Emergencias</p>
+              <p className="text-2xl font-bold text-gray-900 mt-1">99.1%</p>
+              <div className="flex items-center mt-2 text-sm">
+                <ShieldExclamationIcon className="h-4 w-4 text-green-500 mr-1" />
+                <span className="text-gray-600">incidentes de seguridad</span>
+              </div>
+            </div>
+            <div className="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center">
+              <ShieldExclamationIcon className="h-6 w-6 text-red-600" />
             </div>
           </div>
         </div>

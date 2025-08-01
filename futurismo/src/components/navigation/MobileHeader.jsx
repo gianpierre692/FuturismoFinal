@@ -58,7 +58,7 @@ const MobileHeader = ({ onMenuClick, showMenu = true }) => {
                         !location.pathname.includes('/agenda');
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-30">
+    <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-[60]">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Left side */}
         <div className="flex items-center gap-3">

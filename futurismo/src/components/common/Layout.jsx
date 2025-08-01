@@ -1,16 +1,12 @@
 import { Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import Header from './Header';
-import NotificationsPanel from './NotificationsPanel';
-import AdaptiveNavigation from '../navigation/AdaptiveNavigation';
+import UnifiedLayout from '../layout/UnifiedLayout';
 
 const Layout = () => {
-  // Usar navegación adaptativa en lugar del layout tradicional
+  // Usar layout unificado para eliminar conflictos de spacing
   return (
-    <AdaptiveNavigation>
+    <UnifiedLayout>
       <Outlet />
-    </AdaptiveNavigation>
+    </UnifiedLayout>
   );
 };
 

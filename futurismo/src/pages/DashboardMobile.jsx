@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../stores/authStore';
+import useAgencyStore from '../stores/agencyStore';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { 
   CalendarIcon, 
@@ -10,12 +11,15 @@ import {
   ArrowTrendingUpIcon,
   UserGroupIcon,
   CurrencyDollarIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  TrophyIcon,
+  FlagIcon
 } from '@heroicons/react/24/outline';
 
 const DashboardMobile = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const { actions } = useAgencyStore();
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
@@ -41,11 +45,42 @@ const DashboardMobile = () => {
         { icon: ArrowTrendingUpIcon, label: 'Puntualidad', value: '98.5%', color: 'bg-purple-500' }
       ];
     } else if (user?.role === 'agency') {
+      // Obtener métricas inteligentes de negocio
+      const businessMetrics = actions.getBusinessMetrics();
+      
       return [
-        { icon: CalendarIcon, label: 'Reservas', value: '127', trend: '+18%', color: 'bg-blue-500' },
-        { icon: UserGroupIcon, label: 'Turistas', value: '342', trend: '+15%', color: 'bg-green-500' },
-        { icon: CurrencyDollarIcon, label: 'Ingresos', value: '$89.5k', trend: '+23%', color: 'bg-orange-500' },
-        { icon: ArrowTrendingUpIcon, label: 'Puntualidad', value: '94.5%', trend: '+2.5%', color: 'bg-purple-500' }
+        { 
+          icon: CurrencyDollarIcon, 
+          label: 'Margen Ganancia', 
+          value: `${businessMetrics.profitMargin.current.toFixed(1)}%`, 
+          trend: businessMetrics.profitMargin.change > 0 ? `+${businessMetrics.profitMargin.change.toFixed(1)}%` : `${businessMetrics.profitMargin.change.toFixed(1)}%`,
+          subtitle: 'vs mes pasado',
+          color: 'bg-green-500' 
+        },
+        { 
+          icon: TrophyIcon, 
+          label: 'Tour Rentable', 
+          value: businessMetrics.mostProfitableTour.name !== 'N/A' ? businessMetrics.mostProfitableTour.name : 'Sin datos',
+          trend: businessMetrics.mostProfitableTour.name !== 'N/A' ? `${businessMetrics.mostProfitableTour.margin.toFixed(1)}% margen` : '',
+          subtitle: 'más rentable',
+          color: 'bg-yellow-500' 
+        },
+        { 
+          icon: CalendarIcon, 
+          label: 'Mejor Día Ventas', 
+          value: businessMetrics.bestSalesDay.name,
+          trend: businessMetrics.bestSalesDay.name !== 'N/A' ? `S/. ${businessMetrics.bestSalesDay.average.toFixed(0)} prom` : 'Sin datos',
+          subtitle: 'promedio ventas',
+          color: 'bg-blue-500' 
+        },
+        { 
+          icon: FlagIcon, 
+          label: 'Meta Mensual', 
+          value: `${businessMetrics.monthlyGoal.progress.toFixed(0)}%`,
+          trend: `${businessMetrics.monthlyGoal.daysRemaining} días rest`,
+          subtitle: `S/. ${businessMetrics.monthlyGoal.current.toFixed(0)} / S/. ${businessMetrics.monthlyGoal.target}`,
+          color: businessMetrics.monthlyGoal.progress >= 100 ? 'bg-green-500' : businessMetrics.monthlyGoal.progress >= 75 ? 'bg-yellow-500' : 'bg-red-500'
+        }
       ];
     }
     // Admin
@@ -58,6 +93,28 @@ const DashboardMobile = () => {
   };
 
   const stats = getStats();
+
+  // Funciones de navegación para KPI cards (solo para agency)
+  const handleKPIClick = (statIndex) => {
+    if (user?.role !== 'agency') return;
+    
+    switch (statIndex) {
+      case 0: // Reservas
+        navigate('/reservations');
+        break;
+      case 1: // Turistas
+        navigate('/reservations');
+        break;
+      case 2: // Ingresos
+        navigate('/agency-reports');
+        break;
+      case 3: // Puntualidad
+        navigate('/monitoring');
+        break;
+      default:
+        break;
+    }
+  };
 
   // Actividades recientes
   const getRecentActivities = () => {
@@ -82,13 +139,13 @@ const DashboardMobile = () => {
   }
 
   return (
-    <div className="fixed inset-0 top-14 flex flex-col bg-white overflow-y-auto">
+    <div className="fixed inset-0 top-16 flex flex-col bg-white overflow-y-auto">
       {/* Header con saludo */}
       <div className="bg-gradient-to-r from-primary to-primary-600 px-4 pt-4 pb-8">
         <h1 className="text-xl font-bold text-white">
           {getGreeting()}, {user?.name?.split(' ')[0]}
         </h1>
-        <p className="text-primary-100 text-sm mt-1">
+        <p className="text-primary-100 text-sm mt-0.5">
           {new Date().toLocaleDateString('es', { 
             weekday: 'long', 
             day: 'numeric', 
@@ -101,19 +158,33 @@ const DashboardMobile = () => {
       <div className="px-4 -mt-4">
         <div className="grid grid-cols-2 gap-3">
           {stats.map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-lg shadow-sm p-4">
+            <div 
+              key={idx} 
+              className={`bg-white rounded-lg shadow-sm p-4 ${
+                user?.role === 'agency' 
+                  ? 'cursor-pointer active:scale-95 transition-transform duration-150' 
+                  : ''
+              }`}
+              onClick={() => handleKPIClick(idx)}
+            >
               <div className="flex items-center justify-between mb-2">
                 <div className={`p-2 rounded-lg ${stat.color} bg-opacity-10`}>
                   <stat.icon className={`w-5 h-5 ${stat.color.replace('bg-', 'text-')}`} />
                 </div>
                 {stat.trend && (
-                  <span className="text-xs font-medium text-green-600">
+                  <span className={`text-xs font-medium ${
+                    stat.trend.includes('+') ? 'text-green-600' : 
+                    stat.trend.includes('-') ? 'text-red-600' : 'text-gray-600'
+                  }`}>
                     {stat.trend}
                   </span>
                 )}
               </div>
               <p className="text-xl font-bold text-gray-900">{stat.value}</p>
               <p className="text-xs text-gray-600 mt-1">{stat.label}</p>
+              {stat.subtitle && (
+                <p className="text-xs text-gray-500 mt-0.5">{stat.subtitle}</p>
+              )}
             </div>
           ))}
         </div>

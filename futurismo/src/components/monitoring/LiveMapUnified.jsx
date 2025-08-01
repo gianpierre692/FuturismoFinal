@@ -289,7 +289,9 @@ const LiveMapUnified = memo(({
       const handleResize = () => {
         if (mapInstanceRef.current) {
           setTimeout(() => {
-            mapInstanceRef.current.invalidateSize();
+            if (mapInstanceRef.current) {
+              mapInstanceRef.current.invalidateSize();
+            }
           }, 100);
         }
       };

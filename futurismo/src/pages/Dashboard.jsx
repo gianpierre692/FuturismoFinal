@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DashboardMobile from './DashboardMobile';
-import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ChartBarIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import StatsCard from '../components/dashboard/StatsCard';
 import ServiceChart from '../components/dashboard/ServiceChart';
@@ -128,7 +128,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
         {user?.role === 'guide' ? (
           <>
             <StatsCard
@@ -193,30 +193,45 @@ const Dashboard = () => {
         ) : (
           <>
             <StatsCard
-              title="Total Reservas"
-              value={stats.totalReservations}
-              icon={CalendarIcon}
-              trend="+25%"
-              color="primary"
-            />
-            <StatsCard
-              title="Total Turistas"
-              value={stats.totalTourists}
-              icon={UserGroupIcon}
-              trend="+22%"
+              title="Ingresos del Mes"
+              value={`S/. ${stats.totalRevenue.toLocaleString()}`}
+              icon={CurrencyDollarIcon}
+              trend="+15.3%"
               color="success"
             />
             <StatsCard
-              title="Ingresos Totales"
-              value={`$${stats.totalRevenue.toLocaleString()}`}
-              icon={CurrencyDollarIcon}
-              trend="+28%"
+              title="Reservaciones Activas"
+              value="142"
+              icon={CalendarIcon}
+              trend="42 para hoy"
+              color="primary"
+            />
+            <StatsCard
+              title="Tours Completados a Tiempo"
+              value="96.5%"
+              icon={ClockIcon}
+              trend="sin retrasos >30min"
+              color="success"
+            />
+            <StatsCard
+              title="Tours Sin Cancelaciones"
+              value="92.8%"
+              icon={CheckCircleIcon}
+              trend="cancelación último momento"
+              color="primary"
+            />
+            <StatsCard
+              title="Tours Sin Emergencias"
+              value="99.1%"
+              icon={ShieldExclamationIcon}
+              trend="incidentes de seguridad"
               color="secondary"
             />
             <StatsCard
-              title={t('dashboard.systemHealth')}
+              title="Uptime del Sistema"
               value={`${stats.systemHealth}%`}
               icon={ChartBarIcon}
+              trend="Sistema operativo"
               color="primary"
             />
           </>

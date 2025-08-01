@@ -79,13 +79,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             { path: '/chat', icon: ChatBubbleLeftRightIcon, label: 'Chat', badge: '8', badgeColor: 'red' },
             { path: '/emergency', icon: ShieldCheckIcon, label: 'Emergencias' },
           ]
-        },
-        {
-          section: 'CONFIGURACIÓN',
-          items: [
-            { path: '/settings', icon: CogIcon, label: 'Configuración' },
-            { path: '/profile', icon: UserIcon, label: 'Mi Perfil' }
-          ]
         }
       ];
     }
@@ -96,26 +89,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const menuItems = getMenuItems();
 
   return (
-    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-white shadow-lg transition-all duration-300 flex-col h-full hidden lg:flex desktop-only`}>
+    <aside className="w-64 bg-white shadow-lg flex-col h-full hidden lg:flex desktop-only">
       {/* Logo */}
       <div className="p-4 lg:p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
-          <div className={`flex items-center ${!isOpen && 'justify-center'}`}>
+          <div className="flex items-center">
             <span className="text-2xl">🌎</span>
-            {isOpen && (
-              <h1 className="ml-3 text-xl font-bold text-gray-900">Futurismo</h1>
-            )}
+            <h1 className="ml-3 text-xl font-bold text-gray-900">Futurismo</h1>
           </div>
-          <button
-            onClick={toggleSidebar}
-            className="p-1 rounded-lg hover:bg-gray-100 transition-colors hidden lg:block"
-          >
-            {isOpen ? (
-              <ChevronLeftIcon className="w-5 h-5 text-gray-500" />
-            ) : (
-              <ChevronRightIcon className="w-5 h-5 text-gray-500" />
-            )}
-          </button>
         </div>
       </div>
 
@@ -127,11 +108,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             if (item.section) {
               return (
                 <li key={`section-${index}`} className="pt-4 first:pt-0">
-                  {isOpen && (
-                    <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      {item.section}
-                    </h3>
-                  )}
+                  <h3 className="px-3 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    {item.section}
+                  </h3>
                   <ul className="space-y-1">
                     {item.items.map((subItem) => {
                       const Icon = subItem.icon;
@@ -149,29 +128,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                             }
                           >
                             <Icon className="w-5 h-5 flex-shrink-0" />
-                            {isOpen && (
-                              <>
-                                <span className="ml-3 flex-1">{subItem.label}</span>
-                                {subItem.badge && (
-                                  <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
-                                    subItem.badgeColor === 'red' 
-                                      ? 'bg-red-100 text-red-700'
-                                      : subItem.badgeColor === 'green'
-                                      ? 'bg-green-100 text-green-700'
-                                      : 'bg-blue-100 text-blue-700'
-                                  }`}>
-                                    {subItem.badge}
-                                  </span>
-                                )}
-                              </>
-                            )}
-                            
-                            {/* Tooltip for collapsed sidebar */}
-                            {!isOpen && (
-                              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-10">
-                                {subItem.label}
-                                {subItem.badge && ` (${subItem.badge})`}
-                              </div>
+                            <span className="ml-3 flex-1">{subItem.label}</span>
+                            {subItem.badge && (
+                              <span className={`ml-2 px-2 py-0.5 text-xs font-medium rounded-full ${
+                                subItem.badgeColor === 'red' 
+                                  ? 'bg-red-100 text-red-700'
+                                  : subItem.badgeColor === 'green'
+                                  ? 'bg-green-100 text-green-700'
+                                  : 'bg-blue-100 text-blue-700'
+                              }`}>
+                                {subItem.badge}
+                              </span>
                             )}
                           </NavLink>
                         </li>

@@ -9,6 +9,11 @@ import useAuthStore from '../stores/authStore';
 
 const Monitoring = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const { user } = useAuthStore();
+  const { t } = useTranslation();
+  const [activeView, setActiveView] = useState('map');
+  const [selectedGuide, setSelectedGuide] = useState(null);
+  const [selectedTour, setSelectedTour] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,16 +23,10 @@ const Monitoring = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const { user } = useAuthStore();
   
   if (isMobile) {
     return <MonitoringMobile />;
   }
-  const { t } = useTranslation();
-  const [activeView, setActiveView] = useState('map');
-  const [selectedGuide, setSelectedGuide] = useState(null);
-  const [selectedTour, setSelectedTour] = useState(null);
   
   // Para guías, solo mostrar sus propios tours
   const isGuide = user?.role === 'guide';

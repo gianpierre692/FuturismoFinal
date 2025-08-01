@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Bars3Icon, BellIcon, MagnifyingGlassIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon } from '@heroicons/react/24/outline';
+import { BellIcon, MagnifyingGlassIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
 import LanguageToggle from './LanguageToggle';
 
-const Header = ({ toggleSidebar }) => {
+const Header = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { unreadCount, toggleVisibility, isVisible } = useNotificationsStore();
@@ -46,15 +46,8 @@ const Header = ({ toggleSidebar }) => {
         <div className="flex items-center justify-between">
           {/* Left side */}
           <div className="flex items-center">
-            <button
-              onClick={toggleSidebar}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <Bars3Icon className="w-5 h-5 text-gray-500" />
-            </button>
-
             {/* Search bar - Hidden on mobile */}
-            <form onSubmit={handleSearch} className="hidden sm:block ml-4 lg:ml-0">
+            <form onSubmit={handleSearch} className="hidden sm:block">
               <div className="relative">
                 <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -155,8 +148,6 @@ const Header = ({ toggleSidebar }) => {
   );
 };
 
-Header.propTypes = {
-  toggleSidebar: PropTypes.func.isRequired
-};
+Header.propTypes = {};
 
 export default Header;

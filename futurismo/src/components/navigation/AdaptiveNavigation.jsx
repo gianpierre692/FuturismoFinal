@@ -50,16 +50,16 @@ const AdaptiveNavigation = ({ children }) => {
   // DESKTOP - Sidebar tradicional con Header
   if (!isMobile) {
     return (
-      <div className="flex h-screen bg-white overflow-x-hidden max-w-full">
+      <div className="flex h-screen bg-white">
         <DesktopSidebar 
           isOpen={sidebarOpen} 
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
         />
-        <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
           <NotificationsPanel />
-          <div className="flex-1 overflow-y-auto overflow-x-hidden max-w-full content-with-header">
-            <div className="max-w-full">
+          <div className="flex-1 overflow-auto content-with-header">
+            <div className="w-full">
               {children}
             </div>
           </div>
