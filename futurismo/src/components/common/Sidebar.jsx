@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon, PhotoIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
+import LanguageToggle from './LanguageToggle';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { user } = useAuthStore();
@@ -174,8 +175,24 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </ul>
       </nav>
 
-      {/* Footer */}
+      {/* Language Toggle */}
       <div className="p-4 border-t border-gray-200">
+        {isOpen ? (
+          <div className="mb-4">
+            <LanguageToggle />
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <button
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              title={t('profile.language')}
+            >
+              <GlobeAltIcon className="w-5 h-5 text-gray-600" />
+            </button>
+          </div>
+        )}
+        
+        {/* Footer */}
         <div className={`text-center ${!isOpen && 'hidden'}`}>
           <p className="text-xs text-gray-500">
             © 2024 Futurismo

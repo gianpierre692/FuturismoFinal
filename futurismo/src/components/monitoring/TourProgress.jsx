@@ -6,12 +6,14 @@ import TourPhotoUpload from '../guides/TourPhotoUpload';
 import useGuidesStore from '../../stores/guidesStore';
 import useAuthStore from '../../stores/authStore';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const TourProgress = ({ tourId, isGuideView = false }) => {
   const [expandedStop, setExpandedStop] = useState(null);
   const [tourData, setTourData] = useState(null);
   const { getGuideById } = useGuidesStore(state => state.actions);
   const { user } = useAuthStore();
+  const { t } = useTranslation();
 
   // Obtener datos del guía desde el store o usuario autenticado
   const guideData = getGuideById(user?.id || 'guide002') || {};
@@ -160,7 +162,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
 
   const handlePhotosChange = (stopId, newPhotos) => {
     // En una implementación real, esto actualizaría el estado del tour en el store
-    toast.success('Fotos actualizadas correctamente');
+    toast.success(t('monitoring.tourProgress.photosUpdated'));
   };
 
   const canUploadPhotos = (stop) => {
@@ -178,16 +180,16 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
             <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
               <div className="flex items-center gap-1">
                 <ClockIcon className="w-4 h-4" />
-                <span>Inicio: {formatters.formatTime(mockTour.actualStartTime)}</span>
+                <span>{t('monitoring.tourProgress.start')}: {formatters.formatTime(mockTour.actualStartTime)}</span>
               </div>
               <div className="flex items-center gap-1">
                 <UserGroupIcon className="w-4 h-4" />
-                <span>{mockTour.tourists.present}/{mockTour.tourists.total} turistas</span>
+                <span>{mockTour.tourists.present}/{mockTour.tourists.total} {t('monitoring.tourProgress.tourists')}</span>
               </div>
               {getEstimatedDelay() > 0 && (
                 <div className="flex items-center gap-1 text-yellow-600">
                   <ExclamationTriangleIcon className="w-4 h-4" />
-                  <span>Retraso de {Math.round(getEstimatedDelay())} min</span>
+                  <span>{t('monitoring.tourProgress.delayOf')} {Math.round(getEstimatedDelay())} {t('monitoring.tourProgress.min')}</span>
                 </div>
               )}
             </div>
@@ -198,12 +200,12 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
             {mockTour.guide.type === 'freelance' && (
               <button className="btn btn-outline flex items-center gap-2">
                 <PhoneIcon className="w-4 h-4" />
-                Llamar guía
+                {t('monitoring.tourProgress.callGuide')}
               </button>
             )}
             <button className="btn btn-primary flex items-center gap-2">
               <ChatBubbleLeftRightIcon className="w-4 h-4" />
-              Enviar mensaje
+              {t('monitoring.tourProgress.sendMessage')}
             </button>
           </div>
         </div>
@@ -211,8 +213,8 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
         {/* Barra de progreso */}
         <div className="mt-4">
           <div className="flex justify-between items-center text-sm mb-2">
-            <span className="text-gray-600">Progreso del tour</span>
-            <span className="font-medium">{Math.round(getProgressPercentage())}% completado</span>
+            <span className="text-gray-600">{t('monitoring.tourProgress.tourProgress')}</span>
+            <span className="font-medium">{Math.round(getProgressPercentage())}{t('monitoring.tourProgress.percentCompleted')}</span>
           </div>
           <div className="bg-gray-200 rounded-full h-3">
             <div
@@ -225,7 +227,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
 
       {/* Timeline de paradas */}
       <div className="p-6">
-        <h4 className="font-semibold mb-4">Itinerario del Tour</h4>
+        <h4 className="font-semibold mb-4">{t('monitoring.tourProgress.tourItinerary')}</h4>
         
         <div className="space-y-0">
           {mockTour.stops.map((stop, index) => (
@@ -255,7 +257,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
                         {stop.arrivalTime && (
                           <div className="flex items-center gap-1 text-gray-500">
                             <MapPinIcon className="w-4 h-4" />
-                            <span>Llegada: {formatters.formatTime(stop.arrivalTime)}</span>
+                            <span>{t('monitoring.tourProgress.arrival')}: {formatters.formatTime(stop.arrivalTime)}</span>
                           </div>
                         )}
                         {stop.actualTime && (
@@ -287,21 +289,21 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
                   <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-gray-600">Tiempo estimado</p>
-                        <p className="font-medium">{stop.estimatedTime} minutos</p>
+                        <p className="text-gray-600">{t('monitoring.tourProgress.estimatedTime')}</p>
+                        <p className="font-medium">{stop.estimatedTime} {t('monitoring.tourProgress.minutes')}</p>
                       </div>
                       <div>
-                        <p className="text-gray-600">Tiempo real</p>
-                        <p className="font-medium">{stop.actualTime || '-'} minutos</p>
+                        <p className="text-gray-600">{t('monitoring.tourProgress.realTime')}</p>
+                        <p className="font-medium">{stop.actualTime || '-'} {t('monitoring.tourProgress.minutes')}</p>
                       </div>
                       {stop.departureTime && (
                         <>
                           <div>
-                            <p className="text-gray-600">Hora de llegada</p>
+                            <p className="text-gray-600">{t('monitoring.tourProgress.arrivalTime')}</p>
                             <p className="font-medium">{formatters.formatTime(stop.arrivalTime)}</p>
                           </div>
                           <div>
-                            <p className="text-gray-600">Hora de salida</p>
+                            <p className="text-gray-600">{t('monitoring.tourProgress.departureTime')}</p>
                             <p className="font-medium">{formatters.formatTime(stop.departureTime)}</p>
                           </div>
                         </>
@@ -312,11 +314,11 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <p className="text-sm font-medium text-gray-700">
-                          Fotos de la parada {canUploadPhotos(stop) && '(opcional)'}
+                          {t('monitoring.tourProgress.stopsPhotos')} {canUploadPhotos(stop) && t('monitoring.tourProgress.optional')}
                         </p>
                         {stop.photos.length > 0 && (
                           <span className="text-xs text-gray-500">
-                            {stop.photos.length} foto{stop.photos.length > 1 ? 's' : ''}
+                            {stop.photos.length} {stop.photos.length > 1 ? t('monitoring.tourProgress.photosPlural') : t('monitoring.tourProgress.photos')}
                           </span>
                         )}
                       </div>
@@ -347,7 +349,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
                           ) : (
                             <div className="text-center py-6 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
                               <CameraIcon className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                              <p className="text-sm">Sin fotos de esta parada</p>
+                              <p className="text-sm">{t('monitoring.tourProgress.noPhotosForStop')}</p>
                             </div>
                           )}
                         </>
@@ -356,7 +358,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
 
                     {stop.status === 'pendiente' && (
                       <div className="text-sm text-gray-500">
-                        <p>Esta parada aún no ha sido visitada</p>
+                        <p>{t('monitoring.tourProgress.stopNotVisited')}</p>
                       </div>
                     )}
                   </div>
@@ -370,7 +372,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-blue-900">Hora estimada de finalización</p>
+              <p className="text-sm font-medium text-blue-900">{t('monitoring.tourProgress.estimatedEndTime')}</p>
               <p className="text-lg font-semibold text-blue-800">
                 {formatters.formatTime(mockTour.estimatedEndTime)}
               </p>
@@ -378,7 +380,7 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
             {getEstimatedDelay() > 0 && (
               <div className="text-right">
                 <p className="text-sm text-blue-700">
-                  Con retraso actual: {formatters.formatTime(
+                  {t('monitoring.tourProgress.withCurrentDelay')}: {formatters.formatTime(
                     new Date(mockTour.estimatedEndTime.getTime() + (getEstimatedDelay() * 60000))
                   )}
                 </p>

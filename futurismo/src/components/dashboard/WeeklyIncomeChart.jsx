@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   LineChart, Line, BarChart, Bar, ComposedChart, Area, AreaChart,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -16,6 +17,7 @@ import InteractiveButton from '../common/InteractiveButton';
 import InteractiveCard from '../common/InteractiveCard';
 
 const WeeklyIncomeChart = () => {
+  const { t } = useTranslation();
   const [viewType, setViewType] = useState('area'); // area, bar, line, composed
   const [timeframe, setTimeframe] = useState('thisWeek'); // thisWeek, lastWeek, comparison
   const [showDetails, setShowDetails] = useState(false);
@@ -369,10 +371,10 @@ const WeeklyIncomeChart = () => {
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-              Ingresos Semanales
+              {t('dashboard.weeklyIncome')}
             </h3>
             <p className="text-sm text-gray-500">
-              Análisis detallado día por día
+              {t('dashboard.dailyIncomeAnalysis')}
             </p>
           </div>
         </div>
@@ -431,7 +433,7 @@ const WeeklyIncomeChart = () => {
         <InteractiveCard className="bg-gradient-to-r from-primary-50 to-blue-50 p-4 group/stat">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-primary-600 font-medium">Total Semana</p>
+              <p className="text-xs text-primary-600 font-medium">{t('dashboard.weekTotal')}</p>
               <p className="text-xl font-bold text-primary-800 group-hover/stat:scale-105 transition-transform">
                 ${weekStats.total.toLocaleString()}
               </p>
@@ -443,7 +445,7 @@ const WeeklyIncomeChart = () => {
         <InteractiveCard className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 group/stat">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-green-600 font-medium">Promedio Diario</p>
+              <p className="text-xs text-green-600 font-medium">{t('dashboard.dailyAverage')}</p>
               <p className="text-xl font-bold text-green-800 group-hover/stat:scale-105 transition-transform">
                 ${weekStats.promedio}
               </p>
@@ -455,7 +457,7 @@ const WeeklyIncomeChart = () => {
         <InteractiveCard className="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 group/stat">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-purple-600 font-medium">Mejor Día</p>
+              <p className="text-xs text-purple-600 font-medium">{t('dashboard.bestDay')}</p>
               <p className="text-sm font-bold text-purple-800 group-hover/stat:scale-105 transition-transform">
                 {weekStats.mejorDia}
               </p>
@@ -468,7 +470,7 @@ const WeeklyIncomeChart = () => {
         <InteractiveCard className="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 group/stat">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-orange-600 font-medium">Meta Cumplida</p>
+              <p className="text-xs text-orange-600 font-medium">{t('dashboard.goalAchieved')}</p>
               <p className={`text-xl font-bold group-hover/stat:scale-105 transition-transform ${
                 parseFloat(weekStats.porcentajeMeta) >= 100 ? 'text-green-800' : 'text-orange-800'
               }`}>

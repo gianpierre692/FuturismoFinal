@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { BellIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import { BellIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, UserIcon, CogIcon, Bars3Icon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
@@ -13,7 +13,8 @@ const Header = ({ onMenuClick }) => {
   const { unreadCount, toggleVisibility, isVisible } = useNotificationsStore();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   // Cerrar menú al hacer clic fuera
   useEffect(() => {
@@ -45,8 +46,8 @@ const Header = ({ onMenuClick }) => {
 
           {/* Right side */}
           <div className="flex items-center space-x-2 sm:space-x-4">
-            {/* Language Toggle - Hidden on mobile */}
-            <div className="hidden sm:block">
+            {/* Language Toggle - Now visible on all devices */}
+            <div className="mr-2">
               <LanguageToggle />
             </div>
             
@@ -79,7 +80,7 @@ const Header = ({ onMenuClick }) => {
                   </span>
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-gray-900">{user?.name || 'Usuario'}</p>
+                  <p className="text-sm font-medium text-gray-900">{user?.name || t('profile.user')}</p>
                   <p className="text-xs text-gray-500">
                     {user?.role === 'agency' && t('roles.agency')}
                     {user?.role === 'guide' && t('roles.guide')}
@@ -112,6 +113,56 @@ const Header = ({ onMenuClick }) => {
                     <CogIcon className="w-4 h-4 mr-3" />
                     {t('profile.configuration')}
                   </button>
+                  
+                  {/* Language Option */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                      className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                    >
+                      <div className="flex items-center">
+                        <GlobeAltIcon className="w-4 h-4 mr-3" />
+                        {t('profile.language')}
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {i18n.language === 'es' ? 'ES' : 'EN'}
+                      </span>
+                    </button>
+                    
+                    {showLanguageMenu && (
+                      <div className="border-t border-gray-100">
+                        <button
+                          onClick={() => {
+                            i18n.changeLanguage('es');
+                            setShowLanguageMenu(false);
+                            setProfileMenuOpen(false);
+                          }}
+                          className={`flex items-center px-8 py-2 text-sm hover:bg-gray-50 w-full ${
+                            i18n.language === 'es' ? 'text-primary-600 bg-primary-50' : 'text-gray-700'
+                          }`}
+                        >
+                          <span className="mr-2">🇪🇸</span>
+                          {t('profile.spanish')}
+                          {i18n.language === 'es' && <span className="ml-auto text-primary-600">✓</span>}
+                        </button>
+                        <button
+                          onClick={() => {
+                            i18n.changeLanguage('en');
+                            setShowLanguageMenu(false);
+                            setProfileMenuOpen(false);
+                          }}
+                          className={`flex items-center px-8 py-2 text-sm hover:bg-gray-50 w-full ${
+                            i18n.language === 'en' ? 'text-primary-600 bg-primary-50' : 'text-gray-700'
+                          }`}
+                        >
+                          <span className="mr-2">🇺🇸</span>
+                          {t('profile.english')}
+                          {i18n.language === 'en' && <span className="ml-auto text-primary-600">✓</span>}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  
                   <hr className="my-1" />
                   <button
                     onClick={handleLogout}

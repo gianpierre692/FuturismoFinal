@@ -4,7 +4,6 @@ import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGrou
 import { useTranslation } from 'react-i18next';
 import StatsCard from '../components/dashboard/StatsCard';
 import ServiceChart from '../components/dashboard/ServiceChart';
-import QuickActions from '../components/dashboard/QuickActions';
 import ExportPanel from '../components/dashboard/ExportPanel';
 import WeeklyIncomeChart from '../components/dashboard/WeeklyIncomeChart';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -392,9 +391,8 @@ const Dashboard = () => {
           </InteractiveCard>
         </div>
 
-        {/* Right Column - Quick Actions */}
+        {/* Right Column - Export Panel Only */}
         <div className="space-y-6">
-            {user?.role !== 'guide' && <QuickActions />}
             {(user?.role === 'agency' || user?.role === 'admin') && <ExportPanel />}
           </div>
         </div>

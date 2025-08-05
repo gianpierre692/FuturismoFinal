@@ -1,17 +1,19 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowDownTrayIcon, DocumentTextIcon, TableCellsIcon, FunnelIcon, CheckCircleIcon, ClockIcon, XCircleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import exportService from '../../services/exportService';
 import UniversalExportService from '../../services/universalExportService';
 
 const ExportPanel = () => {
+  const { t } = useTranslation();
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [isExporting, setIsExporting] = useState(false);
 
   const statusOptions = [
-    { value: 'all', label: 'Información Completa', icon: ChartBarIcon, color: 'text-blue-600' },
-    { value: 'pendiente', label: 'Solo Pendientes', icon: ClockIcon, color: 'text-yellow-600' },
-    { value: 'confirmada', label: 'Solo Confirmadas', icon: CheckCircleIcon, color: 'text-green-600' },
-    { value: 'cancelada', label: 'Solo Canceladas', icon: XCircleIcon, color: 'text-red-600' }
+    { value: 'all', label: t('dashboard.completeInformation'), icon: ChartBarIcon, color: 'text-blue-600' },
+    { value: 'pendiente', label: t('dashboard.onlyPending'), icon: ClockIcon, color: 'text-yellow-600' },
+    { value: 'confirmada', label: t('dashboard.onlyConfirmed'), icon: CheckCircleIcon, color: 'text-green-600' },
+    { value: 'cancelada', label: t('dashboard.onlyCancelled'), icon: XCircleIcon, color: 'text-red-600' }
   ];
 
   const exportFormats = [
@@ -20,14 +22,14 @@ const ExportPanel = () => {
       label: 'Excel', 
       icon: TableCellsIcon, 
       color: 'bg-green-500 hover:bg-green-600',
-      description: 'Ideal para análisis detallado'
+      description: t('dashboard.idealForAnalysis')
     },
     { 
       format: 'pdf', 
       label: 'PDF', 
       icon: DocumentTextIcon, 
       color: 'bg-red-500 hover:bg-red-600',
-      description: 'Perfecto para reportes formales'
+      description: t('dashboard.perfectForReports')
     }
   ];
 
@@ -101,8 +103,8 @@ const ExportPanel = () => {
           <ArrowDownTrayIcon className="w-6 h-6 text-primary-600" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Exportar Datos</h3>
-          <p className="text-sm text-gray-600">Descarga reportes según tus necesidades</p>
+          <h3 className="text-lg font-semibold text-gray-900">{t('dashboard.exportData')}</h3>
+          <p className="text-sm text-gray-600">{t('dashboard.downloadReports')}</p>
         </div>
       </div>
 
@@ -110,7 +112,7 @@ const ExportPanel = () => {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <FunnelIcon className="w-4 h-4 text-gray-600" />
-          <span className="text-sm font-medium text-gray-700">Filtrar por Estado</span>
+          <span className="text-sm font-medium text-gray-700">{t('dashboard.filterByStatus')}</span>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -144,38 +146,16 @@ const ExportPanel = () => {
         {/* Información adicional del filtro seleccionado */}
         <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <p className="text-sm text-blue-800">
-            <span className="font-medium">📋 Filtro activo:</span> {statusOptions.find(opt => opt.value === selectedStatus)?.label}
+            <span className="font-medium">📋 {t('dashboard.activeFilter')}:</span> {statusOptions.find(opt => opt.value === selectedStatus)?.label}
             {selectedStatus !== 'all' && (
               <span className="ml-2">
-                • Solo se exportarán las reservas con estado "{selectedStatus}"
+                • {t('dashboard.onlyReservationsWillExport')} "{selectedStatus}"
               </span>
             )}
           </p>
         </div>
       </div>
 
-      {/* Estadísticas del Filtro Actual */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Vista Previa de Datos</h4>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="text-center">
-            <div className="text-lg font-bold text-primary-600">{stats.totalReservations}</div>
-            <div className="text-xs text-gray-600">Reservas</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-green-600">{stats.totalTourists}</div>
-            <div className="text-xs text-gray-600">Turistas</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-purple-600">${stats.totalRevenue.toLocaleString()}</div>
-            <div className="text-xs text-gray-600">Ingresos</div>
-          </div>
-          <div className="text-center">
-            <div className="text-lg font-bold text-orange-600">${Math.round(stats.avgTicket).toLocaleString()}</div>
-            <div className="text-xs text-gray-600">Ticket Promedio</div>
-          </div>
-        </div>
-      </div>
 
       {/* Botones de Exportación */}
       <div className="space-y-3">

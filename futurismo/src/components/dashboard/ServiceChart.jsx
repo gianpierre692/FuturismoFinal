@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -9,6 +10,7 @@ import InteractiveButton from '../common/InteractiveButton';
 import InteractiveCard from '../common/InteractiveCard';
 
 const ServiceChart = () => {
+  const { t } = useTranslation();
   const [chartType, setChartType] = useState('line');
   const [timeRange, setTimeRange] = useState('month');
 
@@ -80,7 +82,7 @@ const ServiceChart = () => {
     <InteractiveCard className="bg-white p-6 group">
       {/* Header con controles */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold group-hover:text-primary-600 transition-colors duration-300">Análisis de Servicios</h3>
+        <h3 className="text-lg font-semibold group-hover:text-primary-600 transition-colors duration-300">{t('dashboard.serviceAnalysis')}</h3>
         
         <div className="flex items-center gap-4">
           {/* Selector de rango de tiempo */}

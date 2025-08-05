@@ -21,7 +21,6 @@ import {
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import useAuthStore from '../stores/authStore';
-import QuickActions from '../components/dashboard/QuickActions';
 import AdvancedDataTable from '../components/common/AdvancedDataTable';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -578,8 +577,6 @@ const DashboardDesktop = () => {
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <QuickActions />
 
           {/* Top Guides */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">

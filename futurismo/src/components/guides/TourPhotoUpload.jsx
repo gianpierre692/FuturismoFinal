@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { PhotoIcon, PlusIcon, XMarkIcon, EyeIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const TourPhotoUpload = ({ 
   tourId, 
@@ -13,12 +14,13 @@ const TourPhotoUpload = ({
   const [uploading, setUploading] = useState(false);
   const [previewPhoto, setPreviewPhoto] = useState(null);
   const fileInputRef = useRef(null);
+  const { t } = useTranslation();
 
   const handleFileSelect = async (event) => {
     const files = Array.from(event.target.files);
     
     if (photos.length + files.length > maxPhotos) {
-      toast.error(`Máximo ${maxPhotos} fotos permitidas por tour`);
+      toast.error(t('monitoring.tourPhotoUpload.maxPhotosError', { max: maxPhotos }));
       return;
     }
 
@@ -29,12 +31,12 @@ const TourPhotoUpload = ({
       
       for (const file of files) {
         if (!file.type.startsWith('image/')) {
-          toast.error(`${file.name} no es una imagen válida`);
+          toast.error(t('monitoring.tourPhotoUpload.invalidImage', { name: file.name }));
           continue;
         }
 
         if (file.size > 10 * 1024 * 1024) {
-          toast.error(`${file.name} es muy grande (máximo 10MB)`);
+          toast.error(t('monitoring.tourPhotoUpload.fileTooLarge', { name: file.name }));
           continue;
         }
 
@@ -66,11 +68,12 @@ const TourPhotoUpload = ({
       onPhotosChange(updatedPhotos);
       
       if (newPhotos.length > 0) {
-        toast.success(`${newPhotos.length} foto${newPhotos.length > 1 ? 's' : ''} subida${newPhotos.length > 1 ? 's' : ''} del tour`);
+        const photosText = newPhotos.length > 1 ? t('monitoring.tourPhotoUpload.photosUploadedPlural') : t('monitoring.tourPhotoUpload.photoUploaded');
+        toast.success(`${newPhotos.length} ${photosText} ${t('monitoring.tourPhotoUpload.ofTour')}`);
       }
       
     } catch (error) {
-      toast.error('Error al subir las fotos del tour');
+      toast.error(t('monitoring.tourPhotoUpload.uploadError'));
       console.error(error);
     } finally {
       setUploading(false);
@@ -101,7 +104,7 @@ const TourPhotoUpload = ({
       URL.revokeObjectURL(photoToRemove.url);
     }
     
-    toast.success('Foto del tour eliminada');
+    toast.success(t('monitoring.tourPhotoUpload.photoDeleted'));
   };
 
   const updatePhotoDescription = (photoId, description) => {
@@ -128,13 +131,13 @@ const TourPhotoUpload = ({
 
   const getCategoryLabel = (category) => {
     const categories = {
-      general: 'General',
-      tourist_group: 'Grupo turista',
-      monument: 'Monumento/Lugar',
-      restaurant: 'Restaurante/Comida',
-      transport: 'Transporte'
+      general: t('monitoring.tourPhotoUpload.categories.general'),
+      tourist_group: t('monitoring.tourPhotoUpload.categories.touristGroup'),
+      monument: t('monitoring.tourPhotoUpload.categories.monument'),
+      restaurant: t('monitoring.tourPhotoUpload.categories.restaurant'),
+      transport: t('monitoring.tourPhotoUpload.categories.transport')
     };
-    return categories[category] || 'General';
+    return categories[category] || t('monitoring.tourPhotoUpload.categories.general');
   };
 
   const getCategoryColor = (category) => {
@@ -152,10 +155,10 @@ const TourPhotoUpload = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium text-gray-900">
-          Fotos del Tour
+          {t('monitoring.tourPhotoUpload.tourPhotos')}
         </h3>
         <span className="text-sm text-gray-500">
-          {photos.length}/{maxPhotos} fotos
+          {photos.length}/{maxPhotos} {t('monitoring.tourPhotoUpload.photos')}
         </span>
       </div>
 
@@ -170,12 +173,12 @@ const TourPhotoUpload = ({
             {uploading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                Subiendo fotos...
+                {t('monitoring.tourPhotoUpload.uploadingPhotos')}
               </>
             ) : (
               <>
                 <PlusIcon className="w-4 h-4" />
-                Agregar fotos del tour
+                {t('monitoring.tourPhotoUpload.addTourPhotos')}
               </>
             )}
           </button>
@@ -211,7 +214,7 @@ const TourPhotoUpload = ({
                     <button
                       onClick={() => openPreview(photo)}
                       className="p-2 bg-white bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all"
-                      title="Ver foto"
+                      title={t('monitoring.tourPhotoUpload.viewPhoto')}
                     >
                       <EyeIcon className="w-4 h-4 text-gray-700" />
                     </button>
@@ -219,7 +222,7 @@ const TourPhotoUpload = ({
                       <button
                         onClick={() => removePhoto(photo.id)}
                         className="p-2 bg-white bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all"
-                        title="Eliminar foto"
+                        title={t('monitoring.tourPhotoUpload.deletePhoto')}
                       >
                         <XMarkIcon className="w-4 h-4 text-red-600" />
                       </button>
@@ -257,15 +260,15 @@ const TourPhotoUpload = ({
                     onChange={(e) => updatePhotoCategory(photo.id, e.target.value)}
                     className="w-full text-xs border border-gray-300 rounded px-2 py-1"
                   >
-                    <option value="general">General</option>
-                    <option value="tourist_group">Grupo turista</option>
-                    <option value="monument">Monumento/Lugar</option>
-                    <option value="restaurant">Restaurante/Comida</option>
-                    <option value="transport">Transporte</option>
+                    <option value="general">{t('monitoring.tourPhotoUpload.categories.general')}</option>
+                    <option value="tourist_group">{t('monitoring.tourPhotoUpload.categories.touristGroup')}</option>
+                    <option value="monument">{t('monitoring.tourPhotoUpload.categories.monument')}</option>
+                    <option value="restaurant">{t('monitoring.tourPhotoUpload.categories.restaurant')}</option>
+                    <option value="transport">{t('monitoring.tourPhotoUpload.categories.transport')}</option>
                   </select>
                   
                   <textarea
-                    placeholder="Descripción de la foto..."
+                    placeholder={t('monitoring.tourPhotoUpload.photoDescription')}
                     value={photo.description}
                     onChange={(e) => updatePhotoDescription(photo.id, e.target.value)}
                     className="w-full text-xs border border-gray-300 rounded px-2 py-1 resize-none"
@@ -280,12 +283,12 @@ const TourPhotoUpload = ({
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <PhotoIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
           <p className="text-sm text-gray-600 mb-2">
-            {readonly ? 'No hay fotos del tour' : 'No se han subido fotos del tour'}
+            {readonly ? t('monitoring.tourPhotoUpload.noPhotos') : t('monitoring.tourPhotoUpload.noPhotosUploaded')}
           </p>
           <p className="text-xs text-gray-500">
             {readonly 
-              ? 'Este tour no tiene fotos documentadas' 
-              : 'Las fotos ayudan a documentar el desarrollo del tour'
+              ? t('monitoring.tourPhotoUpload.noPhotosDocumented') 
+              : t('monitoring.tourPhotoUpload.photosHelpDocument')
             }
           </p>
         </div>
@@ -314,7 +317,7 @@ const TourPhotoUpload = ({
                 <div>
                   <p className="font-medium">{previewPhoto.name}</p>
                   <p className="text-sm opacity-75">
-                    {(previewPhoto.size / 1024 / 1024).toFixed(1)} MB
+                    {(previewPhoto.size / 1024 / 1024).toFixed(1)} {t('monitoring.tourPhotoUpload.sizeInMB')}
                   </p>
                 </div>
                 <span className={`px-2 py-1 text-xs font-medium rounded ${getCategoryColor(previewPhoto.category)}`}>
@@ -330,7 +333,7 @@ const TourPhotoUpload = ({
                 {previewPhoto.location && (
                   <div className="flex items-center gap-1">
                     <MapPinIcon className="w-4 h-4" />
-                    Ubicación GPS disponible
+                    {t('monitoring.tourPhotoUpload.gpsLocationAvailable')}
                   </div>
                 )}
               </div>
