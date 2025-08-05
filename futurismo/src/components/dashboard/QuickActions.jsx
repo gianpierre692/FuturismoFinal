@@ -6,6 +6,7 @@ import { generateWhatsAppURL, canBookDirectly } from '../../utils/formatters';
 import InteractiveButton from '../common/InteractiveButton';
 import QuickActionModal from '../common/QuickActionModal';
 import { useState } from 'react';
+import Logger from '../../utils/logger';
 
 const QuickActions = () => {
   const navigate = useNavigate();
@@ -92,7 +93,7 @@ Generado el,${new Date().toLocaleString()}`;
       showNotification('¡Reporte generado y descargado exitosamente!', 'success');
       
     } catch (error) {
-      console.error('Error generando reporte:', error);
+      Logger.error('Error generando reporte:', { error: error.message });
       showNotification('Error al generar el reporte', 'error');
     } finally {
       setIsGeneratingReport(false);
@@ -119,18 +120,15 @@ Generado el,${new Date().toLocaleString()}`;
     switch (modalType) {
       case 'newReservation':
         showNotification('✅ Reserva creada exitosamente', 'success');
-        console.log('Nueva reserva:', formData);
         // Aquí se enviaría al backend
         break;
       
       case 'assignGuide':
         showNotification('✅ Guía asignado correctamente', 'success');
-        console.log('Guía asignado:', formData);
         break;
       
       case 'quickChat':
         showNotification('✅ Consulta enviada al chat', 'success');
-        console.log('Consulta enviada:', formData);
         break;
       
       default:
@@ -178,7 +176,7 @@ Generado el,${new Date().toLocaleString()}`;
       
       alert('Backup del sistema generado exitosamente');
     } catch (error) {
-      console.error('Error generando backup:', error);
+      Logger.error('Error generando backup:', { error: error.message });
       alert('Error al generar backup del sistema');
     }
   };
@@ -189,8 +187,8 @@ Generado el,${new Date().toLocaleString()}`;
       return [
     {
       id: 1,
-      title: 'Nueva Reserva',
-      description: 'ONE-CLICK: Formulario rápido',
+      title: t('quickActions.newReservation'),
+      description: t('quickActions.quickForm'),
       icon: PlusIcon,
       color: 'bg-primary-500 hover:bg-primary-600 text-white',
       onClick: handleNewReservation,
@@ -198,8 +196,8 @@ Generado el,${new Date().toLocaleString()}`;
     },
     {
       id: 2,
-      title: 'Disponibilidad Hoy',
-      description: 'ONE-CLICK: Ver slots libres',
+      title: t('quickActions.todayAvailability'),
+      description: t('quickActions.viewFreeSlots'),
       icon: CalendarIcon,  
       color: 'bg-secondary-500 hover:bg-secondary-600 text-white',
       onClick: handleViewCalendar,
@@ -207,8 +205,8 @@ Generado el,${new Date().toLocaleString()}`;
     },
     {
       id: 3,
-      title: 'Tours Activos',
-      description: 'ONE-CLICK: Vista rápida',
+      title: t('quickActions.activeTours'),
+      description: t('quickActions.quickView'),
       icon: EyeIcon,
       color: 'bg-success-500 hover:bg-success-600 text-white',
       onClick: handleQuickMonitoring,
@@ -216,8 +214,8 @@ Generado el,${new Date().toLocaleString()}`;
     },
     {
       id: 4,
-      title: 'Consulta Rápida',
-      description: 'ONE-CLICK: Enviar mensaje',
+      title: t('quickActions.quickConsult'),
+      description: t('quickActions.sendMessage'),
       icon: ChatBubbleLeftRightIcon,
       color: 'bg-green-500 hover:bg-green-600 text-white',
       onClick: handleDirectConsult,
@@ -225,8 +223,8 @@ Generado el,${new Date().toLocaleString()}`;
     },
     {
       id: 5,
-      title: 'Generar Reporte',
-      description: 'ONE-CLICK: Descarga CSV',
+      title: t('quickActions.generateReport'),
+      description: t('quickActions.downloadCSV'),
       icon: DocumentTextIcon,
       color: 'bg-indigo-500 hover:bg-indigo-600 text-white',
       onClick: handleGenerateReport,
@@ -235,8 +233,8 @@ Generado el,${new Date().toLocaleString()}`;
     },
     {
       id: 6,
-      title: 'Asignar Guía',
-      description: 'ONE-CLICK: Asignación rápida',
+      title: t('quickActions.assignGuide'),
+      description: t('quickActions.quickAssignment'),
       icon: UserGroupIcon,
       color: 'bg-gray-500 hover:bg-gray-600 text-white',
       onClick: handleAssignGuide,
@@ -337,7 +335,6 @@ Generado el,${new Date().toLocaleString()}`;
                 <action.icon className="w-8 h-8 mb-2 mx-auto group-hover:scale-110 transition-transform duration-200" />
                 <h4 className="font-medium text-sm group-hover:scale-105 transition-transform duration-200">
                   {action.title}
-                  {action.oneClick && <span className="block text-xs font-normal text-green-200 mt-1">⚡ ONE-CLICK</span>}
                 </h4>
                 <p className="text-xs opacity-90 group-hover:opacity-100 transition-opacity duration-200">{action.description}</p>
               </div>

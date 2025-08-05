@@ -2,21 +2,29 @@ import { useState } from 'react';
 import { CheckCircleIcon, ClockIcon, MapPinIcon, UserGroupIcon, ChevronRightIcon, ExclamationTriangleIcon, PhoneIcon, ChatBubbleLeftRightIcon, CameraIcon } from '@heroicons/react/24/outline';
 import { EllipsisHorizontalCircleIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
-import PhotoUpload from '../common/PhotoUpload';
+import TourPhotoUpload from '../guides/TourPhotoUpload';
+import useGuidesStore from '../../stores/guidesStore';
+import useAuthStore from '../../stores/authStore';
 import toast from 'react-hot-toast';
 
 const TourProgress = ({ tourId, isGuideView = false }) => {
   const [expandedStop, setExpandedStop] = useState(null);
   const [tourData, setTourData] = useState(null);
+  const { getGuideById } = useGuidesStore(state => state.actions);
+  const { user } = useAuthStore();
 
+  // Obtener datos del guía desde el store o usuario autenticado
+  const guideData = getGuideById(user?.id || 'guide002') || {};
+  
   // Datos mock del tour
   const mockTour = {
     id: tourId || '1',
     name: 'City Tour Lima Histórica',
     guide: {
-      name: 'Carlos Mendoza',
-      phone: '+51 987654321',
-      avatar: 'https://i.pravatar.cc/150?img=1'
+      name: guideData.fullName || 'Carlos Mendoza',
+      phone: guideData.phone || '+51 987654321',
+      avatar: 'https://i.pravatar.cc/150?img=1',
+      type: guideData.guideType || 'planta' // Obtener tipo desde el store
     },
     tourists: {
       total: 12,
@@ -152,7 +160,6 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
 
   const handlePhotosChange = (stopId, newPhotos) => {
     // En una implementación real, esto actualizaría el estado del tour en el store
-    console.log(`Fotos actualizadas para parada ${stopId}:`, newPhotos);
     toast.success('Fotos actualizadas correctamente');
   };
 
@@ -187,10 +194,13 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="btn btn-outline flex items-center gap-2">
-              <PhoneIcon className="w-4 h-4" />
-              Llamar guía
-            </button>
+            {/* Solo mostrar botón de llamar para guías freelance */}
+            {mockTour.guide.type === 'freelance' && (
+              <button className="btn btn-outline flex items-center gap-2">
+                <PhoneIcon className="w-4 h-4" />
+                Llamar guía
+              </button>
+            )}
             <button className="btn btn-primary flex items-center gap-2">
               <ChatBubbleLeftRightIcon className="w-4 h-4" />
               Enviar mensaje
@@ -312,7 +322,9 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
                       </div>
 
                       {canUploadPhotos(stop) ? (
-                        <PhotoUpload
+                        <TourPhotoUpload
+                          tourId={tourId}
+                          guideId={user?.id || guideData.id || "guide002"} // Usar ID del usuario autenticado
                           photos={stop.photos}
                           onPhotosChange={(newPhotos) => handlePhotosChange(stop.id, newPhotos)}
                           maxPhotos={8}

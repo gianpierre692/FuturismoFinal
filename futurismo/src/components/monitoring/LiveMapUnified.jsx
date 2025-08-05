@@ -318,7 +318,6 @@ const LiveMapUnified = memo(({
           ref={mapRef} 
           className="w-full h-full rounded-lg" 
           style={{ 
-            minHeight: '500px',
             backgroundColor: '#f0f0f0' 
           }}
         />
@@ -351,15 +350,15 @@ const LiveMapUnified = memo(({
   ];
 
   return (
-    <div className="flex gap-4 h-full w-full">
+    <div className={`flex gap-4 w-full ${height}`}>
       {/* Mapa */}
-      <div className={`flex-1 h-full bg-white rounded-lg shadow-md overflow-hidden relative`}>
+      <div className={`flex-1 ${height} bg-white rounded-lg shadow-md overflow-hidden relative`}>
         {renderMap()}
       </div>
 
       {/* Sidebar con servicios activos */}
       {showSidebar && (
-        <div className="w-80 bg-white rounded-lg shadow-md p-4 overflow-y-auto flex-shrink-0">
+        <div className={`w-80 ${height} bg-white rounded-lg shadow-md p-4 overflow-y-auto flex-shrink-0`}>
           <h3 className="text-lg font-semibold mb-4">Servicios Activos</h3>
           
           {/* Leyenda */}

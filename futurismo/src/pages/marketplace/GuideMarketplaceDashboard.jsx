@@ -538,12 +538,6 @@ const GuideMarketplaceDashboard = () => {
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => navigate('/marketplace/guide/reviews')}
-              className="mt-4 text-cyan-600 hover:text-cyan-700 text-sm font-medium"
-            >
-              Ver todas las reseñas →
-            </button>
           </div>
         )}
       </div>

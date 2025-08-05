@@ -38,7 +38,8 @@
       "Bash(node check-unused-imports.js)",
       "Bash(cat:*)",
       "Bash(echo:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npm run fix:console-logs:*)"
     ],
     "deny": []
   }

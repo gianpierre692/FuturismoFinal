@@ -76,7 +76,7 @@ const DashboardDesktop = () => {
         navigate('/agency-reports?view=completion'); // Reporte de tasa de éxito
         break;
       default:
-        console.log('KPI clicked:', kpiType);
+        // KPI navigation handled above
     }
   };
 
@@ -271,12 +271,6 @@ const DashboardDesktop = () => {
                 {selectedPeriod === 'month' && 'Ingresos del Mes'}
                 {selectedPeriod === 'year' && 'Ingresos del Año'}
               </h2>
-              <button 
-                onClick={() => navigate('/admin/reports')}
-                className="text-sm text-primary hover:text-primary-dark transition-colors"
-              >
-                Ver detalles →
-              </button>
             </div>
             
             {/* Header Metrics */}
@@ -471,8 +465,8 @@ const DashboardDesktop = () => {
                   label: 'Ver detalles',
                   icon: <EyeIcon className="w-4 h-4" />,
                   onClick: (tour) => {
-                    console.log('Ver detalles del tour:', tour);
-                    // Aquí iría la lógica para ver detalles
+                    // Navigate to tour details
+                    navigate(`/monitoring/tour/${tour.id}`);
                   },
                   className: 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
                 }
@@ -581,11 +575,6 @@ const DashboardDesktop = () => {
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="p-4 border-t border-gray-200">
-              <button className="w-full text-center text-sm text-primary hover:text-primary-dark">
-                Ver todas las notificaciones
-              </button>
             </div>
           </div>
 

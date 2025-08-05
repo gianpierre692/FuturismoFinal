@@ -15,6 +15,7 @@ import {
 import HistoryMobile from './HistoryMobile';
 import useAuthStore from '../stores/authStore';
 import ExcelButton from '../components/common/ExcelButton';
+import TourDetailsModal from '../components/tours/TourDetailsModal';
 
 const History = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -24,6 +25,8 @@ const History = () => {
   const [dateFilter, setDateFilter] = useState('all');
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [selectedTour, setSelectedTour] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -695,6 +698,24 @@ const History = () => {
                     
                     <td className="px-4 py-3 text-center">
                       <button
+                        onClick={() => {
+                          setSelectedTour({
+                            id: trip.id,
+                            name: trip.tourName,
+                            code: trip.id,
+                            client: trip.client.name,
+                            date: formatDate(trip.date),
+                            time: `${trip.startTime} (${trip.duration} horas)`,
+                            tourists: `${trip.tourists} personas`,
+                            amount: formatCurrency(trip.totalAmount),
+                            status: trip.status === 'completed' ? 'Completado' : 
+                                   trip.status === 'cancelled' ? 'Cancelado' : 'En progreso',
+                            rating: trip.feedback?.rating || 'N/A',
+                            guides: trip.assignedGuides?.map(guide => guide.name) || [],
+                            destination: trip.destination
+                          });
+                          setIsModalOpen(true);
+                        }}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Ver detalles"
                       >
@@ -720,6 +741,16 @@ const History = () => {
           </div>
         )}
       </div>
+
+      {/* Modal de detalles del tour */}
+      <TourDetailsModal
+        tour={selectedTour}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedTour(null);
+        }}
+      />
     </div>
   );
 };

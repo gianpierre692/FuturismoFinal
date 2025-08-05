@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, PhoneIcon, ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import TourProgress from '../../components/monitoring/TourProgress';
+import useAuthStore from '../../stores/authStore';
 import toast from 'react-hot-toast';
 
 const GuideTourView = () => {
   const { tourId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
   // Simular verificación de autenticación de guía
@@ -68,13 +70,16 @@ const GuideTourView = () => {
                 Reportar Incidente
               </button>
               
-              <button
-                onClick={() => window.open('tel:+51987654321')}
-                className="btn btn-outline flex items-center gap-2"
-              >
-                <PhoneIcon className="w-4 h-4" />
-                Contactar Agencia
-              </button>
+              {/* Solo mostrar contacto telefónico para guías freelance */}
+              {user?.guideType === 'freelance' && (
+                <button
+                  onClick={() => window.open('tel:+51987654321')}
+                  className="btn btn-outline flex items-center gap-2"
+                >
+                  <PhoneIcon className="w-4 h-4" />
+                  Contactar Agencia
+                </button>
+              )}
 
               <button
                 onClick={handleCompleteTour}
@@ -111,19 +116,22 @@ const GuideTourView = () => {
         />
 
         {/* Acciones rápidas */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-            <h4 className="font-medium text-gray-900 mb-2">📱 Contacto de Emergencia</h4>
-            <p className="text-sm text-gray-600 mb-3">
-              Agencia: +51 987 654 321
-            </p>
-            <button 
-              onClick={() => window.open('tel:+51987654321')}
-              className="btn btn-outline w-full"
-            >
-              Llamar Ahora
-            </button>
-          </div>
+        <div className={`mt-6 grid grid-cols-1 ${user?.guideType === 'freelance' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4`}>
+          {/* Solo mostrar contacto de emergencia para guías freelance */}
+          {user?.guideType === 'freelance' && (
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+              <h4 className="font-medium text-gray-900 mb-2">📱 Contacto de Emergencia</h4>
+              <p className="text-sm text-gray-600 mb-3">
+                Agencia: +51 987 654 321
+              </p>
+              <button 
+                onClick={() => window.open('tel:+51987654321')}
+                className="btn btn-outline w-full"
+              >
+                Llamar Ahora
+              </button>
+            </div>
+          )}
 
           <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
             <h4 className="font-medium text-gray-900 mb-2">⚠️ Reportar Problema</h4>

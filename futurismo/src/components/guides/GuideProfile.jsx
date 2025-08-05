@@ -106,15 +106,18 @@ const GuideProfile = ({ guide, onClose, onEdit }) => {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <PhoneIcon className="w-4 h-4 text-blue-600" />
+              {/* Solo mostrar teléfono para guías freelance */}
+              {guide?.guideType === 'freelance' && (
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <PhoneIcon className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{guide?.phone || 'Sin teléfono'}</p>
+                    <p className="text-sm text-gray-600">Teléfono</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">{guide?.phone || 'Sin teléfono'}</p>
-                  <p className="text-sm text-gray-600">Teléfono</p>
-                </div>
-              </div>
+              )}
 
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">

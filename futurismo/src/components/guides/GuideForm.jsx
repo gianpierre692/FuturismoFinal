@@ -46,12 +46,13 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
 
   const watchedLanguages = watch('languages');
   const watchedMuseums = watch('museums');
+  const watchedGuideType = watch('guideType');
 
   const onSubmit = (data) => {
     const guideData = {
       fullName: data.fullName,
       dni: data.dni,
-      phone: data.phone,
+      phone: data.guideType === 'freelance' ? data.phone : '', // Limpiar teléfono para guías de planta
       email: data.email,
       address: data.address,
       guideType: data.guideType,
@@ -167,19 +168,24 @@ const GuideForm = ({ guide, onSave, onCancel }) => {
                     )}
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Teléfono *
-                    </label>
-                    <input
-                      {...register('phone', { required: 'El teléfono es requerido' })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="+51 987 654 321"
-                    />
-                    {errors.phone && (
-                      <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-                    )}
-                  </div>
+                  {/* Solo mostrar teléfono para guías freelance */}
+                  {watchedGuideType === 'freelance' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Teléfono *
+                      </label>
+                      <input
+                        {...register('phone', { 
+                          required: watchedGuideType === 'freelance' ? 'El teléfono es requerido' : false 
+                        })}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="+51 987 654 321"
+                      />
+                      {errors.phone && (
+                        <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">

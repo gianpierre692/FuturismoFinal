@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, MapIcon, CalendarIcon, ClockIcon, ChatBubbleLeftRightIcon, UserIcon, ChevronLeftIcon, ChevronRightIcon, CogIcon, UserGroupIcon, DocumentTextIcon, CalendarDaysIcon, BuildingOffice2Icon, ShieldCheckIcon, ChartBarIcon, StarIcon, UserCircleIcon, CurrencyDollarIcon, MagnifyingGlassIcon, BriefcaseIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
 
@@ -23,6 +23,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { path: '/marketplace/bookings', icon: BriefcaseIcon, label: t('navigation.myContracts') },
         { path: '/agency/calendar', icon: CalendarDaysIcon, label: t('navigation.calendar') },
         { path: '/agency/reports', icon: ChartBarIcon, label: t('navigation.reports') },
+        { path: '/admin/tour-photos', icon: PhotoIcon, label: 'Fotos de Tours' },
         { path: '/agency/points', icon: StarIcon, label: t('navigation.points') },
         { path: '/history', icon: ClockIcon, label: t('navigation.history') },
         { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') },
@@ -70,6 +71,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           section: 'ANÁLISIS',
           items: [
             { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes' },
+            { path: '/admin/tour-photos', icon: PhotoIcon, label: 'Fotos de Tours' },
             { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
           ]
         },

@@ -46,6 +46,7 @@ const TourReassignment = lazy(() => import('./pages/admin/TourReassignment'));
 const AgencyApproval = lazy(() => import('./pages/admin/AgencyApproval'));
 const MassNotifications = lazy(() => import('./pages/admin/MassNotifications'));
 const RouteAnalytics = lazy(() => import('./pages/admin/RouteAnalytics'));
+const TourPhotosManagement = lazy(() => import('./pages/admin/TourPhotosManagement'));
 const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
 const PointsStore = lazy(() => import('./pages/guide/PointsStore'));
 const ResponsiveTest = lazy(() => import('./pages/ResponsiveTest'));
@@ -324,6 +325,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <RouteAnalytics />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="admin/tour-photos" 
+              element={
+                <ProtectedRoute allowedRoles={['admin', 'agency']}>
+                  <TourPhotosManagement />
                 </ProtectedRoute>
               } 
             />

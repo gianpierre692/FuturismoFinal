@@ -172,7 +172,6 @@ const ContextualDashboard = () => {
         <div className="space-y-6 animate-fadeIn">
           {/* Aquí van el resto de gráficos, tablas, etc. */}
           <DetailedMetrics />
-          <RecentActivity />
           <UpcomingTasks />
         </div>
       )}

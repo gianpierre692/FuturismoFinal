@@ -123,11 +123,6 @@ const RecentActivity = () => {
             </p>
           </div>
           
-          {stats.pendingActions > 0 && (
-            <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
-              {stats.pendingActions} acciones pendientes
-            </div>
-          )}
         </div>
 
         {/* Mini estadísticas */}
@@ -186,16 +181,6 @@ const RecentActivity = () => {
         ))}
       </div>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-gray-200 bg-gray-50">
-        <InteractiveButton
-          variant="ghost"
-          size="sm"
-          className="w-full text-sm font-medium text-primary-600 hover:text-primary-700 justify-center"
-        >
-          Ver toda la actividad →
-        </InteractiveButton>
-      </div>
     </div>
   );
 };

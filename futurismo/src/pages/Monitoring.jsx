@@ -33,7 +33,7 @@ const Monitoring = () => {
   const isAdmin = user?.role === 'admin' || user?.role === 'administrador';
 
   return (
-    <div className="page-container bg-gray-50">
+    <div className="page-container bg-gray-50 h-screen overflow-hidden">
       <div className="page-content-none flex flex-col h-full">
         {/* Header con opciones de vista */}
         <div className="page-header-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -131,8 +131,8 @@ const Monitoring = () => {
           </div>
         )}
 
-        {/* Contenido principal with better spacing */}
-        <div className="flex-1 min-h-0 h-full">
+        {/* Contenido principal with controlled height */}
+        <div className="flex-1 min-h-0" style={{ height: 'calc(100vh - 180px)' }}>
           {activeView === 'map' && (
             <div className="h-full w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
               <LiveMapUnified 
@@ -196,7 +196,10 @@ const Monitoring = () => {
               <div className="overflow-hidden">
                 {selectedTour ? (
                   <div className="h-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                    <TourProgress tourId={selectedTour} />
+                    <TourProgress 
+                      tourId={selectedTour} 
+                      isGuideView={isGuide}
+                    />
                   </div>
                 ) : (
                   <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 h-full flex items-center justify-center">
