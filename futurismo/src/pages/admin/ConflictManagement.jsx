@@ -19,6 +19,7 @@ import InteractiveCard from '../../components/common/InteractiveCard';
 import InteractiveButton from '../../components/common/InteractiveButton';
 import { useNavigate } from 'react-router-dom';
 import useNotificationsStore from '../../stores/notificationsStore';
+import Logger from '../../utils/logger';
 
 const ConflictManagement = () => {
   const navigate = useNavigate();
@@ -382,7 +383,7 @@ const ConflictManagement = () => {
                     size="sm"
                     variant="secondary"
                     icon={DocumentTextIcon}
-                    onClick={() => console.log('Ver documentos', conflict.id)}
+                    onClick={() => Logger.debug('Ver documentos', conflict.id)}
                   >
                     Ver documentos
                   </InteractiveButton>

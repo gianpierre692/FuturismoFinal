@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { PaperAirplaneIcon, PaperClipIcon, FaceSmileIcon, EllipsisVerticalIcon, PhoneIcon, VideoCameraIcon, InformationCircleIcon, PhotoIcon, DocumentTextIcon, MapPinIcon, ClockIcon, CheckIcon, XMarkIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 import useAuthStore from '../../stores/authStore';
+import Logger from '../../utils/logger';
 
 const ChatWindow = ({ chat, onClose }) => {
   const { user } = useAuthStore();
@@ -158,7 +159,7 @@ const ChatWindow = ({ chat, onClose }) => {
     const file = e.target.files[0];
     if (file) {
       // Simular envío de archivo
-      console.log('Archivo seleccionado:', file.name);
+      Logger.debug('Archivo seleccionado:', file.name);
     }
   };
 

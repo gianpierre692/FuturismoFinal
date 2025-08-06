@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import useAuthStore from '../stores/authStore';
 import useNotificationsStore from '../stores/notificationsStore';
 import ImageUpload from '../components/common/ImageUpload';
+import Logger from '../utils/logger';
 
 const ProfileMobile = () => {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ const ProfileMobile = () => {
         setProfileImage(e.target.result);
         setUploadError(null);
         setShowImageUpload(false);
-        console.log('Imagen de perfil actualizada (móvil):', file.name);
+        Logger.debug('Imagen de perfil actualizada (móvil):', file.name);
       };
       reader.readAsDataURL(file);
     } else {

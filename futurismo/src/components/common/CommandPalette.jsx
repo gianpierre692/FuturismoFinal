@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Logger from '../../utils/logger';
 import { 
   MagnifyingGlassIcon,
   DocumentIcon,
@@ -184,7 +185,7 @@ const saveRecentSearch = (item) => {
 };
 
 const exportTodayReport = () => {
-  console.log('Exporting today report...');
+  Logger.debug('Exporting today report...');
   // Lógica de exportación
 };
 

@@ -5,6 +5,7 @@ import { PlusIcon, ClockIcon } from '@heroicons/react/24/outline';
 import useIndependentAgendaStore from '../../../stores/independentAgendaStore';
 import useAuthStore from '../../../stores/authStore';
 import EventBlock from '../EventComponents/EventBlock';
+import Logger from '../../../utils/logger';
 
 const WeekView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) => {
   const { user } = useAuthStore();
@@ -68,7 +69,7 @@ const WeekView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =
       onTimeSlotClick(day, timeString);
     }
     
-    console.log(`Adding event at ${timeString} on ${format(day, 'yyyy-MM-dd')}`);
+    Logger.debug(`Adding event at ${timeString} on ${format(day, 'yyyy-MM-dd')}`);
   };
 
   const handleEventClick = (event) => {
@@ -78,7 +79,7 @@ const WeekView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =
       onEventClick(event);
     }
     
-    console.log('Event clicked:', event);
+    Logger.debug('Event clicked:', event);
   };
 
   const handleEventDoubleClick = (event) => {
@@ -86,7 +87,7 @@ const WeekView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =
       onEventEdit(event);
     }
     
-    console.log('Event double-clicked for editing:', event);
+    Logger.debug('Event double-clicked for editing:', event);
   };
 
   const handleSlotHover = (day, hour, isHovering) => {
@@ -117,17 +118,17 @@ const WeekView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =
       const dragData = JSON.parse(e.dataTransfer.getData('text/plain'));
       const { eventId, eventType, startTime, endTime } = dragData;
       
-      console.log('Event dropped in week view:', {
+      Logger.debug('Event dropped in week view:', {
         eventId,
         originalTime: startTime,
         newDay: format(day, 'yyyy-MM-dd'),
         newHour: hour
       });
       
-      // TODO: Integrar con el store para mover el evento
+      // Se integrará con el store cuando se conecte con el backend
       
     } catch (error) {
-      console.error('Error parsing drag data:', error);
+      Logger.error('Error parsing drag data:', error);
     }
   };
 

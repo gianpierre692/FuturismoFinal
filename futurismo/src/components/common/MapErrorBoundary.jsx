@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MapPinIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 /**
  * MapErrorBoundary - Error boundary específico para componentes de mapa
@@ -23,12 +24,12 @@ class MapErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Map Error Boundary:', error, errorInfo);
+    Logger.error('Map Error Boundary:', error, errorInfo);
     
     // Log específico para errores de mapa
     if (import.meta.env.PROD) {
       // TODO: Enviar a servicio de logging con contexto de mapa
-      console.log('Map component failed:', {
+      Logger.debug('Map component failed:', {
         error: error.message,
         stack: error.stack,
         componentStack: errorInfo.componentStack,

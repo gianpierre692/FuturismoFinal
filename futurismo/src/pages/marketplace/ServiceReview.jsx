@@ -9,6 +9,7 @@ import useMarketplaceStore from '../../stores/marketplaceStore';
 import useAuthStore from '../../stores/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const ServiceReview = () => {
   const { requestId } = useParams();
@@ -80,7 +81,7 @@ const ServiceReview = () => {
         navigate('/marketplace/requests');
       }
     } catch (error) {
-      console.error('Error loading request:', error);
+      Logger.error('Error loading request:', error);
     } finally {
       setIsLoading(false);
     }
@@ -136,7 +137,7 @@ const ServiceReview = () => {
       
       navigate(`/marketplace/requests/${requestId}`);
     } catch (error) {
-      console.error('Error creating review:', error);
+      Logger.error('Error creating review:', error);
       toast.error('Error al enviar la reseña');
     } finally {
       setIsSubmitting(false);

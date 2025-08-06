@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { MapPinIcon, UserGroupIcon, ClockIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 const LiveMapFixed = ({ 
   services = [], 
@@ -110,7 +111,7 @@ const LiveMapFixed = ({
         mapInstanceRef.current = map;
         setIsMapReady(true);
       } catch (error) {
-        console.error('Error al inicializar el mapa:', error);
+        Logger.error('Error al inicializar el mapa:', error);
       }
     };
 
@@ -125,7 +126,7 @@ const LiveMapFixed = ({
           mapInstanceRef.current.remove();
           mapInstanceRef.current = null;
         } catch (error) {
-          console.warn('Error al limpiar el mapa:', error);
+          Logger.warn('Error al limpiar el mapa:', error);
         }
       }
       
@@ -145,7 +146,7 @@ const LiveMapFixed = ({
       try {
         marker.remove();
       } catch (error) {
-        console.warn('Error al remover marcador:', error);
+        Logger.warn('Error al remover marcador:', error);
       }
     });
     markersRef.current = [];

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CreditCardIcon, PencilIcon, CheckIcon, XMarkIcon, PlusIcon, TrashIcon, EyeIcon, EyeSlashIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 const PaymentDataSection = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -93,7 +94,7 @@ const PaymentDataSection = () => {
   };
 
   const handleSave = () => {
-    console.log('Guardando datos de pago:', paymentMethods);
+    Logger.debug('Guardando datos de pago:', paymentMethods);
     setIsEditing(false);
     alert('✅ Datos de pago actualizados correctamente');
   };

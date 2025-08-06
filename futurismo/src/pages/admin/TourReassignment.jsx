@@ -21,6 +21,7 @@ import InteractiveCard from '../../components/common/InteractiveCard';
 import InteractiveButton from '../../components/common/InteractiveButton';
 import useNotificationsStore from '../../stores/notificationsStore';
 import useGuidesStore from '../../stores/guidesStore';
+import Logger from '../../utils/logger';
 
 const TourReassignment = () => {
   const { addNotification } = useNotificationsStore();
@@ -372,14 +373,14 @@ const TourReassignment = () => {
                 <InteractiveButton
                   variant="secondary"
                   icon={PhoneIcon}
-                  onClick={() => console.log('Contactar agencia', tour.agency)}
+                  onClick={() => Logger.debug('Contactar agencia', tour.agency)}
                 >
                   Contactar agencia
                 </InteractiveButton>
                 <InteractiveButton
                   variant="secondary"
                   icon={XCircleIcon}
-                  onClick={() => console.log('Cancelar definitivamente', tour.id)}
+                  onClick={() => Logger.debug('Cancelar definitivamente', tour.id)}
                   className="hover:bg-red-50 hover:text-red-700"
                 >
                   Cancelar definitivamente

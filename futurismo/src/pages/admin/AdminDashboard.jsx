@@ -31,7 +31,7 @@ import {
   XCircleIcon,
   PlusCircleIcon,
   MegaphoneIcon,
-  TrendingUpIcon
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import UniversalExportService from '../../services/universalExportService';
@@ -441,7 +441,7 @@ const AdminDashboard = () => {
               <p className="text-2xl font-bold text-gray-900 mt-1">96.5%</p>
               <div className="flex items-center mt-2 text-sm">
                 <ClockIcon className="h-4 w-4 text-green-500 mr-1" />
-                <span className="text-gray-600">sin retrasos >30min</span>
+                <span className="text-gray-600">sin retrasos &gt;30min</span>
               </div>
             </div>
             <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">

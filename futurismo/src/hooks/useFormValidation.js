@@ -17,6 +17,7 @@ import InputSanitizer, { sanitizationSchemas } from '../utils/inputSanitizer.js'
 import useTimer from './useTimer.js';
 import { useSmartMemo } from './useSmartMemo.js';
 import Logger from '../utils/logger.js';
+import Logger from '../utils/logger';
 
 // Validadores básicos para retrocompatibilidad
 const basicValidators = {
@@ -218,7 +219,7 @@ const useFormValidation = (initialData = {}, options = {}) => {
       try {
         await onSubmit(formData);
       } catch (error) {
-        console.error('Form submission error:', error);
+        Logger.error('Form submission error:', error);
         // Podrías setear errores de servidor aquí
       }
     }

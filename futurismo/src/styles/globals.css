@@ -1,14 +1,12 @@
 /* Importar estilos de librerías externas */
 @import 'react-datepicker/dist/react-datepicker.css';
 @import 'react-loading-skeleton/dist/skeleton.css';
+@import './responsive.css';
+@import './navigation.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Importar utilidades responsive */
-@import './responsive.css';
-@import './navigation.css';
 
 /* Spinner animation */
 .spinner {

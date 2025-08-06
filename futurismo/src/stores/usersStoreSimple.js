@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import Logger from '../utils/logger';
 
 // Datos mock simples integrados en el store
 const mockUsersData = [
@@ -399,7 +400,7 @@ const useUsersStore = create((set, get) => ({
   },
 
   resetUserPassword: (userId) => {
-    console.log(`Contraseña reseteada para usuario ${userId}`);
+    Logger.debug(`Contraseña reseteada para usuario ${userId}`);
   },
 
   // Método para obtener todos los usuarios

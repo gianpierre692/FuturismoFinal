@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import Logger from '../utils/logger';
 
 const useAuthStore = create((set, get) => ({
   // Estado
@@ -174,7 +175,7 @@ const useAuthStore = create((set, get) => ({
           });
           return true;
         } catch (error) {
-          console.warn('Error al recuperar sesión guardada:', error);
+          Logger.warn('Error al recuperar sesión guardada:', error);
           localStorage.removeItem('auth_token');
           localStorage.removeItem('auth_user');
         }
@@ -235,7 +236,7 @@ const useAuthStore = create((set, get) => ({
           rememberMe: true
         });
       } catch (error) {
-        console.warn('Error al inicializar sesión:', error);
+        Logger.warn('Error al inicializar sesión:', error);
         localStorage.removeItem('auth_token');
         localStorage.removeItem('auth_user');
       }

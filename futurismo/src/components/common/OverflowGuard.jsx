@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Logger from '../../utils/logger';
 
 /**
  * OverflowGuard - Componente que detecta y reporta overflow horizontal
@@ -12,7 +13,7 @@ export const OverflowGuard = ({ children, name = 'Component' }) => {
         if (element) {
           const isOverflowing = element.scrollWidth > element.clientWidth;
           if (isOverflowing) {
-            console.warn(
+            Logger.warn(
               `⚠️ Overflow detectado en ${name}:`,
               {
                 scrollWidth: element.scrollWidth,

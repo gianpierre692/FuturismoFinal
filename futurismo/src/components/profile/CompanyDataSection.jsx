@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BuildingOfficeIcon, PencilIcon, CheckIcon, XMarkIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 const CompanyDataSection = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,7 +25,7 @@ const CompanyDataSection = () => {
   };
 
   const handleSave = () => {
-    console.log('Guardando datos de empresa:', formData);
+    Logger.debug('Guardando datos de empresa:', formData);
     setIsEditing(false);
     alert('✅ Datos de empresa actualizados correctamente');
   };

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { PhotoIcon, PlusIcon, XMarkIcon, EyeIcon, MapPinIcon, ClockIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import Logger from '../../utils/logger';
 
 const TourPhotoUpload = ({ 
   tourId, 
@@ -74,7 +75,7 @@ const TourPhotoUpload = ({
       
     } catch (error) {
       toast.error(t('monitoring.tourPhotoUpload.uploadError'));
-      console.error(error);
+      Logger.error(error);
     } finally {
       setUploading(false);
       if (fileInputRef.current) {

@@ -1,5 +1,6 @@
 import { XMarkIcon, CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, PhoneIcon, CurrencyDollarIcon, DocumentTextIcon, ArrowDownTrayIcon, PaperAirplaneIcon, PencilIcon, CheckCircleIcon, ExclamationTriangleIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
+import Logger from '../../utils/logger';
 
 const ReservationDetail = ({ reservation, onClose }) => {
   if (!reservation) return null;
@@ -25,17 +26,17 @@ const ReservationDetail = ({ reservation, onClose }) => {
 
   const handleSendVoucher = () => {
     // Implementar envío de voucher
-    console.log('Enviar voucher por email');
+    Logger.debug('Enviar voucher por email');
   };
 
   const handleDownloadVoucher = () => {
     // Implementar descarga de voucher
-    console.log('Descargar voucher PDF');
+    Logger.debug('Descargar voucher PDF');
   };
 
   const handleConfirmPayment = () => {
     // Implementar confirmación de pago
-    console.log('Confirmar pago');
+    Logger.debug('Confirmar pago');
   };
 
   return (

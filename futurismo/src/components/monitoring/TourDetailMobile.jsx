@@ -1,6 +1,5 @@
 import { 
   ArrowLeftIcon,
-  PhoneIcon,
   ChatBubbleLeftRightIcon,
   MapPinIcon,
   ClockIcon,
@@ -8,6 +7,7 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
+import Logger from '../../utils/logger';
 
 const TourDetailMobile = ({ tour, onBack }) => {
   const stops = [
@@ -64,18 +64,10 @@ const TourDetailMobile = ({ tour, onBack }) => {
               </div>
             </div>
 
-            {/* Botones de acción - Integrados en el layout */}
-            <div className="grid grid-cols-2 gap-3">
+            {/* Botones de acción - Solo mensaje */}
+            <div className="grid grid-cols-1 gap-3">
               <button
-                onClick={() => window.location.href = `tel:${tour.guide?.phone || ''}`}
-                className="flex items-center justify-center gap-2 px-4 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <PhoneIcon className="w-5 h-5 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Llamar guía</span>
-              </button>
-              
-              <button
-                onClick={() => console.log('Enviar mensaje')}
+                onClick={() => Logger.debug('Enviar mensaje')}
                 className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               >
                 <ChatBubbleLeftRightIcon className="w-5 h-5" />

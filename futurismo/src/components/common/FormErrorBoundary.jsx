@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 /**
  * FormErrorBoundary - Error boundary específico para formularios
@@ -23,7 +24,7 @@ class FormErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Form Error Boundary:', error, errorInfo);
+    Logger.error('Form Error Boundary:', error, errorInfo);
     
     // Intentar preservar datos del formulario
     try {
@@ -42,12 +43,12 @@ class FormErrorBoundary extends React.Component {
         localStorage.setItem('form_backup_' + Date.now(), JSON.stringify(formData));
       }
     } catch (saveError) {
-      console.warn('No se pudieron guardar los datos del formulario:', saveError);
+      Logger.warn('No se pudieron guardar los datos del formulario:', saveError);
     }
 
     // Log específico para errores de formulario
     if (import.meta.env.PROD) {
-      console.log('Form component failed:', {
+      Logger.debug('Form component failed:', {
         error: error.message,
         formName: this.props.formName,
         hasUnsavedData: !!this.state.savedFormData
@@ -72,7 +73,7 @@ class FormErrorBoundary extends React.Component {
     };
     
     // En producción, enviarías esto a tu sistema de reporte de bugs
-    console.log('Issue reported:', issueData);
+    Logger.debug('Issue reported:', issueData);
     alert('Reporte enviado. Gracias por ayudarnos a mejorar.');
   };
 

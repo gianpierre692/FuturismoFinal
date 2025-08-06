@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import useToastStore from '../stores/toastStore';
+import Logger from '../utils/logger';
 
 const useInteractiveAdmin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +18,7 @@ const useInteractiveAdmin = () => {
             await options.onConfirm?.();
             resolve(true);
           } catch (error) {
-            console.error('Error en confirmación:', error);
+            Logger.error('Error en confirmación:', error);
             toast.error(error.message || 'Ha ocurrido un error');
             resolve(false);
           } finally {
@@ -69,7 +70,7 @@ const useInteractiveAdmin = () => {
       
       return result;
     } catch (error) {
-      console.error('Error en operación:', error);
+      Logger.error('Error en operación:', error);
       toast.error(error.message || errorMessage);
       throw error;
     } finally {

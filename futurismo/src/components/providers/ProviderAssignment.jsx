@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { XMarkIcon, DocumentCheckIcon, CalendarIcon, ClockIcon, PlusIcon, TrashIcon, MapPinIcon, UserGroupIcon, DocumentTextIcon, ArrowDownTrayIcon, MagnifyingGlassIcon, FunnelIcon, CheckCircleIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import useProvidersStore from '../../stores/providersStore';
 import pdfService from '../../services/pdfService';
+import Logger from '../../utils/logger';
 
 const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
   const {
@@ -154,7 +155,7 @@ const ProviderAssignment = ({ onClose, existingAssignment = null }) => {
       }
 
     } catch (error) {
-      console.error('Error generando PDF:', error);
+      Logger.error('Error generando PDF:', error);
       alert('Error al generar el PDF. Por favor intenta nuevamente.');
     }
   };

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   PhotoIcon, 
   EyeIcon, 
@@ -16,6 +17,7 @@ import {
 import useGuidesStore from '../../stores/guidesStore';
 
 const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
+  const { t } = useTranslation();
   const { searchTourPhotos, getPhotoStatistics, getGuideById } = useGuidesStore(state => state.actions);
   const guides = useGuidesStore(state => state.guides);
   
@@ -64,7 +66,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
         allPhotos.push({
           ...photo,
           tourId: tourEntry.tourId,
-          guideName: getGuideById(tourEntry.guideId)?.fullName || 'Guía desconocido'
+          guideName: getGuideById(tourEntry.guideId)?.fullName || t('admin.photos.unknownGuide')
         });
       });
     });
@@ -122,13 +124,13 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
 
   const getCategoryLabel = (category) => {
     const categories = {
-      general: 'General',
-      tourist_group: 'Grupo turista',
-      monument: 'Monumento/Lugar',
-      restaurant: 'Restaurante/Comida',
-      transport: 'Transporte'
+      general: t('admin.photos.categories.general'),
+      tourist_group: t('admin.photos.categories.touristGroup'),
+      monument: t('admin.photos.categories.monument'),
+      restaurant: t('admin.photos.categories.restaurant'),
+      transport: t('admin.photos.categories.transport')
     };
-    return categories[category] || 'General';
+    return categories[category] || t('admin.photos.categories.general');
   };
 
   const getCategoryColor = (category) => {
@@ -147,9 +149,9 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Fotos de Tours</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t('admin.photos.title')}</h2>
           <p className="text-sm text-gray-600 mt-1">
-            Visualización y gestión de fotos subidas por guías
+            {t('admin.photos.subtitle')}
           </p>
         </div>
         
@@ -158,7 +160,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
           className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
         >
           <FunnelIcon className="w-4 h-4" />
-          Filtros
+          {t('common.filters')}
         </button>
       </div>
 
@@ -167,7 +169,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <PhotoIcon className="w-5 h-5 text-blue-600" />
-            <span className="text-sm font-medium text-blue-900">Total Fotos</span>
+            <span className="text-sm font-medium text-blue-900">{t('admin.photos.stats.totalPhotos')}</span>
           </div>
           <p className="text-2xl font-bold text-blue-600 mt-1">
             {stats.total?.totalPhotos || 0}
@@ -177,7 +179,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <CalendarDaysIcon className="w-5 h-5 text-green-600" />
-            <span className="text-sm font-medium text-green-900">Tours con Fotos</span>
+            <span className="text-sm font-medium text-green-900">{t('admin.photos.stats.toursWithPhotos')}</span>
           </div>
           <p className="text-2xl font-bold text-green-600 mt-1">
             {stats.total?.toursWithPhotos || 0}
@@ -187,7 +189,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <UserIcon className="w-5 h-5 text-purple-600" />
-            <span className="text-sm font-medium text-purple-900">Promedio/Tour</span>
+            <span className="text-sm font-medium text-purple-900">{t('admin.photos.stats.averagePerTour')}</span>
           </div>
           <p className="text-2xl font-bold text-purple-600 mt-1">
             {stats.total?.averagePhotosPerTour || 0}
@@ -197,7 +199,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
         <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-center gap-2">
             <TagIcon className="w-5 h-5 text-orange-600" />
-            <span className="text-sm font-medium text-orange-900">Fotos Mostradas</span>
+            <span className="text-sm font-medium text-orange-900">{t('admin.photos.stats.photosShown')}</span>
           </div>
           <p className="text-2xl font-bold text-orange-600 mt-1">
             {filteredPhotos.length}
@@ -210,13 +212,13 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Guía</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('common.guide')}</label>
               <select
                 value={filters.guideId}
                 onChange={(e) => handleFilterChange('guideId', e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
               >
-                <option value="">Todos los guías</option>
+                <option value="">{t('admin.photos.filters.allGuides')}</option>
                 {guides.map(guide => (
                   <option key={guide.id} value={guide.id}>
                     {guide.fullName}
@@ -226,23 +228,23 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.photos.filters.category')}</label>
               <select
                 value={filters.category}
                 onChange={(e) => handleFilterChange('category', e.target.value)}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
               >
-                <option value="">Todas las categorías</option>
-                <option value="general">General</option>
-                <option value="tourist_group">Grupo turista</option>
-                <option value="monument">Monumento/Lugar</option>
-                <option value="restaurant">Restaurante/Comida</option>
-                <option value="transport">Transporte</option>
+                <option value="">{t('admin.photos.filters.allCategories')}</option>
+                <option value="general">{t('admin.photos.categories.general')}</option>
+                <option value="tourist_group">{t('admin.photos.categories.touristGroup')}</option>
+                <option value="monument">{t('admin.photos.categories.monument')}</option>
+                <option value="restaurant">{t('admin.photos.categories.restaurant')}</option>
+                <option value="transport">{t('admin.photos.categories.transport')}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha desde</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.photos.filters.dateFrom')}</label>
               <input
                 type="date"
                 value={filters.dateFrom}
@@ -252,7 +254,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha hasta</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.photos.filters.dateTo')}</label>
               <input
                 type="date"
                 value={filters.dateTo}
@@ -262,13 +264,13 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Buscar descripción</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('admin.photos.filters.searchDescription')}</label>
               <div className="relative">
                 <input
                   type="text"
                   value={filters.description}
                   onChange={(e) => handleFilterChange('description', e.target.value)}
-                  placeholder="Buscar en descripciones..."
+                  placeholder={t('admin.photos.filters.searchPlaceholder')}
                   className="w-full border border-gray-300 rounded-md px-3 py-2 pl-8 text-sm"
                 />
                 <MagnifyingGlassIcon className="w-4 h-4 text-gray-400 absolute left-2 top-2.5" />
@@ -281,7 +283,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
               onClick={clearFilters}
               className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
             >
-              Limpiar filtros
+              {t('common.clearFilters')}
             </button>
           </div>
         </div>
@@ -330,9 +332,9 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
       ) : (
         <div className="text-center py-12">
           <PhotoIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron fotos</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{t('admin.photos.noPhotosFound')}</h3>
           <p className="text-gray-600">
-            No hay fotos que coincidan con los filtros aplicados.
+            {t('admin.photos.noPhotosMessage')}
           </p>
         </div>
       )}
@@ -370,7 +372,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
             {/* Contador */}
             {filteredPhotos.length > 1 && (
               <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black bg-opacity-70 text-white px-3 py-1 rounded-lg text-sm">
-                {currentPhotoIndex + 1} de {filteredPhotos.length}
+                {currentPhotoIndex + 1} {t('common.of')} {filteredPhotos.length}
               </div>
             )}
             
@@ -397,7 +399,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
               <div className="grid grid-cols-2 gap-4 text-sm mb-3">
                 <div className="flex items-center gap-2">
                   <UserIcon className="w-4 h-4" />
-                  <span>Guía: {selectedPhoto.guideName}</span>
+                  <span>{t('common.guide')}: {selectedPhoto.guideName}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CalendarDaysIcon className="w-4 h-4" />
@@ -410,7 +412,7 @@ const TourPhotosViewer = ({ tourId = null, guideId = null }) => {
                 {selectedPhoto.location && (
                   <div className="flex items-center gap-2">
                     <MapPinIcon className="w-4 h-4" />
-                    <span>Ubicación GPS disponible</span>
+                    <span>{t('admin.photos.gpsAvailable')}</span>
                   </div>
                 )}
               </div>

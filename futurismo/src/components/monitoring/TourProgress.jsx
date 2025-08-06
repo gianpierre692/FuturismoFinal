@@ -166,8 +166,9 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
   };
 
   const canUploadPhotos = (stop) => {
-    // Solo se pueden subir fotos si la parada está en progreso o completada
-    return isGuideView && (stop.status === 'en_progreso' || stop.status === 'completado');
+    // Los guías (empleados y freelancers) pueden subir fotos si la parada está en progreso o completada
+    const isGuideOrFreelancer = user?.role === 'guide' || (user?.role === 'guide' && user?.guideType === 'freelance');
+    return isGuideView && isGuideOrFreelancer && (stop.status === 'en_progreso' || stop.status === 'completado');
   };
 
   return (
@@ -196,13 +197,6 @@ const TourProgress = ({ tourId, isGuideView = false }) => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Solo mostrar botón de llamar para guías freelance */}
-            {mockTour.guide.type === 'freelance' && (
-              <button className="btn btn-outline flex items-center gap-2">
-                <PhoneIcon className="w-4 h-4" />
-                {t('monitoring.tourProgress.callGuide')}
-              </button>
-            )}
             <button className="btn btn-primary flex items-center gap-2">
               <ChatBubbleLeftRightIcon className="w-4 h-4" />
               {t('monitoring.tourProgress.sendMessage')}

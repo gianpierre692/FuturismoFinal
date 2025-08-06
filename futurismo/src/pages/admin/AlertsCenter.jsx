@@ -18,6 +18,7 @@ import InteractiveCard from '../../components/common/InteractiveCard';
 import InteractiveButton from '../../components/common/InteractiveButton';
 import useNotificationsStore from '../../stores/notificationsStore';
 import { useNavigate } from 'react-router-dom';
+import Logger from '../../utils/logger';
 
 const AlertsCenter = () => {
   const navigate = useNavigate();
@@ -150,7 +151,7 @@ const AlertsCenter = () => {
         navigate(`/emergency?protocol=${alert.emergencyProtocol}`);
         break;
       default:
-        console.log('Action:', action, alert);
+        Logger.debug('Action:', action, alert);
     }
   };
 

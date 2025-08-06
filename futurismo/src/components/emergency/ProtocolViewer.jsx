@@ -155,13 +155,9 @@ const ProtocolViewer = ({ protocol, onClose, onEdit, onDownload }) => {
                           {contact.type}
                         </p>
                       </div>
-                      <a
-                        href={`tel:${contact.phone}`}
-                        className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                        title="Llamar ahora"
-                      >
+                      <div className="p-2 bg-gray-200 text-gray-600 rounded-lg">
                         <PhoneIcon className="w-4 h-4" />
-                      </a>
+                      </div>
                     </div>
                   </div>
                 ))}

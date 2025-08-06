@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/outline';
 import InteractiveCard from '../common/InteractiveCard';
 
-const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
+const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary', onClick }) => {
+  const { t } = useTranslation();
   const colorClasses = {
     primary: 'bg-primary-100 text-primary-600',
     secondary: 'bg-secondary-100 text-secondary-600',
@@ -13,7 +15,14 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
   const isPositiveTrend = trend && trend.startsWith('+');
 
   return (
-    <InteractiveCard className="p-4 sm:p-6 relative overflow-hidden group">
+    <InteractiveCard 
+      className={`p-4 sm:p-6 relative overflow-hidden group transition-all duration-300 ${
+        onClick 
+          ? 'cursor-pointer hover:shadow-xl hover:-translate-y-1 hover:bg-gray-50 active:scale-95' 
+          : ''
+      }`}
+      onClick={onClick}
+    >
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <p className="text-xs sm:text-sm font-medium text-gray-600 group-hover:text-gray-700 transition-colors">
@@ -33,7 +42,7 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
               <span className={`text-sm font-medium ${isPositiveTrend ? 'text-green-600' : 'text-red-600'}`}>
                 {trend}
               </span>
-              <span className="text-xs sm:text-sm text-gray-500 ml-1 hidden sm:inline">vs mes anterior</span>
+              <span className="text-xs sm:text-sm text-gray-500 ml-1 hidden sm:inline">{t('common.vsPreviousMonth')}</span>
             </div>
           )}
         </div>
@@ -45,6 +54,13 @@ const StatsCard = ({ title, value, icon: Icon, trend, color = 'primary' }) => {
 
       {/* Progress line animation */}
       <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+      
+      {/* Click indicator for interactive cards */}
+      {onClick && (
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></div>
+        </div>
+      )}
     </InteractiveCard>
   );
 };
@@ -54,7 +70,8 @@ StatsCard.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   icon: PropTypes.elementType.isRequired,
   trend: PropTypes.string,
-  color: PropTypes.oneOf(['primary', 'secondary', 'success', 'danger'])
+  color: PropTypes.oneOf(['primary', 'secondary', 'success', 'danger']),
+  onClick: PropTypes.func
 };
 
 export default StatsCard;

@@ -18,6 +18,7 @@ import useMarketplaceStore from '../../stores/marketplaceStore';
 import useAuthStore from '../../stores/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const ServiceRequestDetail = () => {
   const { requestId } = useParams();
@@ -95,7 +96,7 @@ const ServiceRequestDetail = () => {
         navigate('/marketplace/requests');
       }
     } catch (error) {
-      console.error('Error loading request:', error);
+      Logger.error('Error loading request:', error);
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +119,7 @@ const ServiceRequestDetail = () => {
       // Recargar datos
       loadRequestData();
     } catch (error) {
-      console.error('Error sending message:', error);
+      Logger.error('Error sending message:', error);
       toast.error('Error al enviar el mensaje');
     } finally {
       setIsSendingMessage(false);

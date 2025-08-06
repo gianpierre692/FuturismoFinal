@@ -4,6 +4,7 @@ import { MapPinIcon, UserGroupIcon, PhoneIcon, ClockIcon } from '@heroicons/reac
 import { useServicesStore } from '../../stores/servicesStore';
 import { formatters } from '../../utils/formatters';
 import { getDestination } from '../../data/destinations';
+import Logger from '../../utils/logger';
 
 // Componente unificado que puede funcionar en 3 modos:
 // 1. 'simple' - Sin librerías externas, mapa simulado
@@ -28,9 +29,9 @@ const LiveMapUnified = memo(({
 
   // Inicializar datos mock si es necesario (solo una vez)
   useEffect(() => {
-    console.log('LiveMapUnified - activeServices:', activeServices.length);
+    Logger.debug('LiveMapUnified - activeServices:', activeServices.length);
     if (activeServices.length === 0) {
-      console.log('Inicializando datos mock...');
+      Logger.debug('Inicializando datos mock...');
       initializeMockData();
     }
   }, []); // Solo ejecutar una vez al montar
@@ -165,7 +166,7 @@ const LiveMapUnified = memo(({
             mapInstanceRef.current.remove();
             mapInstanceRef.current = null;
           } catch (error) {
-            console.warn('Error al limpiar el mapa:', error);
+            Logger.warn('Error al limpiar el mapa:', error);
           }
         }
         markersRef.current = [];
@@ -186,14 +187,14 @@ const LiveMapUnified = memo(({
       // Verificar que el contenedor tenga dimensiones
       const rect = mapRef.current.getBoundingClientRect();
       if ((rect.width === 0 || rect.height === 0) && retryCount < 10) {
-        console.log(`Contenedor sin dimensiones (${rect.width}x${rect.height}), reintento ${retryCount + 1}/10`);
+        Logger.debug(`Contenedor sin dimensiones (${rect.width}x${rect.height}), reintento ${retryCount + 1}/10`);
         setTimeout(() => initializeLeafletMap(retryCount + 1), 200);
         return;
       }
 
       // Si después de 10 intentos no tiene dimensiones, forzar inicialización
       if (rect.width === 0 || rect.height === 0) {
-        console.warn('Forzando inicialización del mapa sin dimensiones detectadas');
+        Logger.warn('Forzando inicialización del mapa sin dimensiones detectadas');
       }
 
       // Limpiar cualquier inicialización previa del contenedor
@@ -209,7 +210,7 @@ const LiveMapUnified = memo(({
           attribution: '© OpenStreetMap contributors'
         }).addTo(mapInstanceRef.current);
 
-        console.log('Mapa inicializado correctamente');
+        Logger.debug('Mapa inicializado correctamente');
         setIsMapLoaded(true);
         
         // Invalidar el tamaño del mapa después de un pequeño delay para asegurar que el DOM esté listo
@@ -221,7 +222,7 @@ const LiveMapUnified = memo(({
         
         updateMarkers();
       } catch (error) {
-        console.error('Error al inicializar el mapa:', error);
+        Logger.error('Error al inicializar el mapa:', error);
         // Limpiar referencias en caso de error
         mapInstanceRef.current = null;
         if (mapRef.current && mapRef.current._leaflet_id) {
@@ -337,7 +338,7 @@ const LiveMapUnified = memo(({
   const NPMMap = () => {
     // Este requeriría importar React Leaflet
     // Por ahora retornamos el modo simple como fallback
-    console.warn('Modo NPM requiere instalar react-leaflet. Usando modo simple como fallback.');
+    Logger.warn('Modo NPM requiere instalar react-leaflet. Usando modo simple como fallback.');
     return <SimpleMap />;
   };
 
@@ -419,9 +420,9 @@ const LiveMapUnified = memo(({
                         {service.guide?.phone && (
                           <div className="flex items-center gap-1">
                             <PhoneIcon className="w-3 h-3" />
-                            <a href={`tel:${service.guide.phone}`} className="text-blue-600 hover:underline">
+                            <span className="text-gray-600">
                               {service.guide.phone}
-                            </a>
+                            </span>
                           </div>
                         )}
                       </div>

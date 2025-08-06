@@ -1,3 +1,5 @@
+import Logger from './logger';
+
 /**
  * Configuración centralizada de la aplicación
  * 
@@ -20,7 +22,6 @@ if (isProduction) {
   const missingVars = requiredVars.filter(varName => !import.meta.env[varName]);
   
   if (missingVars.length > 0) {
-    console.error('❌ Variables de entorno faltantes en producción:', missingVars);
     throw new Error(`Variables de entorno requeridas: ${missingVars.join(', ')}`);
   }
 }
@@ -182,7 +183,7 @@ export const validateConfig = () => {
   }
   
   if (errors.length > 0) {
-    console.error('❌ Errores de configuración:', errors);
+    Logger.error('❌ Errores de configuración:', errors);
     if (isProduction) {
       throw new Error(`Configuración inválida: ${errors.join(', ')}`);
     }
@@ -191,16 +192,21 @@ export const validateConfig = () => {
   return errors.length === 0;
 };
 
-// Log de configuración en desarrollo
-if (isDevelopment && FEATURES.DEBUG_MODE) {
-  console.log('🔧 Configuración de la aplicación:', {
-    environment,
-    apiUrl: API_CONFIG.BASE_URL,
-    wsUrl: WEBSOCKET_CONFIG.PRIMARY_URL,
-    mapCenter: MAP_CONFIG.DEFAULT_CENTER,
-    features: FEATURES
-  });
-}
+// Función para loggear configuración (se ejecuta después de la inicialización)
+const logConfiguration = () => {
+  if (isDevelopment && FEATURES.DEBUG_MODE) {
+    Logger.debug('🔧 Configuración de la aplicación:', {
+      environment,
+      apiUrl: API_CONFIG.BASE_URL,
+      wsUrl: WEBSOCKET_CONFIG.PRIMARY_URL,
+      mapCenter: MAP_CONFIG.DEFAULT_CENTER,
+      features: FEATURES
+    });
+  }
+};
+
+// Ejecutar logging después de un tick
+setTimeout(logConfiguration, 0);
 
 // Exportar configuración completa
 export default {

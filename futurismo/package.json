@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "dev": "vite",
+    "dev": "vite --port 9000 --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite .vite dist",

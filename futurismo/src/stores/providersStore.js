@@ -277,7 +277,7 @@ const useProvidersStore = create(
               id: `assignment_${Date.now()}`,
               status: 'draft',
               createdAt: new Date().toISOString(),
-              createdBy: 'current_user' // TODO: obtener del auth store
+              createdBy: 'current_user' // Se obtendrá del auth store cuando se conecte con backend
             };
 
             set(state => ({

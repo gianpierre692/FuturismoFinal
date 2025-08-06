@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PhoneIcon, PencilIcon, CheckIcon, XMarkIcon, PlusIcon, TrashIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 const ContactDataSection = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -61,7 +62,7 @@ const ContactDataSection = () => {
   };
 
   const handleSave = () => {
-    console.log('Guardando datos de contacto:', contacts);
+    Logger.debug('Guardando datos de contacto:', contacts);
     setIsEditing(false);
     alert('✅ Datos de contacto actualizados correctamente');
   };

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { XMarkIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import Logger from '../../utils/logger';
 
 const InstallPWA = () => {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ const InstallPWA = () => {
       const { outcome } = await deferredPrompt.userChoice;
       
       if (outcome === 'accepted') {
-        console.log('PWA instalada');
+        Logger.debug('PWA instalada');
       }
       
       setDeferredPrompt(null);

@@ -20,6 +20,7 @@ import { es } from 'date-fns/locale';
 import InteractiveCard from '../../components/common/InteractiveCard';
 import InteractiveButton from '../../components/common/InteractiveButton';
 import useNotificationsStore from '../../stores/notificationsStore';
+import Logger from '../../utils/logger';
 
 const AgencyApproval = () => {
   const { addNotification } = useNotificationsStore();
@@ -487,7 +488,7 @@ const AgencyApproval = () => {
                     size="sm"
                     variant="secondary"
                     icon={DocumentTextIcon}
-                    onClick={() => console.log('Ver documentos', request.id)}
+                    onClick={() => Logger.debug('Ver documentos', request.id)}
                   >
                     Ver documentos
                   </InteractiveButton>
@@ -495,7 +496,7 @@ const AgencyApproval = () => {
                     size="sm"
                     variant="secondary"
                     icon={PhoneIcon}
-                    onClick={() => console.log('Contactar', request.id)}
+                    onClick={() => Logger.debug('Contactar', request.id)}
                   >
                     Contactar
                   </InteractiveButton>

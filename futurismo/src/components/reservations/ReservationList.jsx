@@ -11,6 +11,7 @@ import ExportModal from '../common/ExportModal';
 import exportService from '../../services/exportService';
 import ServiceRatingModal from '../ratings/ServiceRatingModal';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const ReservationList = () => {
   const { reservations } = useReservationsStore();
@@ -339,14 +340,14 @@ const ReservationList = () => {
 
   const handleEdit = (reservation) => {
     // Implementar edición
-    console.log('Editar reserva:', reservation.id);
+    Logger.debug('Editar reserva:', reservation.id);
     setShowActions(null);
   };
 
   const handleDelete = (reservation) => {
     // Implementar eliminación
     if (window.confirm(t('search.deleteConfirm'))) {
-      console.log('Eliminar reserva:', reservation.id);
+      Logger.debug('Eliminar reserva:', reservation.id);
     }
     setShowActions(null);
   };
@@ -368,7 +369,7 @@ const ReservationList = () => {
   };
 
   const handleRatingsCompleted = (allRatings) => {
-    console.log('Valoraciones completadas:', allRatings);
+    Logger.debug('Valoraciones completadas:', allRatings);
     
     // En una implementación real, aquí se guardarían las valoraciones en la base de datos
     // y se actualizaría el estado de la reserva como "valorada"
@@ -425,7 +426,7 @@ const ReservationList = () => {
       }, 300);
       
     } catch (error) {
-      console.error('Error al exportar reservas:', error);
+      Logger.error('Error al exportar reservas:', error);
       throw new Error(`Error al exportar: ${error.message}`);
     }
   };

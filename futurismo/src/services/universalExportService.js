@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
+import Logger from '../utils/logger';
 
 class UniversalExportService {
   // Excel Export Methods
@@ -23,7 +24,7 @@ class UniversalExportService {
       
       return { success: true, message: 'Archivo Excel exportado correctamente' };
     } catch (error) {
-      console.error('Error exporting to Excel:', error);
+      Logger.error('Error exporting to Excel:', error);
       return { success: false, error: error.message };
     }
   }
@@ -45,7 +46,7 @@ class UniversalExportService {
       
       return { success: true, message: 'Archivo Excel multi-hoja exportado correctamente' };
     } catch (error) {
-      console.error('Error exporting multi-sheet Excel:', error);
+      Logger.error('Error exporting multi-sheet Excel:', error);
       return { success: false, error: error.message };
     }
   }
@@ -133,7 +134,7 @@ class UniversalExportService {
       
       return { success: true, message: 'Archivo PDF exportado correctamente' };
     } catch (error) {
-      console.error('Error exporting to PDF:', error);
+      Logger.error('Error exporting to PDF:', error);
       return { success: false, error: error.message };
     }
   }

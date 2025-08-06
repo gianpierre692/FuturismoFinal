@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   CalendarIcon,
   ClockIcon,
@@ -14,8 +15,10 @@ import {
   FunnelIcon
 } from '@heroicons/react/24/outline';
 import { useUsersStore } from '../../stores/usersStoreSimple';
+import Logger from '../../utils/logger';
 
 const AdminAgendaView = () => {
+  const { t, i18n } = useTranslation();
   const { getGuides } = useUsersStore();
   const navigate = useNavigate();
   
@@ -69,7 +72,10 @@ const AdminAgendaView = () => {
   const weekDates = generateWeekDates(selectedDate);
   const monthDates = generateMonthDates(selectedDate);
   const currentDates = viewMode === 'week' ? weekDates : monthDates;
-  const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const dayNames = [
+    t('common.mon'), t('common.tue'), t('common.wed'), 
+    t('common.thu'), t('common.fri'), t('common.sat'), t('common.sun')
+  ];
 
   const getAvailabilityForGuide = (guide, date) => {
     if (!guide?.agenda) return { disponible: false, horarios: [] };
@@ -116,15 +122,9 @@ const AdminAgendaView = () => {
 
   const handleViewGuide = (guide) => {
     // Aquí podrías abrir un modal con detalles del guía o redirigir a su perfil
-    console.log('Ver detalles de:', guide);
+    Logger.debug('Ver detalles de:', guide);
   };
 
-  const handleCallGuide = (guide) => {
-    // Aquí podrías integrar con un sistema de llamadas o mostrar el número
-    if (guide.phone) {
-      window.open(`tel:${guide.phone}`, '_self');
-    }
-  };
 
   const filteredGuides = freelanceGuides.filter(guide => selectedGuides.includes(guide.id));
 
@@ -136,7 +136,7 @@ const AdminAgendaView = () => {
           <div className="flex items-center">
             <CalendarIcon className="h-6 w-6 text-blue-600 mr-3" />
             <h2 className="text-xl font-semibold text-gray-900">
-              Agenda de Guías Freelance
+              {t('admin.agenda.title')}
             </h2>
           </div>
           
@@ -150,7 +150,7 @@ const AdminAgendaView = () => {
               }`}
             >
               <FunnelIcon className="h-4 w-4 mr-2" />
-              Filtros
+              {t('common.filters')}
             </button>
             
             <select
@@ -158,8 +158,8 @@ const AdminAgendaView = () => {
               onChange={(e) => setViewMode(e.target.value)}
               className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
             >
-              <option value="week">Vista Semanal</option>
-              <option value="month">Vista Mensual</option>
+              <option value="week">{t('admin.agenda.weekView')}</option>
+              <option value="month">{t('admin.agenda.monthView')}</option>
             </select>
           </div>
         </div>
@@ -167,7 +167,7 @@ const AdminAgendaView = () => {
         {/* Filtros */}
         {showFilters && (
           <div className="border-t pt-4">
-            <h4 className="text-sm font-medium text-gray-900 mb-3">Seleccionar Guías:</h4>
+            <h4 className="text-sm font-medium text-gray-900 mb-3">{t('admin.agenda.selectGuides')}:</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {freelanceGuides.map((guide) => (
                 <label key={guide.id} className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
@@ -187,7 +187,7 @@ const AdminAgendaView = () => {
                       {guide.firstName} {guide.lastName}
                     </div>
                     <div className="text-xs text-gray-500">
-                      Rating: {guide.rating} ⭐ • {guide.experience} años
+                      {t('common.rating')}: {guide.rating} ⭐ • {guide.experience} {t('common.years')}
                     </div>
                   </div>
                 </label>
@@ -216,8 +216,8 @@ const AdminAgendaView = () => {
             
             <span className="text-lg font-medium text-gray-900">
               {viewMode === 'week' 
-                ? `Semana del ${new Date(weekDates[0]).toLocaleDateString('es-PE')}` 
-                : `${new Date(selectedDate).toLocaleDateString('es-PE', { month: 'long', year: 'numeric' })}`
+                ? `${t('admin.agenda.weekOf')} ${new Date(weekDates[0]).toLocaleDateString(i18n.language === 'es' ? 'es-PE' : 'en-US')}` 
+                : `${new Date(selectedDate).toLocaleDateString(i18n.language === 'es' ? 'es-PE' : 'en-US', { month: 'long', year: 'numeric' })}`
               }
             </span>
             
@@ -241,7 +241,7 @@ const AdminAgendaView = () => {
             onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
             className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm"
           >
-            Hoy
+            {t('common.today')}
           </button>
         </div>
       </div>
@@ -251,7 +251,7 @@ const AdminAgendaView = () => {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Guías Seleccionados ({filteredGuides.length})
+              {t('admin.agenda.selectedGuides')} ({filteredGuides.length})
             </h3>
             
             <div className="space-y-3">
@@ -276,7 +276,7 @@ const AdminAgendaView = () => {
                   <div className="flex items-center justify-between text-xs">
                     <span className="flex items-center text-gray-600">
                       <ClockIcon className="h-3 w-3 mr-1" />
-                      {guide.experience} años
+                      {guide.experience} {t('common.years')}
                     </span>
                     <span className="flex items-center text-yellow-600">
                       ⭐ {guide.rating}
@@ -287,23 +287,16 @@ const AdminAgendaView = () => {
                     <button
                       onClick={() => handleViewGuide(guide)}
                       className="flex-1 px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs hover:bg-blue-100 transition-colors"
-                      title="Ver detalles"
+                      title={t('common.viewDetails')}
                     >
                       <EyeIcon className="h-3 w-3 mx-auto" />
                     </button>
                     <button
                       onClick={() => handleSendMessage(guide)}
                       className="flex-1 px-2 py-1 bg-green-50 text-green-600 rounded text-xs hover:bg-green-100 transition-colors"
-                      title="Enviar mensaje"
+                      title={t('admin.agenda.sendMessage')}
                     >
                       <ChatBubbleLeftRightIcon className="h-3 w-3 mx-auto" />
-                    </button>
-                    <button
-                      onClick={() => handleCallGuide(guide)}
-                      className="flex-1 px-2 py-1 bg-purple-50 text-purple-600 rounded text-xs hover:bg-purple-100 transition-colors"
-                      title={`Llamar a ${guide.phone || 'N/A'}`}
-                    >
-                      <PhoneIcon className="h-3 w-3 mx-auto" />
                     </button>
                   </div>
                 </div>
@@ -367,9 +360,9 @@ const AdminAgendaView = () => {
                             key={guide.id}
                             className={`p-2 rounded border text-xs ${getStatusColor(status)}`}
                             title={`${guide.firstName} ${guide.lastName} - ${
-                              status === 'disponible-con-horario' ? `Horarios: ${availability.horarios.join(', ')}` :
-                              status === 'disponible-sin-horario' ? 'Disponible sin horarios específicos' :
-                              'No disponible'
+                              status === 'disponible-con-horario' ? `${t('admin.agenda.schedules')}: ${availability.horarios.join(', ')}` :
+                              status === 'disponible-sin-horario' ? t('admin.agenda.availableWithoutSchedule') :
+                              t('admin.agenda.notAvailable')
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -390,7 +383,7 @@ const AdminAgendaView = () => {
                                 ))}
                                 {availability.horarios.length > 3 && (
                                   <div className="text-xs opacity-60">
-                                    +{availability.horarios.length - 3} más
+                                    +{availability.horarios.length - 3} {t('common.more')}
                                   </div>
                                 )}
                               </div>
@@ -398,7 +391,7 @@ const AdminAgendaView = () => {
                             
                             {viewMode === 'month' && availability.horarios.length > 0 && (
                               <div className="text-xs opacity-75 mt-1">
-                                {availability.horarios.length} horario{availability.horarios.length > 1 ? 's' : ''}
+                                {availability.horarios.length} {availability.horarios.length > 1 ? t('admin.agenda.schedules').toLowerCase() : t('admin.agenda.schedule').toLowerCase()}
                               </div>
                             )}
                           </div>
@@ -416,7 +409,7 @@ const AdminAgendaView = () => {
       {/* Summary */}
       <div className="bg-white rounded-lg shadow-sm border p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Resumen de Disponibilidad - {viewMode === 'week' ? 'Semana' : 'Mes'}
+          {t('admin.agenda.availabilitySummary')} - {viewMode === 'week' ? t('admin.agenda.week') : t('admin.agenda.month')}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -424,7 +417,7 @@ const AdminAgendaView = () => {
             <div className="text-2xl font-bold text-blue-600">
               {filteredGuides.length}
             </div>
-            <div className="text-sm text-blue-700">Guías Monitoreados</div>
+            <div className="text-sm text-blue-700">{t('admin.agenda.monitoredGuides')}</div>
           </div>
           
           <div className="text-center p-4 bg-green-50 rounded-lg">
@@ -435,7 +428,7 @@ const AdminAgendaView = () => {
                 ).length;
               }, 0)}
             </div>
-            <div className="text-sm text-green-700">Disponibilidades con Horario</div>
+            <div className="text-sm text-green-700">{t('admin.agenda.availableWithSchedule')}</div>
           </div>
           
           <div className="text-center p-4 bg-yellow-50 rounded-lg">
@@ -446,7 +439,7 @@ const AdminAgendaView = () => {
                 ).length;
               }, 0)}
             </div>
-            <div className="text-sm text-yellow-700">Disponibles sin Horario</div>
+            <div className="text-sm text-yellow-700">{t('admin.agenda.availableWithoutSchedule')}</div>
           </div>
           
           <div className="text-center p-4 bg-red-50 rounded-lg">
@@ -457,7 +450,7 @@ const AdminAgendaView = () => {
                 ).length;
               }, 0)}
             </div>
-            <div className="text-sm text-red-700">No Disponibles</div>
+            <div className="text-sm text-red-700">{t('admin.agenda.notAvailable')}</div>
           </div>
         </div>
       </div>

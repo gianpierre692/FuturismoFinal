@@ -22,6 +22,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import useAgencyStore from '../stores/agencyStore';
 import toast from 'react-hot-toast';
+import Logger from '../utils/logger';
 
 const AgencyPoints = () => {
   const { currentAgency, actions } = useAgencyStore();
@@ -155,7 +156,7 @@ const AgencyPoints = () => {
   };
 
   const exportHistory = () => {
-    console.log('Exportando historial de puntos...', filteredHistory);
+    Logger.debug('Exportando historial de puntos...', filteredHistory);
     // Implementar exportación
   };
 

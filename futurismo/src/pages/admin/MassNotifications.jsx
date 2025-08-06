@@ -21,6 +21,7 @@ import InteractiveButton from '../../components/common/InteractiveButton';
 import useNotificationsStore from '../../stores/notificationsStore';
 import useUsersStore from '../../stores/usersStoreSimple';
 import useGuidesStore from '../../stores/guidesStore';
+import Logger from '../../utils/logger';
 
 const MassNotifications = () => {
   const { addNotification } = useNotificationsStore();
@@ -136,7 +137,7 @@ const MassNotifications = () => {
     }
 
     // Simular envío
-    console.log('Enviando notificación:', {
+    Logger.debug('Enviando notificación:', {
       type: notificationType,
       priority,
       subject,

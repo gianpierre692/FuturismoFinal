@@ -15,6 +15,7 @@ import {
   EyeSlashIcon
 } from '@heroicons/react/24/outline';
 import { useUsersStore } from '../../stores/usersStore';
+import Logger from '../../utils/logger';
 
 // Esquema de validación
 const userSchema = yup.object({
@@ -203,7 +204,7 @@ const UserForm = ({ user = null, onSubmit, onCancel, isLoading = false }) => {
         onSubmit(userData);
       }
     } catch (error) {
-      console.error('Error al guardar usuario:', error);
+      Logger.error('Error al guardar usuario:', error);
     }
   };
 

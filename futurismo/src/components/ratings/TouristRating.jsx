@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaceSmileIcon, FaceFrownIcon, HandThumbUpIcon, HandThumbDownIcon, HeartIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { FaceSmileIcon as FaceSmileSolid, FaceFrownIcon as FaceFrownSolid, HandThumbUpIcon as HandThumbUpSolid, HandThumbDownIcon as HandThumbDownSolid, HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const TouristRating = ({ 
   touristId, 
@@ -76,7 +77,7 @@ const TouristRating = ({
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // En una implementación real, aquí iría la llamada a la API
-      console.log('Rating submitted:', ratingData);
+      Logger.debug('Rating submitted:', ratingData);
 
       toast.success(`Valoración "${ratingOptions.find(r => r.value === selectedRating)?.label}" enviada correctamente`);
       
@@ -86,7 +87,7 @@ const TouristRating = ({
 
     } catch (error) {
       toast.error('Error al enviar la valoración');
-      console.error('Error submitting rating:', error);
+      Logger.error('Error submitting rating:', error);
     } finally {
       setIsSubmitting(false);
     }

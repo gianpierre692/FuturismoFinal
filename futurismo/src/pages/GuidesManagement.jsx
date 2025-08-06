@@ -32,6 +32,7 @@ import ExportImportModal from '../components/common/ExportImportModal';
 import AdvancedDataTable from '../components/common/AdvancedDataTable';
 import InteractiveButton from '../components/common/InteractiveButton';
 import useNotificationsStore from '../stores/notificationsStore';
+import Logger from '../utils/logger';
 
 const GuidesManagement = () => {
   const { guides = [], languages = [], museums = [], actions } = useGuidesStore();
@@ -936,7 +937,7 @@ const GuidesManagement = () => {
                   onClick={() => {
                     // Simular envío de mensajes
                     selectedInactiveGuides.forEach(guide => {
-                      console.log(`Enviando mensaje a ${guide.fullName}: ${contactSubject}`);
+                      Logger.debug(`Enviando mensaje a ${guide.fullName}: ${contactSubject}`);
                     });
                     
                     addNotification({

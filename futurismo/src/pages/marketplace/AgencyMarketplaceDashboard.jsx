@@ -17,6 +17,7 @@ import {
 import useMarketplaceStore from '../../stores/marketplaceStore';
 import useAuthStore from '../../stores/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import Logger from '../../utils/logger';
 
 const AgencyMarketplaceDashboard = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const AgencyMarketplaceDashboard = () => {
       // Simular carga de datos
       await new Promise(resolve => setTimeout(resolve, 500));
     } catch (error) {
-      console.error('Error loading dashboard:', error);
+      Logger.error('Error loading dashboard:', error);
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import { MAP_CONFIG, STATUS_COLORS } from '../utils/constants';
+import Logger from '../utils/logger';
 
 class MapService {
   constructor() {
@@ -247,7 +248,7 @@ class MapService {
   // Mostrar ubicación actual del usuario
   showCurrentLocation() {
     if (!navigator.geolocation) {
-      console.error('Geolocation is not supported');
+      Logger.error('Geolocation is not supported');
       return;
     }
 
@@ -267,7 +268,7 @@ class MapService {
         this.map.setView([latitude, longitude], 15);
       },
       (error) => {
-        console.error('Error getting location:', error);
+        Logger.error('Error getting location:', error);
       }
     );
   }
@@ -275,7 +276,7 @@ class MapService {
   // Seguir ubicación del usuario
   watchUserLocation(callback) {
     if (!navigator.geolocation) {
-      console.error('Geolocation is not supported');
+      Logger.error('Geolocation is not supported');
       return;
     }
 
@@ -292,7 +293,7 @@ class MapService {
         }
       },
       (error) => {
-        console.error('Error watching location:', error);
+        Logger.error('Error watching location:', error);
       },
       {
         enableHighAccuracy: true,

@@ -11,6 +11,7 @@ import DocumentsSection from '../components/profile/DocumentsSection';
 import FeedbackSection from '../components/profile/FeedbackSectionSimple';
 import ImageUpload from '../components/common/ImageUpload';
 import ProfileMobile from './ProfileMobile';
+import Logger from '../utils/logger';
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -46,7 +47,7 @@ const Profile = () => {
         
         // Simular actualización del usuario en el store
         // En producción actualizarías el usuario en authStore con la nueva imagen
-        console.log('Imagen de perfil actualizada:', file.name);
+        Logger.debug('Imagen de perfil actualizada:', file.name);
       };
       reader.readAsDataURL(file);
     } else {

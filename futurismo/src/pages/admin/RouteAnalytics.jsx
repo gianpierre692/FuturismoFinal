@@ -20,6 +20,7 @@ import InteractiveCard from '../../components/common/InteractiveCard';
 import InteractiveButton from '../../components/common/InteractiveButton';
 import ExcelButton from '../../components/common/ExcelButton';
 import SafeChart from '../../components/charts/SafeChart';
+import Logger from '../../utils/logger';
 
 const RouteAnalytics = () => {
   const [timeRange, setTimeRange] = useState('month');
@@ -118,7 +119,7 @@ const RouteAnalytics = () => {
                 <option value="year">Último año</option>
               </select>
               <ExcelButton
-                onClick={() => console.log('Exportar análisis')}
+                onClick={() => Logger.debug('Exportar análisis')}
                 text="Exportar"
                 fullText={true}
               />

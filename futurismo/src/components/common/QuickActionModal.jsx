@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon, CheckIcon, CalendarIcon, MapPinIcon, UserGroupIcon, ClockIcon } from '@heroicons/react/24/outline';
 import InteractiveButton from './InteractiveButton';
 import InteractiveInput from './InteractiveInput';
+import Logger from '../../utils/logger';
 
 const QuickActionModal = ({ isOpen, onClose, type, onSubmit }) => {
   const [formData, setFormData] = useState({});
@@ -16,7 +17,7 @@ const QuickActionModal = ({ isOpen, onClose, type, onSubmit }) => {
       onClose();
       setFormData({});
     } catch (error) {
-      console.error('Error:', error);
+      Logger.error('Error:', error);
     } finally {
       setLoading(false);
     }

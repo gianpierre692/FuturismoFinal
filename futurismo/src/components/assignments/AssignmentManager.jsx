@@ -13,6 +13,7 @@ import {
 } from '@heroicons/react/24/outline';
 import TourAssignmentBrochure from './TourAssignmentBrochure';
 import TourAssignmentBrochurePDF from './TourAssignmentBrochurePDF';
+import Logger from '../../utils/logger';
 
 const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
   const [assignment, setAssignment] = useState({
@@ -29,7 +30,6 @@ const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isSending, setIsSending] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const brochureRef = useRef();
 
@@ -144,66 +144,12 @@ const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
       
       setIsGenerating(false);
     } catch (error) {
-      console.error('Error generando PDF:', error);
+      Logger.error('Error generando PDF:', error);
       alert('Error al generar el PDF. Por favor intenta nuevamente.');
       setIsGenerating(false);
     }
   };
 
-  const handleSendWhatsApp = async () => {
-    if (!assignment.agency.whatsapp) {
-      alert('La agencia no tiene número de WhatsApp registrado');
-      return;
-    }
-
-    setIsSending(true);
-    
-    try {
-      // Simular envío por WhatsApp (en una app real, esto sería una API call)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const message = encodeURIComponent(`
-🌎 *FUTURISMO TOURS*
-📋 *ASIGNACIÓN DE TOUR*
-
-📅 *Tour:* ${assignment.tourName}
-📆 *Fecha:* ${new Date(assignment.tourDate).toLocaleDateString('es-PE')}
-⏰ *Hora:* ${assignment.tourTime}
-👥 *Grupo:* ${assignment.groupSize} personas
-
-👨‍🏫 *Guía:* ${assignment.guide?.name}
-📞 ${assignment.guide?.phone}
-
-🚗 *Chofer:* ${assignment.driver?.name}
-📞 ${assignment.driver?.phone}
-
-🚙 *Vehículo:* ${assignment.vehicle?.brand} ${assignment.vehicle?.model}
-🔢 *Placa:* ${assignment.vehicle?.plate}
-
-📍 *Punto de encuentro:* ${assignment.pickupLocation?.name}
-
-✅ Su brochure detallado ha sido enviado por email.
-
-¡Gracias por confiar en Futurismo Tours!
-      `);
-
-      const whatsappUrl = `https://wa.me/${assignment.agency.whatsapp.replace(/[^\d]/g, '')}?text=${message}`;
-      window.open(whatsappUrl, '_blank');
-      
-      setIsSending(false);
-      
-      // Marcar como enviado
-      if (onAssignmentComplete) {
-        onAssignmentComplete(assignment);
-      }
-      
-      alert('¡Asignación enviada exitosamente por WhatsApp!');
-      
-    } catch (error) {
-      setIsSending(false);
-      alert('Error al enviar por WhatsApp: ' + error.message);
-    }
-  };
 
   const isAssignmentComplete = assignment.guide && assignment.driver && assignment.vehicle;
 
@@ -400,18 +346,6 @@ const AssignmentManager = ({ reservation, onAssignmentComplete }) => {
               {isGenerating ? 'Generando...' : 'Descargar PDF'}
             </button>
 
-            <button
-              onClick={handleSendWhatsApp}
-              disabled={!isAssignmentComplete || isSending}
-              className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isAssignmentComplete
-                  ? 'bg-green-600 text-white hover:bg-green-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              <PaperAirplaneIcon className="h-4 w-4 mr-2" />
-              {isSending ? 'Enviando...' : 'Enviar WhatsApp'}
-            </button>
           </div>
         </div>
       </div>

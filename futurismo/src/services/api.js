@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_ENDPOINTS, ERROR_MESSAGES } from '../utils/constants';
+import Logger from '../utils/logger';
 
 // Crear instancia de axios con configuración base
 const api = axios.create({
@@ -164,7 +165,7 @@ export const uploadFile = async (file, type = 'general') => {
         (progressEvent.loaded * 100) / progressEvent.total
       );
       // Aquí podrías actualizar un store con el progreso
-      console.log(`Upload progress: ${percentCompleted}%`);
+      Logger.debug(`Upload progress: ${percentCompleted}%`);
     }
   });
 };
@@ -180,7 +181,7 @@ export const downloadFile = async (url, filename) => {
     link.click();
     window.URL.revokeObjectURL(link.href);
   } catch (error) {
-    console.error('Error downloading file:', error);
+    Logger.error('Error downloading file:', error);
     throw error;
   }
 };

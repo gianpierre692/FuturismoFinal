@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import ServiceAreaRating from './ServiceAreaRating';
 import StaffEvaluation from './StaffEvaluation';
+import Logger from '../../utils/logger';
 
 const RatingModal = ({ 
   isOpen, 
@@ -22,7 +23,7 @@ const RatingModal = ({
 
   const handleRatingSubmit = (submittedData) => {
     setRatingData(submittedData);
-    console.log('Rating submitted:', submittedData);
+    Logger.debug('Rating submitted:', submittedData);
     onSubmit(submittedData);
     handleClose();
   };

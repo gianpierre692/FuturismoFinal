@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowDownTrayIcon, DocumentTextIcon, TableCellsIcon, FunnelIcon, CheckCircleIcon, ClockIcon, XCircleIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import exportService from '../../services/exportService';
 import UniversalExportService from '../../services/universalExportService';
+import Logger from '../../utils/logger';
 
 const ExportPanel = () => {
   const { t } = useTranslation();
@@ -22,14 +23,14 @@ const ExportPanel = () => {
       label: 'Excel', 
       icon: TableCellsIcon, 
       color: 'bg-green-500 hover:bg-green-600',
-      description: t('dashboard.idealForAnalysis')
+      description: t('dashboard.excelDescription')
     },
     { 
       format: 'pdf', 
       label: 'PDF', 
       icon: DocumentTextIcon, 
       color: 'bg-red-500 hover:bg-red-600',
-      description: t('dashboard.perfectForReports')
+      description: t('dashboard.pdfDescription')
     }
   ];
 
@@ -53,41 +54,14 @@ const ExportPanel = () => {
           statusLabel
         );
       } else if (format === 'pdf') {
-        // Convertir datos para PDF
-        const pdfData = reservationData.map(item => [
-          item.id || '',
-          item.date || '',
-          item.tourName || '',
-          item.status || '',
-          item.tourists || 0,
-          `$${item.revenue || 0}`
-        ]);
-        
-        UniversalExportService.exportToPDF(pdfData, {
-          filename: `reservas_${selectedStatus}`,
-          title: `Reporte de ${statusLabel}`,
-          columns: [
-            { header: 'ID' },
-            { header: 'Fecha' },
-            { header: 'Tour' },
-            { header: 'Estado' },
-            { header: 'Turistas' },
-            { header: 'Ingresos' }
-          ]
-        });
+        // Usar el servicio de exportación que ya tiene la lógica PDF correcta
+        exportService.exportData('pdf', selectedStatus);
       }
       
-      // Mostrar mensaje de éxito detallado
-      alert(`✅ ${statusLabel} exportada exitosamente!\n\n` +
-            `📊 Datos exportados:\n` +
-            `• ${stats.totalReservations} reservas\n` +
-            `• ${stats.totalTourists} turistas\n` +
-            `• $${stats.totalRevenue.toLocaleString()} en ingresos\n` +
-            `• Formato: ${format.toUpperCase()}\n\n` +
-            `📁 El archivo se descargó automáticamente.`);
+      // Éxito - el archivo se descarga automáticamente
     } catch (error) {
-      console.error('Error al exportar:', error);
-      alert('❌ Error al exportar los datos. Intenta nuevamente.');
+      Logger.error('Error al exportar:', error);
+      // Error silencioso - ya se registró con Logger
     } finally {
       setIsExporting(false);
     }
@@ -159,7 +133,7 @@ const ExportPanel = () => {
 
       {/* Botones de Exportación */}
       <div className="space-y-3">
-        <h4 className="text-sm font-medium text-gray-700">Formato de Exportación</h4>
+        <h4 className="text-sm font-medium text-gray-700">{t('dashboard.exportFormat')}</h4>
         {exportFormats.map((format) => (
           <button
             key={format.format}
@@ -175,7 +149,10 @@ const ExportPanel = () => {
               <format.icon className="w-5 h-5" />
               <div className="text-left">
                 <div className="font-semibold">
-                  Exportar {stats.totalReservations} reserva{stats.totalReservations !== 1 ? 's' : ''} como {format.label}
+                  {t('dashboard.exportCount', { 
+                    count: stats.totalReservations, 
+                    format: format.label 
+                  })}
                 </div>
                 <div className="text-sm opacity-90">
                   {format.description} • {statusOptions.find(opt => opt.value === selectedStatus)?.label}
@@ -194,7 +171,7 @@ const ExportPanel = () => {
       {/* Nota informativa */}
       <div className="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-800">
-          <span className="font-medium">💡 Tip:</span> Los archivos se descargarán automáticamente con la fecha actual en el nombre.
+          <span className="font-medium">💡 {t('dashboard.tip')}:</span> {t('dashboard.downloadTip')}
         </p>
       </div>
     </div>

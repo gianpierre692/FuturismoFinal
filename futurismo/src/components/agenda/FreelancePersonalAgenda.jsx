@@ -17,6 +17,7 @@ import QuickEditModal from '../calendar/Input/QuickEditModal';
 import useIndependentAgendaStore from '../../stores/independentAgendaStore';
 import useAuthStore from '../../stores/authStore';
 import useKeyboardShortcuts from '../../hooks/useKeyboardShortcuts';
+import Logger from '../../utils/logger';
 
 const FreelancePersonalAgenda = () => {
   const { user } = useAuthStore();
@@ -59,29 +60,29 @@ const FreelancePersonalAgenda = () => {
   };
 
   const handleEventClick = (event) => {
-    console.log('Event clicked in agenda:', event);
+    Logger.debug('Event clicked in agenda:', event);
     // Aquí podrías mostrar un popover con detalles del evento
   };
 
   const handleEventEdit = (event) => {
-    console.log('Event edit requested:', event);
+    Logger.debug('Event edit requested:', event);
     // Abrir modal de edición con datos del evento
     setSelectedEvent(event);
     setIsEditEventModalOpen(true);
   };
 
   const handleEventSave = (updatedEvent) => {
-    console.log('Event saved:', updatedEvent);
+    Logger.debug('Event saved:', updatedEvent);
     // El store ya se actualiza en QuickEditModal
   };
 
   const handleEventDelete = (deletedEvent) => {
-    console.log('Event deleted:', deletedEvent);
+    Logger.debug('Event deleted:', deletedEvent);
     // El store ya se actualiza en QuickEditModal
   };
 
   const handleEventDuplicate = (duplicatedEvent) => {
-    console.log('Event duplicated:', duplicatedEvent);
+    Logger.debug('Event duplicated:', duplicatedEvent);
     // El store ya se actualiza en QuickEditModal
   };
 

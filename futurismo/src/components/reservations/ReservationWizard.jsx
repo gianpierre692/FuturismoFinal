@@ -8,6 +8,7 @@ import { useReservationsStore } from '../../stores/reservationsStore';
 import { formatters, canBookDirectly } from '../../utils/formatters';
 import { validators } from '../../utils/validators';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 // Esquemas de validación para cada paso
 const step1Schema = yup.object({
@@ -195,7 +196,7 @@ const ReservationWizard = ({ onClose }) => {
       }
     } catch (error) {
       toast.error('Error al crear la reserva');
-      console.error(error);
+      Logger.error(error);
     } finally {
       setIsSubmitting(false);
     }

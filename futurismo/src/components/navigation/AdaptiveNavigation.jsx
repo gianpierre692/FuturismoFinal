@@ -8,6 +8,7 @@ import MobileHeader from './MobileHeader';
 import Header from '../common/Header';
 import NotificationsPanel from '../common/NotificationsPanel';
 import ResponsiveDebug from '../debug/ResponsiveDebug';
+import Logger from '../../utils/logger';
 
 const AdaptiveNavigation = ({ children }) => {
   const { user } = useAuthStore();
@@ -37,7 +38,7 @@ const AdaptiveNavigation = ({ children }) => {
   }, []);
 
   // Debug en desarrollo
-  // console.log('AdaptiveNavigation - isMobile:', isMobile, 'width:', window.innerWidth, 'user:', user?.role);
+  // Logger.debug('AdaptiveNavigation - isMobile:', isMobile, 'width:', window.innerWidth, 'user:', user?.role);
   
   // Ocultar navegación en ciertas rutas
   const hideNavRoutes = ['/login', '/register', '/onboarding'];

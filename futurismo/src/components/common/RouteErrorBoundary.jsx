@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { HomeIcon, ArrowPathIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
+import Logger from '../../utils/logger';
 
 /**
  * RouteErrorBoundary - Error boundary para páginas/rutas completas
@@ -29,7 +30,7 @@ class RouteErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Route Error Boundary:', error, errorInfo);
+    Logger.error('Route Error Boundary:', error, errorInfo);
     
     // Log específico para errores de ruta/página
     const errorReport = {
@@ -45,7 +46,7 @@ class RouteErrorBoundary extends React.Component {
 
     if (import.meta.env.PROD) {
       // TODO: Enviar a servicio de logging
-      console.log('Route failed:', errorReport);
+      Logger.debug('Route failed:', errorReport);
     }
 
     // Guardar reporte para análisis
@@ -56,7 +57,7 @@ class RouteErrorBoundary extends React.Component {
       if (reports.length > 10) reports.shift();
       localStorage.setItem('error_reports', JSON.stringify(reports));
     } catch (e) {
-      console.warn('No se pudo guardar reporte de error:', e);
+      Logger.warn('No se pudo guardar reporte de error:', e);
     }
   }
 

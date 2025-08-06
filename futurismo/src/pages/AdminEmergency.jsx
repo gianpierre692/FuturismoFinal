@@ -4,6 +4,7 @@ import useEmergencyStore from '../stores/emergencyStore';
 import ProtocolEditor from '../components/emergency/ProtocolEditor';
 import MaterialsManager from '../components/emergency/MaterialsManager';
 import emergencyPDFService from '../services/emergencyPDFService';
+import Logger from '../utils/logger';
 
 const AdminEmergency = () => {
   const { protocols, materials, categories, actions } = useEmergencyStore();
@@ -53,7 +54,7 @@ const AdminEmergency = () => {
     try {
       await emergencyPDFService.downloadAllProtocolsPDF(protocols);
     } catch (error) {
-      console.error('Error descargando protocolos:', error);
+      Logger.error('Error descargando protocolos:', error);
       alert('Error al generar el PDF de protocolos');
     }
   };
@@ -62,7 +63,7 @@ const AdminEmergency = () => {
     try {
       await emergencyPDFService.downloadGuideEmergencyKit();
     } catch (error) {
-      console.error('Error descargando kit:', error);
+      Logger.error('Error descargando kit:', error);
       alert('Error al generar el PDF del kit');
     }
   };
@@ -288,9 +289,9 @@ const AdminEmergency = () => {
                     <div key={index} className="p-3 bg-white rounded-lg border">
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-gray-900">{contact.name}</span>
-                        <a href={`tel:${contact.phone}`} className="text-blue-600 font-medium">
+                        <span className="text-gray-600 font-medium">
                           {contact.phone}
-                        </a>
+                        </span>
                       </div>
                       {contact.available && (
                         <p className="text-xs text-gray-500 mt-1">{contact.available}</p>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardMobile from './DashboardMobile';
-import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ChartBarIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
+import { ArrowTrendingUpIcon, CalendarIcon, CheckCircleIcon, ClockIcon, UserGroupIcon, CurrencyDollarIcon, ExclamationTriangleIcon, ChartBarIcon, ShieldExclamationIcon, StarIcon, PlayIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import StatsCard from '../components/dashboard/StatsCard';
 import ServiceChart from '../components/dashboard/ServiceChart';
 import ExportPanel from '../components/dashboard/ExportPanel';
-import WeeklyIncomeChart from '../components/dashboard/WeeklyIncomeChart';
+import MonthlyIncomeChart from '../components/dashboard/MonthlyIncomeChart';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import InteractiveButton from '../components/common/InteractiveButton';
 import InteractiveCard from '../components/common/InteractiveCard';
@@ -15,6 +16,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const Dashboard = () => {
   const { user } = useAuthStore();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [stats, setStats] = useState(() => {
@@ -24,14 +26,15 @@ const Dashboard = () => {
         myTours: 3,
         completedToday: 2,
         nextTour: '14:30',
-        punctualityRate: 98.5
+        myRating: 4.8,
+        monthlyEarnings: 3250
       };
     } else if (user?.role === 'agency') {
       return {
         activeServices: 12,
+        activeTours: 5,
         completedToday: 8,
         totalRevenue: 15840,
-        punctualityRate: 94.5,
         totalReservations: 127,
         totalTourists: 342,
         monthlyRevenue: 89500
@@ -41,6 +44,7 @@ const Dashboard = () => {
         activeServices: 48,
         totalAgencies: 12,
         totalGuides: 35,
+        onlineUsers: 47,
         systemHealth: 99.9,
         totalReservations: 1847,
         totalTourists: 4532,
@@ -95,6 +99,65 @@ const Dashboard = () => {
     setMonthlyData(getMonthlyData());
   }, [i18n.language]);
 
+  // Funciones para manejar clicks en las tarjetas de estadísticas
+  const handleStatsClick = (type) => {
+    switch (type) {
+      // Agency role actions
+      case 'reservations':
+        navigate('/reservations');
+        break;
+      case 'tourists':
+        navigate('/reservations?filter=tourists');
+        break;
+      case 'income':
+        navigate('/agency/reports?section=income');
+        break;
+      case 'active-tours':
+        navigate('/monitoring');
+        break;
+      
+      // Guide role actions
+      case 'my-tours':
+        navigate('/monitoring?view=my-tours');
+        break;
+      case 'completed':
+        navigate('/monitoring?filter=completed');
+        break;
+      case 'next-tour':
+        navigate('/agenda?view=next');
+        break;
+      case 'my-rating':
+        navigate('/profile');
+        break;
+      case 'my-earnings':
+        navigate('/guide/finances');
+        break;
+      
+      // Admin role actions
+      case 'admin-income':
+        navigate('/admin/reports?section=income');
+        break;
+      case 'admin-reservations':
+        navigate('/admin/reservations');
+        break;
+      case 'online-users':
+        navigate('/users');
+        break;
+      case 'admin-cancellations':
+        navigate('/admin/reports?section=cancellations');
+        break;
+      case 'admin-emergencies':
+        navigate('/admin/alerts?view=emergencies');
+        break;
+      case 'admin-system':
+        navigate('/settings?section=system-health');
+        break;
+      
+      default:
+        break;
+    }
+  };
+
   // Obtener hora del día para el saludo
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -127,7 +190,8 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="page-section grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-6">
+        <div className="page-section flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl w-full">
         {user?.role === 'guide' ? (
           <>
             <StatsCard
@@ -136,6 +200,7 @@ const Dashboard = () => {
               icon={CalendarIcon}
               trend="+1"
               color="primary"
+              onClick={() => handleStatsClick('my-tours')}
             />
             <StatsCard
               title={t('dashboard.completed')}
@@ -143,19 +208,22 @@ const Dashboard = () => {
               icon={CheckCircleIcon}
               trend="+2"
               color="success"
+              onClick={() => handleStatsClick('completed')}
             />
             <StatsCard
               title={t('dashboard.nextTour')}
               value={stats.nextTour}
               icon={ClockIcon}
               color="secondary"
+              onClick={() => handleStatsClick('next-tour')}
             />
             <StatsCard
-              title={t('dashboard.myPunctuality')}
-              value={`${stats.punctualityRate}%`}
-              icon={ArrowTrendingUpIcon}
-              trend="+0.5%"
+              title={user?.guideType === 'freelance' ? 'Mis Ganancias' : 'Mi Calificación'}
+              value={user?.guideType === 'freelance' ? `S/. ${stats.monthlyEarnings}` : `${stats.myRating} ⭐`}
+              icon={user?.guideType === 'freelance' ? CurrencyDollarIcon : StarIcon}
+              trend={user?.guideType === 'freelance' ? '+12%' : '+0.2'}
               color="primary"
+              onClick={() => handleStatsClick(user?.guideType === 'freelance' ? 'my-earnings' : 'my-rating')}
             />
           </>
         ) : user?.role === 'agency' ? (
@@ -166,6 +234,7 @@ const Dashboard = () => {
               icon={CalendarIcon}
               trend="+18%"
               color="primary"
+              onClick={() => handleStatsClick('reservations')}
             />
             <StatsCard
               title={t('dashboard.totalTourists')}
@@ -173,6 +242,7 @@ const Dashboard = () => {
               icon={UserGroupIcon}
               trend="+15%"
               color="success"
+              onClick={() => handleStatsClick('tourists')}
             />
             <StatsCard
               title={t('dashboard.totalIncome')}
@@ -180,23 +250,26 @@ const Dashboard = () => {
               icon={CurrencyDollarIcon}
               trend="+23%"
               color="secondary"
+              onClick={() => handleStatsClick('income')}
             />
             <StatsCard
-              title={t('dashboard.punctuality')}
-              value={`${stats.punctualityRate}%`}
-              icon={ArrowTrendingUpIcon}
-              trend="+2.5%"
+              title="Tours Activos"
+              value={stats.activeTours}
+              icon={PlayIcon}
+              trend="+3 hoy"
               color="primary"
+              onClick={() => handleStatsClick('active-tours')}
             />
           </>
         ) : (
           <>
             <StatsCard
-              title="Ingresos del Mes"
+              title={t('dashboard.totalIncome')}
               value={`S/. ${stats.totalRevenue.toLocaleString()}`}
               icon={CurrencyDollarIcon}
               trend="+15.3%"
               color="success"
+              onClick={() => handleStatsClick('admin-income')}
             />
             <StatsCard
               title="Reservaciones Activas"
@@ -204,13 +277,15 @@ const Dashboard = () => {
               icon={CalendarIcon}
               trend="42 para hoy"
               color="primary"
+              onClick={() => handleStatsClick('admin-reservations')}
             />
             <StatsCard
-              title="Tours Completados a Tiempo"
-              value="96.5%"
-              icon={ClockIcon}
-              trend="sin retrasos >30min"
+              title="Usuarios Online"
+              value={stats.onlineUsers}
+              icon={UserGroupIcon}
+              trend="conectados ahora"
               color="success"
+              onClick={() => handleStatsClick('online-users')}
             />
             <StatsCard
               title="Tours Sin Cancelaciones"
@@ -218,6 +293,7 @@ const Dashboard = () => {
               icon={CheckCircleIcon}
               trend="cancelación último momento"
               color="primary"
+              onClick={() => handleStatsClick('admin-cancellations')}
             />
             <StatsCard
               title="Tours Sin Emergencias"
@@ -225,6 +301,7 @@ const Dashboard = () => {
               icon={ShieldExclamationIcon}
               trend="incidentes de seguridad"
               color="secondary"
+              onClick={() => handleStatsClick('admin-emergencies')}
             />
             <StatsCard
               title="Uptime del Sistema"
@@ -232,10 +309,12 @@ const Dashboard = () => {
               icon={ChartBarIcon}
               trend="Sistema operativo"
               color="primary"
+              onClick={() => handleStatsClick('admin-system')}
             />
           </>
         )}  
-      </div>
+          </div>
+        </div>
 
       {/* Monthly Comparison Charts - Only for Agency and Admin */}
       {(user?.role === 'agency' || user?.role === 'admin') && (
@@ -303,7 +382,7 @@ const Dashboard = () => {
       {/* Análisis Detallado de Ingresos - Solo para Agency y Admin */}
       {(user?.role === 'agency' || user?.role === 'admin') && (
         <div className="mb-6 sm:mb-8">
-          <WeeklyIncomeChart />
+          <MonthlyIncomeChart />
         </div>
       )}
 
@@ -398,27 +477,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-        {/* Bottom Section - Alerts or Announcements */}
-        <div className="page-section bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg shadow-lg p-6 text-white hover:shadow-xl transition-all duration-300 group">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-white bg-opacity-20 rounded-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-            <ExclamationTriangleIcon className="w-6 h-6 animate-pulse" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2 group-hover:scale-105 transition-transform duration-200">{t('dashboard.importantReminder')}</h3>
-            <p className="text-primary-100 mb-3 group-hover:text-white transition-colors duration-200">
-              {t('dashboard.holidayMessage')}
-            </p>
-            <InteractiveButton
-              variant="ghost"
-              size="sm"
-              className="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 text-sm font-medium text-white border-white border border-opacity-30 hover:border-opacity-50"
-            >
-              {t('dashboard.viewHolidayCalendar')}
-            </InteractiveButton>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

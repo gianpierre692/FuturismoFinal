@@ -2,6 +2,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import Logger from '../utils/logger';
 
 // Configuración de colores y estilos
 const colors = {
@@ -459,7 +460,7 @@ class PDFService {
    */
   async sendPDFByEmail(assignmentData, recipients) {
     // Este método sería implementado con un servicio de email
-    console.log('Enviando PDF por email a:', recipients);
+    Logger.debug('Enviando PDF por email a:', recipients);
     
     // Generar PDFs
     const { agencyPDF, guidePDF } = this.generateBothPDFs(assignmentData);

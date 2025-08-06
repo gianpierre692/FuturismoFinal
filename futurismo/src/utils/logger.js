@@ -65,7 +65,7 @@ class Logger {
   static error(message, context = {}) {
     if (CURRENT_LOG_LEVEL >= LOG_LEVELS.ERROR) {
       const formatted = formatMessage('ERROR', message, context);
-      console.error(formatted.message, formatted.data || '', formatted.context);
+      // Logging silencioso - sin console
       
       // En producción, enviar errores a servicio de logging
       if (config.ENVIRONMENT.isProduction) {
@@ -77,49 +77,49 @@ class Logger {
   static warn(message, context = {}) {
     if (CURRENT_LOG_LEVEL >= LOG_LEVELS.WARN) {
       const formatted = formatMessage('WARN', message, context);
-      console.warn(formatted.message, formatted.data || '', formatted.context);
+      // Logging silencioso - sin console
     }
   }
 
   static info(message, context = {}) {
     if (CURRENT_LOG_LEVEL >= LOG_LEVELS.INFO) {
       const formatted = formatMessage('INFO', message, context);
-      console.info(formatted.message, formatted.data || '', formatted.context);
+      // Logging silencioso - sin console
     }
   }
 
   static debug(message, context = {}) {
     if (CURRENT_LOG_LEVEL >= LOG_LEVELS.DEBUG) {
       const formatted = formatMessage('DEBUG', message, context);
-      console.log(formatted.message, formatted.data || '', formatted.context);
+      // Logging silencioso - sin console
     }
   }
 
   // Logs específicos para desarrollo
   static dev(message, data = {}) {
     if (config.ENVIRONMENT.isDevelopment || config.FEATURES.DEBUG_MODE) {
-      console.log(`🔧 [DEV] ${message}`, sanitizeData(data));
+      // Logging silencioso - sin console
     }
   }
 
   // Performance logging
   static performance(label, duration, context = {}) {
     if (config.FEATURES.PERFORMANCE_METRICS) {
-      this.info(`⚡ Performance: ${label} took ${duration}ms`, context);
+      // Logging silencioso - sin console
     }
   }
 
   // WebSocket específico
   static websocket(message, data = {}) {
     if (config.ENVIRONMENT.isDevelopment) {
-      console.log(`🔌 [WebSocket] ${message}`, sanitizeData(data));
+      // Logging silencioso - sin console
     }
   }
 
   // Map específico
   static map(message, data = {}) {
     if (config.ENVIRONMENT.isDevelopment) {
-      console.log(`🗺️ [Map] ${message}`, sanitizeData(data));
+      // Logging silencioso - sin console
     }
   }
 

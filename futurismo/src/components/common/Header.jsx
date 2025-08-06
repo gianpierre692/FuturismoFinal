@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useAuthStore from '../../stores/authStore';
 import useNotificationsStore from '../../stores/notificationsStore';
 import LanguageToggle from './LanguageToggle';
+import Logger from '../../utils/logger';
 
 const Header = ({ onMenuClick }) => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Header = ({ onMenuClick }) => {
             {/* Notifications */}
             <button
               onClick={() => {
-                console.log('Notification button clicked! Current state:', isVisible);
+                Logger.debug('Notification button clicked! Current state:', isVisible);
                 toggleVisibility();
               }}
               className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"

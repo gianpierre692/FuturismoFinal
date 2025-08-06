@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 import { API_ENDPOINTS } from '../utils/constants';
+import Logger from '../utils/logger';
 
 class WebSocketService {
   constructor() {
@@ -13,13 +14,13 @@ class WebSocketService {
   connect(token) {
     // En desarrollo sin backend, simular conexión WebSocket
     if (import.meta.env.DEV && !import.meta.env.VITE_ENABLE_WEBSOCKET) {
-      console.log('WebSocket simulado en modo desarrollo');
+      Logger.debug('WebSocket simulado en modo desarrollo');
       this.simulateConnection();
       return;
     }
 
     if (this.socket?.connected) {
-      console.log('WebSocket already connected');
+      Logger.debug('WebSocket already connected');
       return;
     }
 
@@ -37,20 +38,20 @@ class WebSocketService {
   setupEventHandlers() {
     // Conexión establecida
     this.socket.on('connect', () => {
-      console.log('WebSocket connected');
+      Logger.debug('WebSocket connected');
       this.reconnectAttempts = 0;
       this.emit('connection:established');
     });
 
     // Desconexión
     this.socket.on('disconnect', (reason) => {
-      console.log('WebSocket disconnected:', reason);
+      Logger.debug('WebSocket disconnected:', reason);
       this.emit('connection:lost', reason);
     });
 
     // Error de conexión
     this.socket.on('connect_error', (error) => {
-      console.error('WebSocket connection error:', error);
+      Logger.error('WebSocket connection error:', error);
       this.reconnectAttempts++;
       
       if (this.reconnectAttempts >= this.maxReconnectAttempts) {
@@ -60,7 +61,7 @@ class WebSocketService {
 
     // Reconexión
     this.socket.on('reconnect', (attemptNumber) => {
-      console.log('WebSocket reconnected after', attemptNumber, 'attempts');
+      Logger.debug('WebSocket reconnected after', attemptNumber, 'attempts');
       this.emit('connection:reconnected');
     });
 
@@ -107,7 +108,7 @@ class WebSocketService {
   // Suscribirse a un canal específico
   subscribeToService(serviceId) {
     if (!this.socket?.connected) {
-      console.error('WebSocket not connected');
+      Logger.error('WebSocket not connected');
       return;
     }
 
@@ -220,7 +221,7 @@ class WebSocketService {
         try {
           callback(data);
         } catch (error) {
-          console.error(`Error in WebSocket event listener for ${event}:`, error);
+          Logger.error(`Error in WebSocket event listener for ${event}:`, error);
         }
       });
     }
@@ -249,11 +250,11 @@ class WebSocketService {
         }
       },
       emit: (event, data) => {
-        console.log(`[WebSocket Mock] Evento emitido: ${event}`, data);
+        Logger.debug(`[WebSocket Mock] Evento emitido: ${event}`, data);
       },
       off: () => {},
       disconnect: () => {
-        console.log('[WebSocket Mock] Desconectado');
+        Logger.debug('[WebSocket Mock] Desconectado');
         this.socket.connected = false;
       }
     };

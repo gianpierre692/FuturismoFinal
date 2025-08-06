@@ -70,14 +70,14 @@ const GuideTourView = () => {
                 Reportar Incidente
               </button>
               
-              {/* Solo mostrar contacto telefónico para guías freelance */}
+              {/* Solo mostrar chat para guías freelance */}
               {user?.guideType === 'freelance' && (
                 <button
-                  onClick={() => window.open('tel:+51987654321')}
+                  onClick={() => navigate('/chat')}
                   className="btn btn-outline flex items-center gap-2"
                 >
-                  <PhoneIcon className="w-4 h-4" />
-                  Contactar Agencia
+                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                  Chat con Agencia
                 </button>
               )}
 
@@ -117,18 +117,18 @@ const GuideTourView = () => {
 
         {/* Acciones rápidas */}
         <div className={`mt-6 grid grid-cols-1 ${user?.guideType === 'freelance' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4`}>
-          {/* Solo mostrar contacto de emergencia para guías freelance */}
+          {/* Solo mostrar chat de emergencia para guías freelance */}
           {user?.guideType === 'freelance' && (
             <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-              <h4 className="font-medium text-gray-900 mb-2">📱 Contacto de Emergencia</h4>
+              <h4 className="font-medium text-gray-900 mb-2">💬 Contacto de Emergencia</h4>
               <p className="text-sm text-gray-600 mb-3">
-                Agencia: +51 987 654 321
+                Comunicación directa con agencia
               </p>
               <button 
-                onClick={() => window.open('tel:+51987654321')}
+                onClick={() => navigate('/chat')}
                 className="btn btn-outline w-full"
               >
-                Llamar Ahora
+                Abrir Chat
               </button>
             </div>
           )}

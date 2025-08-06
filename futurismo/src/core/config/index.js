@@ -1,3 +1,5 @@
+import Logger from '../../utils/logger';
+
 // Configuración centralizada de la aplicación
 // Este archivo valida y expone todas las variables de entorno
 
@@ -99,7 +101,7 @@ if (config.isProduction) {
   
   requiredInProduction.forEach(key => {
     if (!import.meta.env[key]) {
-      console.error(`Missing required production environment variable: ${key}`);
+      Logger.error(`Missing required production environment variable: ${key}`);
     }
   });
 }

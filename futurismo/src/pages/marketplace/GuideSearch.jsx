@@ -18,6 +18,7 @@ import useMarketplaceStore from '../../stores/marketplaceStore';
 import GuideCardSimple from '../../components/marketplace/GuideCardSimple';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { debounce } from 'lodash';
+import Logger from '../../utils/logger';
 
 const GuideSearch = () => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const GuideSearch = () => {
       setGuides(allGuides);
       setFilteredGuides(allGuides);
     } catch (error) {
-      console.error('Error loading guides:', error);
+      Logger.error('Error loading guides:', error);
     } finally {
       setIsLoading(false);
     }

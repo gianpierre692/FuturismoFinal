@@ -4,6 +4,7 @@ import { format, formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import useNotificationsStore from '../../stores/notificationsStore';
 import { useTranslation } from 'react-i18next';
+import Logger from '../../utils/logger';
 
 const NotificationsPanel = () => {
   const { 
@@ -22,7 +23,7 @@ const NotificationsPanel = () => {
   const { t } = useTranslation();
   const panelRef = useRef(null);
   
-  console.log('NotificationsPanel render - isVisible:', isVisible);
+  Logger.debug('NotificationsPanel render - isVisible:', isVisible);
   
   // Cerrar panel al hacer clic fuera
   useEffect(() => {

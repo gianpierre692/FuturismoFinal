@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ToastContainer from './components/common/ToastContainer';
 
 // Stores
@@ -67,8 +68,10 @@ const GuideMarketplaceDashboard = lazy(() => import('./pages/marketplace/GuideMa
 
 // WebSocket service
 import webSocketResilientService from './services/websocketResilient';
+import Logger from './utils/logger';
 
 function App() {
+  const { t } = useTranslation();
   const { isAuthenticated, token, initialize } = useAuthStore();
   const { addNotification } = useNotificationsStore();
 
@@ -77,7 +80,7 @@ function App() {
     try {
       initialize();
     } catch (error) {
-      console.warn('Error al inicializar aplicación:', error);
+      Logger.warn('Error al inicializar aplicación:', error);
       localStorage.clear();
     }
   }, [initialize]);
@@ -91,14 +94,14 @@ function App() {
       // Listeners de WebSocket resiliente
       const unsubscribeTourUpdate = webSocketResilientService.on('tour:location-update', (data) => {
         // Actualización de ubicación de tour recibida
-        console.log('Tour location updated:', data);
+        Logger.debug('Tour location updated:', data);
       });
 
       const unsubscribeTourStatus = webSocketResilientService.on('tour:status-change', (data) => {
         addNotification({
           type: 'info',
-          title: 'Estado de tour actualizado',
-          message: `Tour ${data.tourId} cambió a: ${data.status}`,
+          title: t('notifications.tourStatusUpdated'),
+          message: t('notifications.tourStatusMessage', { tourId: data.tourId, status: data.status }),
           actionUrl: `/monitoring?tour=${data.tourId}`
         });
       });
@@ -106,8 +109,8 @@ function App() {
       const unsubscribeEmergency = webSocketResilientService.on('emergency:alert', (data) => {
         addNotification({
           type: 'error',
-          title: '🚨 EMERGENCIA',
-          message: `Alerta de emergencia en ${data.location}`,
+          title: t('notifications.emergencyTitle'),
+          message: t('notifications.emergencyMessage', { location: data.location }),
           actionUrl: `/monitoring?emergency=${data.id}`
         });
       });
@@ -156,7 +159,7 @@ function App() {
             <Route path="dashboard" element={
               <LazyWrapper 
                 fallback={<SkeletonLoader.Dashboard />}
-                description="Cargando dashboard..."
+                description={t('loading.dashboard')}
               >
                 <Dashboard />
               </LazyWrapper>
@@ -164,7 +167,7 @@ function App() {
             <Route path="monitoring" element={
               <LazyWrapper 
                 fallback={<SkeletonLoader.Map />}
-                description="Cargando monitoreo en tiempo real..."
+                description={t('loading.monitoring')}
               >
                 <Monitoring />
               </LazyWrapper>

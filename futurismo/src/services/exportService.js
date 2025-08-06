@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
+import Logger from '../utils/logger';
 
 class ExportService {
   // Obtener datos mock de reservas con diferentes estados para demostrar filtros
@@ -181,73 +182,78 @@ class ExportService {
 
   // Exportar a PDF
   exportToPDF(data, filename = 'reservas_export', title = 'Reporte de Reservas') {
-    const doc = new jsPDF('l', 'mm', 'a4'); // Orientación landscape
-    
-    // Título del documento
-    doc.setFontSize(18);
-    doc.text(title, 15, 20);
-    
-    // Fecha del reporte
-    doc.setFontSize(10);
-    doc.text(`Generado el: ${new Date().toLocaleDateString('es-PE')}`, 15, 30);
-    
-    // Configurar tabla
-    const headers = [
-      'ID', 'Fecha', 'Tour', 'Cliente', 'Contacto', 
-      'Adultos', 'Niños', 'Total', 'Estado', 'Guía', 'Pago'
-    ];
-    
-    const rows = data.map(item => [
-      item.id,
-      new Date(item.date).toLocaleDateString('es-PE'),
-      item.tourName,
-      item.clientName,
-      item.clientContact,
-      item.adults,
-      item.children,
-      `$${item.total}`,
-      item.status.charAt(0).toUpperCase() + item.status.slice(1),
-      item.guideName,
-      item.paymentStatus
-    ]);
+    try {
+      const doc = new jsPDF('l', 'mm', 'a4'); // Orientación landscape
+      
+      // Título del documento
+      doc.setFontSize(18);
+      doc.text(title, 15, 20);
+      
+      // Fecha del reporte
+      doc.setFontSize(10);
+      doc.text(`Generado el: ${new Date().toLocaleDateString('es-PE')}`, 15, 30);
+      
+      // Configurar tabla
+      const headers = [
+        'ID', 'Fecha', 'Tour', 'Cliente', 'Contacto', 
+        'Adultos', 'Niños', 'Total', 'Estado', 'Guía', 'Pago'
+      ];
+      
+      const rows = data.map(item => [
+        item.id,
+        new Date(item.date).toLocaleDateString('es-PE'),
+        item.tourName,
+        item.clientName,
+        item.clientContact,
+        item.adults,
+        item.children,
+        `$${item.total}`,
+        item.status.charAt(0).toUpperCase() + item.status.slice(1),
+        item.guideName,
+        item.paymentStatus
+      ]);
+      autoTable(doc, {
+        head: [headers],
+        body: rows,
+        startY: 40,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2
+        },
+        headStyles: {
+          fillColor: [59, 130, 246], // Azul primary
+          textColor: 255
+        },
+        alternateRowStyles: {
+          fillColor: [249, 250, 251] // Gris claro
+        },
+        columnStyles: {
+          7: { halign: 'right' }, // Total alineado a la derecha
+          5: { halign: 'center' }, // Adultos centrado
+          6: { halign: 'center' }  // Niños centrado
+        }
+      });
 
-    doc.autoTable({
-      head: [headers],
-      body: rows,
-      startY: 40,
-      styles: {
-        fontSize: 8,
-        cellPadding: 2
-      },
-      headStyles: {
-        fillColor: [59, 130, 246], // Azul primary
-        textColor: 255
-      },
-      alternateRowStyles: {
-        fillColor: [249, 250, 251] // Gris claro
-      },
-      columnStyles: {
-        7: { halign: 'right' }, // Total alineado a la derecha
-        5: { halign: 'center' }, // Adultos centrado
-        6: { halign: 'center' }  // Niños centrado
-      }
-    });
+      // Agregar estadísticas al final
+      const finalY = doc.lastAutoTable.finalY + 20;
+      doc.setFontSize(12);
+      doc.text('Resumen:', 15, finalY);
+      
+      doc.setFontSize(10);
+      const totalReservations = data.length;
+      const totalRevenue = data.reduce((sum, item) => sum + item.total, 0);
+      const totalTourists = data.reduce((sum, item) => sum + item.adults + item.children, 0);
+      
+      doc.text(`Total de Reservas: ${totalReservations}`, 15, finalY + 10);
+      doc.text(`Total de Turistas: ${totalTourists}`, 15, finalY + 20);
+      doc.text(`Ingresos Totales: $${totalRevenue.toLocaleString()}`, 15, finalY + 30);
 
-    // Agregar estadísticas al final
-    const finalY = doc.lastAutoTable.finalY + 20;
-    doc.setFontSize(12);
-    doc.text('Resumen:', 15, finalY);
-    
-    doc.setFontSize(10);
-    const totalReservations = data.length;
-    const totalRevenue = data.reduce((sum, item) => sum + item.total, 0);
-    const totalTourists = data.reduce((sum, item) => sum + item.adults + item.children, 0);
-    
-    doc.text(`Total de Reservas: ${totalReservations}`, 15, finalY + 10);
-    doc.text(`Total de Turistas: ${totalTourists}`, 15, finalY + 20);
-    doc.text(`Ingresos Totales: $${totalRevenue.toLocaleString()}`, 15, finalY + 30);
-
-    doc.save(`${filename}_${new Date().toISOString().split('T')[0]}.pdf`);
+      doc.save(`${filename}_${new Date().toISOString().split('T')[0]}.pdf`);
+      
+    } catch (error) {
+      Logger.error('Error in exportToPDF:', error);
+      throw error;
+    }
   }
 
   // Función auxiliar para descargar blobs
@@ -269,7 +275,7 @@ class ExportService {
     const filteredData = this.filterDataByStatus(allData, status);
     
     if (filteredData.length === 0) {
-      alert('No hay datos para exportar con los filtros seleccionados.');
+      Logger.error('No hay datos para exportar con los filtros seleccionados.');
       return;
     }
 
@@ -294,7 +300,7 @@ class ExportService {
         this.exportToPDF(filteredData, baseFilename, title);
         break;
       default:
-        console.error('Formato de exportación no soportado:', format);
+        Logger.error('Formato de exportación no soportado:', format);
     }
   }
 

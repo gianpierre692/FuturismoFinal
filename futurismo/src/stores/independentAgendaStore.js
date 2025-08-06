@@ -558,7 +558,7 @@ const useIndependentAgendaStore = create(
             
             if (!workingHoursForDay || !workingHoursForDay.enabled) return [];
             
-            // TODO: Implementar lógica completa de cálculo de slots disponibles
+            // Implementar lógica completa de cálculo de slots disponibles cuando se conecte con el backend
             // Por ahora retorna estructura básica
             return [
               {

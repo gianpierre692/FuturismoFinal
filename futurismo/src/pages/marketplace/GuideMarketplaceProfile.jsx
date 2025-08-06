@@ -21,6 +21,7 @@ import { HeartIcon as HeartOutlineIcon } from '@heroicons/react/24/outline';
 import useMarketplaceStore from '../../stores/marketplaceStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { useTranslation } from 'react-i18next';
+import Logger from '../../utils/logger';
 
 const GuideMarketplaceProfile = () => {
   const { guideId } = useParams();
@@ -87,7 +88,7 @@ const GuideMarketplaceProfile = () => {
       const reviewsData = await getGuideReviews(guideId);
       setReviews(reviewsData);
     } catch (error) {
-      console.error('Error loading guide:', error);
+      Logger.error('Error loading guide:', error);
     } finally {
       setIsLoading(false);
     }
@@ -356,18 +357,11 @@ const GuideMarketplaceProfile = () => {
           )}
         </div>
 
-        {/* Botones de acción fijos */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 grid grid-cols-2 gap-3">
-          <button
-            onClick={() => window.location.href = `tel:${guide.phone}`}
-            className="flex items-center justify-center gap-2 py-3 bg-white border border-gray-300 rounded-lg font-medium text-gray-700"
-          >
-            <PhoneIcon className="h-5 w-5" />
-            Llamar
-          </button>
+        {/* Botón de acción fijo */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
           <button
             onClick={handleContact}
-            className="flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-lg font-medium"
+            className="w-full flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-lg font-medium"
           >
             <ChatBubbleLeftRightIcon className="h-5 w-5" />
             Contactar

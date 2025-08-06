@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import ServiceAreaFeedback from './ServiceAreaFeedback';
 import StaffFeedback from './StaffFeedback';
+import Logger from '../../utils/logger';
 
 const FeedbackModal = ({ 
   isOpen, 
@@ -22,7 +23,7 @@ const FeedbackModal = ({
 
   const handleFeedbackSubmit = (submittedData) => {
     setFeedbackData(submittedData);
-    console.log('Feedback submitted:', submittedData);
+    Logger.debug('Feedback submitted:', submittedData);
     onSubmit(submittedData);
     handleClose();
   };

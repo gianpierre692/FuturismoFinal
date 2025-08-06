@@ -12,7 +12,7 @@
  */
 
 import { io } from 'socket.io-client';
-import Logger from '../utils/logger.js';
+import Logger from '../utils/logger';
 
 // Estados de conexión
 const CONNECTION_STATES = {
@@ -121,7 +121,7 @@ class WebSocketResilientService {
     this.token = token;
     
     if (this.currentState === CONNECTION_STATES.CONNECTED) {
-      console.log('✅ WebSocket ya conectado');
+      Logger.debug('✅ WebSocket ya conectado');
       return;
     }
 
@@ -176,7 +176,7 @@ class WebSocketResilientService {
       // Timeout para la conexión
       const connectionTimeout = setTimeout(() => {
         if (this.currentState === CONNECTION_STATES.CONNECTING) {
-          console.warn('⏰ Timeout de conexión');
+          Logger.warn('⏰ Timeout de conexión');
           this.handleConnectionFailure();
         }
       }, 15000); // 15 segundos timeout
@@ -193,7 +193,7 @@ class WebSocketResilientService {
       });
 
     } catch (error) {
-      console.error('❌ Error creando socket:', error);
+      Logger.error('❌ Error creando socket:', error);
       this.handleConnectionFailure();
     }
   }
@@ -228,7 +228,7 @@ class WebSocketResilientService {
   // ===========================================
 
   handleConnect() {
-    console.log('✅ WebSocket conectado exitosamente');
+    Logger.debug('✅ WebSocket conectado exitosamente');
     
     this.stats.connectionsSuccessful++;
     this.reconnectAttempts = 0;
@@ -246,7 +246,7 @@ class WebSocketResilientService {
   }
 
   handleDisconnect(reason) {
-    console.warn(`⚠️ WebSocket desconectado: ${reason}`);
+    Logger.warn(`⚠️ WebSocket desconectado: ${reason}`);
     
     this.clearAllTimers();
     this.changeState(CONNECTION_STATES.RECONNECTING);
@@ -254,7 +254,7 @@ class WebSocketResilientService {
     // Decidir si reconectar o fallar
     if (reason === 'io server disconnect') {
       // El servidor nos desconectó intencionalmente
-      console.log('🚫 Server desconectó - esperando antes de reconectar');
+      Logger.debug('🚫 Server desconectó - esperando antes de reconectar');
       setTimeout(() => this.scheduleReconnect(), 5000);
     } else {
       // Desconexión inesperada - reconectar inmediatamente
@@ -263,7 +263,7 @@ class WebSocketResilientService {
   }
 
   handleConnectError(error) {
-    console.error(`❌ Error de conexión: ${error.message}`);
+    Logger.error(`❌ Error de conexión: ${error.message}`);
     this.handleConnectionFailure();
   }
 
@@ -273,12 +273,12 @@ class WebSocketResilientService {
     // Intentar con siguiente URL
     if (this.reconnectAttempts % 3 === 0) {
       this.currentUrlIndex = (this.currentUrlIndex + 1) % this.wsUrls.length;
-      console.log(`🔄 Cambiando a URL backup: ${this.wsUrls[this.currentUrlIndex]}`);
+      Logger.debug(`🔄 Cambiando a URL backup: ${this.wsUrls[this.currentUrlIndex]}`);
     }
     
     // Si fallaron todos los URLs varias veces, activar fallback
     if (this.reconnectAttempts > this.wsUrls.length * 3) {
-      console.warn('🚨 WebSocket totalmente fallido - activando fallback polling');
+      Logger.warn('🚨 WebSocket totalmente fallido - activando fallback polling');
       this.activateFallback();
       return;
     }
@@ -303,7 +303,7 @@ class WebSocketResilientService {
     const jitter = baseDelay * 0.25 * (Math.random() * 2 - 1);
     const delay = Math.max(1000, baseDelay + jitter);
     
-    console.log(`⏱️ Reconectando en ${Math.round(delay / 1000)}s (intento ${this.reconnectAttempts})`);
+    Logger.debug(`⏱️ Reconectando en ${Math.round(delay / 1000)}s (intento ${this.reconnectAttempts})`);
     
     this.reconnectTimeoutId = setTimeout(() => {
       this.reconnectTimeoutId = null;
@@ -374,10 +374,10 @@ class WebSocketResilientService {
     this.missedHeartbeats++;
     this.stats.heartbeatsLost++;
     
-    console.warn(`💔 Heartbeat perdido (${this.missedHeartbeats}/${this.maxMissedHeartbeats})`);
+    Logger.warn(`💔 Heartbeat perdido (${this.missedHeartbeats}/${this.maxMissedHeartbeats})`);
     
     if (this.missedHeartbeats >= this.maxMissedHeartbeats) {
-      console.error('💀 Demasiados heartbeats perdidos - reconectando');
+      Logger.error('💀 Demasiados heartbeats perdidos - reconectando');
       this.emit(EVENT_TYPES.HEARTBEAT_FAILED);
       
       // Forzar reconexión
@@ -414,7 +414,7 @@ class WebSocketResilientService {
   processMessageQueue() {
     if (this.messageQueue.length === 0) return;
     
-    console.log(`📤 Procesando ${this.messageQueue.length} mensajes en queue`);
+    Logger.debug(`📤 Procesando ${this.messageQueue.length} mensajes en queue`);
     
     const messagesToProcess = [...this.messageQueue];
     this.messageQueue = [];
@@ -444,7 +444,7 @@ class WebSocketResilientService {
     if (this.isPolling) return;
     
     this.isPolling = true;
-    console.log('🔄 Iniciando HTTP polling fallback');
+    Logger.debug('🔄 Iniciando HTTP polling fallback');
     
     const poll = async () => {
       try {
@@ -460,7 +460,7 @@ class WebSocketResilientService {
           this.handlePollingData(data);
         }
       } catch (error) {
-        console.error('❌ Error en polling:', error);
+        Logger.error('❌ Error en polling:', error);
       }
       
       if (this.isPolling) {
@@ -502,7 +502,7 @@ class WebSocketResilientService {
   requestStateSync() {
     if (this.currentState !== CONNECTION_STATES.CONNECTED) return;
     
-    console.log('🔄 Solicitando sincronización de estado...');
+    Logger.debug('🔄 Solicitando sincronización de estado...');
     
     this.socket.emit('state:sync-request', {
       timestamp: Date.now(),
@@ -520,7 +520,7 @@ class WebSocketResilientService {
       try {
         callback(data);
       } catch (error) {
-        console.error(`Error en listener de ${eventName}:`, error);
+        Logger.error(`Error en listener de ${eventName}:`, error);
       }
     });
   }
@@ -560,7 +560,7 @@ class WebSocketResilientService {
     const oldState = this.currentState;
     this.currentState = newState;
     
-    console.log(`🔄 Estado WebSocket: ${oldState} → ${newState}`);
+    Logger.debug(`🔄 Estado WebSocket: ${oldState} → ${newState}`);
     
     this.emit(EVENT_TYPES.CONNECTION_STATE_CHANGED, {
       oldState,
@@ -605,7 +605,7 @@ class WebSocketResilientService {
   // ===========================================
 
   startMockMode() {
-    console.log('🎭 WebSocket en modo MOCK para desarrollo');
+    Logger.debug('🎭 WebSocket en modo MOCK para desarrollo');
     
     this.changeState(CONNECTION_STATES.CONNECTED);
     

@@ -17,6 +17,7 @@ import useMarketplaceStore from '../../stores/marketplaceStore';
 import useAuthStore from '../../stores/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const BookingFlow = () => {
   const { guideId } = useParams();
@@ -66,7 +67,7 @@ const BookingFlow = () => {
       const guideData = await getGuideById(guideId);
       setGuide(guideData);
     } catch (error) {
-      console.error('Error loading guide:', error);
+      Logger.error('Error loading guide:', error);
       toast.error('Error al cargar información del guía');
     } finally {
       setIsLoading(false);
@@ -153,7 +154,7 @@ const BookingFlow = () => {
       toast.success('¡Solicitud enviada correctamente!');
       navigate('/marketplace/bookings');
     } catch (error) {
-      console.error('Error creating booking:', error);
+      Logger.error('Error creating booking:', error);
       toast.error('Error al crear la reserva');
     }
   };

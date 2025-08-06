@@ -6,6 +6,7 @@ import useIndependentAgendaStore from '../../../stores/independentAgendaStore';
 import useAuthStore from '../../../stores/authStore';
 import EventBlock from '../EventComponents/EventBlock';
 import AllDayEvent from '../EventComponents/AllDayEvent';
+import Logger from '../../../utils/logger';
 
 const DayView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) => {
   const { user } = useAuthStore();
@@ -73,7 +74,7 @@ const DayView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =>
       onTimeSlotClick(selectedDate, timeString);
     }
     
-    console.log(`Adding event at ${timeString} on ${format(selectedDate, 'yyyy-MM-dd')}`);
+    Logger.debug(`Adding event at ${timeString} on ${format(selectedDate, 'yyyy-MM-dd')}`);
   };
 
   const handleEventClick = (event) => {
@@ -83,7 +84,7 @@ const DayView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =>
       onEventClick(event);
     }
     
-    console.log('Event clicked:', event);
+    Logger.debug('Event clicked:', event);
   };
 
   const handleEventDoubleClick = (event) => {
@@ -91,7 +92,7 @@ const DayView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =>
       onEventEdit(event);
     }
     
-    console.log('Event double-clicked for editing:', event);
+    Logger.debug('Event double-clicked for editing:', event);
   };
 
   const handleSlotHover = (hour, isHovering) => {
@@ -125,18 +126,18 @@ const DayView = ({ onTimeSlotClick, onDateClick, onEventClick, onEventEdit }) =>
       const { eventId, eventType, startTime, endTime } = dragData;
       
       // Aquí implementaremos la lógica para mover el evento
-      console.log('Event dropped:', {
+      Logger.debug('Event dropped:', {
         eventId,
         originalTime: startTime,
         newHour: hour,
         newDate: format(selectedDate, 'yyyy-MM-dd')
       });
       
-      // TODO: Integrar con el store para mover el evento
+      // Se integrará con el store cuando se conecte con el backend
       // moveEvent(eventId, selectedDate, hour);
       
     } catch (error) {
-      console.error('Error parsing drag data:', error);
+      Logger.error('Error parsing drag data:', error);
     }
   };
 

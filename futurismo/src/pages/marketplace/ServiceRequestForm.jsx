@@ -21,6 +21,7 @@ import useAuthStore from '../../stores/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import GuideAvailabilityCalendar from '../../components/marketplace/GuideAvailabilityCalendar';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 // Esquema de validación
 const serviceRequestSchema = yup.object().shape({
@@ -162,7 +163,7 @@ const ServiceRequestForm = () => {
         navigate('/marketplace');
       }
     } catch (error) {
-      console.error('Error loading guide:', error);
+      Logger.error('Error loading guide:', error);
     } finally {
       setIsLoading(false);
     }
@@ -202,7 +203,7 @@ const ServiceRequestForm = () => {
       toast.success('Solicitud enviada exitosamente');
       navigate(`/marketplace/requests/${newRequest.id}`);
     } catch (error) {
-      console.error('Error creating request:', error);
+      Logger.error('Error creating request:', error);
       toast.error('Error al enviar la solicitud');
     } finally {
       setIsSubmitting(false);

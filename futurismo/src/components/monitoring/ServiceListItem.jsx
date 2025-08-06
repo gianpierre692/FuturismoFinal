@@ -63,9 +63,9 @@ const ServiceListItem = memo(({
             {service.guide?.phone && (
               <div className="flex items-center gap-1">
                 <PhoneIcon className="w-3 h-3" />
-                <a href={`tel:${service.guide.phone}`} className="text-blue-600 hover:underline">
+                <span className="text-gray-600">
                   {service.guide.phone}
-                </a>
+                </span>
               </div>
             )}
           </div>

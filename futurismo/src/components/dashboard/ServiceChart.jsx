@@ -100,40 +100,40 @@ const ServiceChart = () => {
           {/* Selector de tipo de gráfico */}
           <div className="flex bg-gray-100 rounded-lg p-1">
             <InteractiveButton
-              variant={chartType === 'line' ? 'primary' : 'ghost'}
+              variant="ghost"
               size="sm"
-              className={`px-3 py-1 text-sm font-medium ${
+              className={`px-3 py-1.5 text-sm font-medium ${
                 chartType === 'line'
-                  ? 'bg-white text-gray-900 shadow-sm'
+                  ? 'bg-white !text-gray-900 shadow-sm ring-1 ring-gray-200'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
               onClick={() => setChartType('line')}
             >
-              Líneas
+              {t('dashboard.chartTypes.line')}
             </InteractiveButton>
             <InteractiveButton
-              variant={chartType === 'bar' ? 'primary' : 'ghost'}
+              variant="ghost"
               size="sm"
-              className={`px-3 py-1 text-sm font-medium ${
+              className={`px-3 py-1.5 text-sm font-medium ${
                 chartType === 'bar'
-                  ? 'bg-white text-gray-900 shadow-sm'
+                  ? 'bg-white !text-gray-900 shadow-sm ring-1 ring-gray-200'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
               onClick={() => setChartType('bar')}
             >
-              Barras
+              {t('dashboard.chartTypes.bar')}
             </InteractiveButton>
             <InteractiveButton
-              variant={chartType === 'pie' ? 'primary' : 'ghost'}
+              variant="ghost"
               size="sm"
-              className={`px-3 py-1 text-sm font-medium ${
+              className={`px-3 py-1.5 text-sm font-medium ${
                 chartType === 'pie'
-                  ? 'bg-white text-gray-900 shadow-sm'
+                  ? 'bg-white !text-gray-900 shadow-sm ring-1 ring-gray-200'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
               onClick={() => setChartType('pie')}
             >
-              Torta
+              {t('dashboard.chartTypes.pie')}
             </InteractiveButton>
           </div>
         </div>

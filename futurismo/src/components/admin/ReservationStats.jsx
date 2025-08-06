@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   UsersIcon as Users,
   CalendarIcon as Calendar,
@@ -11,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const ReservationStats = ({ reservations = [], filters = {} }) => {
+  const { t } = useTranslation();
   
   // Calcular estadísticas detalladas
   const stats = useMemo(() => {
@@ -124,33 +126,33 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
       {/* Estadísticas principales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total de Clientes"
+          title={t('admin.stats.totalClients')}
           value={stats.totalClients.toLocaleString()}
-          subtitle="Reservas completadas"
+          subtitle={t('admin.stats.completedReservations')}
           icon={Users}
           color="blue"
           trend="+12%"
         />
         <StatCard
-          title="Total Turistas"
+          title={t('admin.stats.totalTourists')}
           value={stats.totalTourists.toLocaleString()}
-          subtitle="Personas atendidas"
+          subtitle={t('admin.stats.peopleServed')}
           icon={TrendingUp}
           color="green"
           trend="+18%"
         />
         <StatCard
-          title="Ingresos Totales"
+          title={t('admin.stats.totalRevenue')}
           value={formatCurrency(stats.totalRevenue)}
-          subtitle="Ventas acumuladas"
+          subtitle={t('admin.stats.accumulatedSales')}
           icon={DollarSign}
           color="purple"
           trend="+23%"
         />
         <StatCard
-          title="Promedio por Grupo"
+          title={t('admin.stats.averagePerGroup')}
           value={stats.avgGroupSize.toFixed(1)}
-          subtitle="Personas por reserva"
+          subtitle={t('admin.stats.peoplePerReservation')}
           icon={BarChart3}
           color="orange"
           trend="+5%"
@@ -160,17 +162,17 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
       {/* Estadísticas adicionales */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatCard
-          title="Promedio por Cliente"
+          title={t('admin.stats.averagePerClient')}
           value={formatCurrency(stats.avgRevenuePerClient)}
-          subtitle="Valor promedio de reserva"
+          subtitle={t('admin.stats.averageReservationValue')}
           icon={Star}
           color="yellow"
           trend="+8%"
         />
         <StatCard
-          title="Destinos Activos"
+          title={t('admin.stats.activeDestinations')}
           value={stats.topDestinations.length}
-          subtitle="Ubicaciones disponibles"
+          subtitle={t('admin.stats.availableLocations')}
           icon={MapPin}
           color="indigo"
         />
@@ -181,7 +183,7 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center mb-4">
             <MapPin className="w-5 h-5 text-blue-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-800">Top Destinos</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{t('admin.stats.topDestinations')}</h3>
           </div>
           <div className="space-y-3">
             {stats.topDestinations.map((item, index) => (
@@ -200,7 +202,7 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">{item.count}</div>
-                  <div className="text-xs text-gray-500">reservas</div>
+                  <div className="text-xs text-gray-500">{t('common.reservations')}</div>
                 </div>
               </div>
             ))}
@@ -211,7 +213,7 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center mb-4">
             <Users className="w-5 h-5 text-green-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-800">Top Guías</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{t('admin.stats.topGuides')}</h3>
           </div>
           <div className="space-y-3">
             {stats.topGuides.map((item, index) => (
@@ -230,7 +232,7 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">{item.count}</div>
-                  <div className="text-xs text-gray-500">tours</div>
+                  <div className="text-xs text-gray-500">{t('common.tours')}</div>
                 </div>
               </div>
             ))}
@@ -241,7 +243,7 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center mb-4">
             <PieChart className="w-5 h-5 text-purple-600 mr-2" />
-            <h3 className="text-lg font-semibold text-gray-800">Tipos de Tour</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{t('admin.stats.tourTypes')}</h3>
           </div>
           <div className="space-y-3">
             {stats.tourTypeDistribution.map((item, index) => (
@@ -270,14 +272,14 @@ const ReservationStats = ({ reservations = [], filters = {} }) => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center mb-4">
           <TrendingUp className="w-5 h-5 text-indigo-600 mr-2" />
-          <h3 className="text-lg font-semibold text-gray-800">Tendencia de Clientes</h3>
+          <h3 className="text-lg font-semibold text-gray-800">{t('admin.stats.clientTrend')}</h3>
         </div>
         <div className="grid grid-cols-3 gap-4">
           {stats.monthlyTrend.map((month) => (
             <div key={month.month} className="text-center p-4 bg-gray-50 rounded-lg">
               <div className="text-sm text-gray-600 mb-1">{month.month}</div>
               <div className="text-xl font-bold text-gray-900 mb-1">{month.clients}</div>
-              <div className="text-xs text-gray-500">clientes</div>
+              <div className="text-xs text-gray-500">{t('common.clients')}</div>
               <div className="text-sm font-medium text-green-600 mt-1">
                 {formatCurrency(month.revenue)}
               </div>

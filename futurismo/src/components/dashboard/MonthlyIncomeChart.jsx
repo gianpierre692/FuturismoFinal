@@ -16,125 +16,125 @@ import {
 import InteractiveButton from '../common/InteractiveButton';
 import InteractiveCard from '../common/InteractiveCard';
 
-const WeeklyIncomeChart = () => {
+const MonthlyIncomeChart = () => {
   const { t } = useTranslation();
   const [viewType, setViewType] = useState('area'); // area, bar, line, composed
-  const [timeframe, setTimeframe] = useState('thisWeek'); // thisWeek, lastWeek, comparison
+  const [timeframe, setTimeframe] = useState('thisMonth'); // thisMonth, lastMonth, comparison
   const [showDetails, setShowDetails] = useState(false);
 
-  // Datos más detallados para la semana
-  const weeklyData = useMemo(() => {
+  // Datos más detallados para el mes
+  const monthlyData = useMemo(() => {
     const baseData = {
-      thisWeek: [
+      thisMonth: [
         { 
-          day: 'Lun', 
-          dayFull: 'Lunes',
-          ingresos: 4200, 
-          reservas: 12, 
-          promedio: 350,
-          tours: ['City Tour', 'Gastronómico'], 
-          turistas: 28,
-          meta: 4000,
-          porcentajeMeta: 105
+          day: 'Ene', 
+          dayFull: 'Enero',
+          ingresos: 125000, 
+          reservas: 285, 
+          promedio: 439,
+          tours: ['City Tour', 'Gastronómico', 'Palomino'], 
+          turistas: 812,
+          meta: 100000,
+          porcentajeMeta: 125
+        },
+        { 
+          day: 'Feb', 
+          dayFull: 'Febrero',
+          ingresos: 118000, 
+          reservas: 262, 
+          promedio: 450,
+          tours: ['Palomino', 'City Tour', 'Pachacámac'], 
+          turistas: 765,
+          meta: 100000,
+          porcentajeMeta: 118
         },
         { 
           day: 'Mar', 
-          dayFull: 'Martes',
-          ingresos: 3800, 
-          reservas: 10, 
-          promedio: 380,
-          tours: ['Palomino', 'City Tour'], 
-          turistas: 24,
-          meta: 4000,
-          porcentajeMeta: 95
-        },
-        { 
-          day: 'Mié', 
-          dayFull: 'Miércoles',
-          ingresos: 5600, 
-          reservas: 16, 
-          promedio: 350,
+          dayFull: 'Marzo',
+          ingresos: 142000, 
+          reservas: 310, 
+          promedio: 458,
           tours: ['Gastronómico', 'Pachacámac', 'City Tour'], 
-          turistas: 35,
-          meta: 4000,
-          porcentajeMeta: 140
+          turistas: 890,
+          meta: 120000,
+          porcentajeMeta: 118.3
         },
         { 
-          day: 'Jue', 
-          dayFull: 'Jueves',
-          ingresos: 4900, 
-          reservas: 14, 
-          promedio: 350,
-          tours: ['City Tour', 'Palomino'], 
-          turistas: 32,
-          meta: 4000,
-          porcentajeMeta: 122.5
+          day: 'Abr', 
+          dayFull: 'Abril',
+          ingresos: 136000, 
+          reservas: 298, 
+          promedio: 456,
+          tours: ['City Tour', 'Palomino', 'Líneas de Nazca'], 
+          turistas: 845,
+          meta: 120000,
+          porcentajeMeta: 113.3
         },
         { 
-          day: 'Vie', 
-          dayFull: 'Viernes',
-          ingresos: 6800, 
-          reservas: 19, 
-          promedio: 358,
+          day: 'May', 
+          dayFull: 'Mayo',
+          ingresos: 148000, 
+          reservas: 325, 
+          promedio: 455,
           tours: ['Gastronómico', 'City Tour', 'Palomino'], 
-          turistas: 42,
-          meta: 4000,
-          porcentajeMeta: 170
+          turistas: 920,
+          meta: 140000,
+          porcentajeMeta: 105.7
         },
         { 
-          day: 'Sáb', 
-          dayFull: 'Sábado',
-          ingresos: 8200, 
-          reservas: 23, 
-          promedio: 357,
+          day: 'Jun', 
+          dayFull: 'Junio',
+          ingresos: 156000, 
+          reservas: 342, 
+          promedio: 456,
           tours: ['Todos los tours'], 
-          turistas: 56,
-          meta: 4000,
-          porcentajeMeta: 205
+          turistas: 968,
+          meta: 140000,
+          porcentajeMeta: 111.4
         },
         { 
-          day: 'Dom', 
-          dayFull: 'Domingo',
-          ingresos: 7100, 
-          reservas: 20, 
-          promedio: 355,
+          day: 'Jul', 
+          dayFull: 'Julio',
+          ingresos: 165000, 
+          reservas: 356, 
+          promedio: 463,
           tours: ['City Tour', 'Gastronómico', 'Pachacámac'], 
-          turistas: 48,
-          meta: 4000,
-          porcentajeMeta: 177.5
+          turistas: 1012,
+          meta: 150000,
+          porcentajeMeta: 110
         }
       ],
-      lastWeek: [
-        { day: 'Lun', ingresos: 3900, reservas: 11, promedio: 355 },
-        { day: 'Mar', ingresos: 3200, reservas: 9, promedio: 356 },
-        { day: 'Mié', ingresos: 4800, reservas: 13, promedio: 369 },
-        { day: 'Jue', ingresos: 4200, reservas: 12, promedio: 350 },
-        { day: 'Vie', ingresos: 5900, reservas: 17, promedio: 347 },
-        { day: 'Sáb', ingresos: 7300, reservas: 21, promedio: 348 },
-        { day: 'Dom', ingresos: 6200, reservas: 18, promedio: 344 }
+      lastMonth: [
+        { day: 'Ene', ingresos: 98000, reservas: 245, promedio: 400 },
+        { day: 'Feb', ingresos: 105000, reservas: 238, promedio: 441 },
+        { day: 'Mar', ingresos: 128000, reservas: 285, promedio: 449 },
+        { day: 'Abr', ingresos: 122000, reservas: 275, promedio: 444 },
+        { day: 'May', ingresos: 138000, reservas: 302, promedio: 457 },
+        { day: 'Jun', ingresos: 145000, reservas: 318, promedio: 456 },
+        { day: 'Jul', ingresos: 152000, reservas: 330, promedio: 461 }
       ]
     };
 
     if (timeframe === 'comparison') {
-      return baseData.thisWeek.map((current, index) => ({
+      return baseData.thisMonth.map((current, index) => ({
         ...current,
-        ingresosAnterior: baseData.lastWeek[index].ingresos,
-        reservasAnterior: baseData.lastWeek[index].reservas,
-        diferencia: current.ingresos - baseData.lastWeek[index].ingresos,
-        porcentajeCambio: ((current.ingresos - baseData.lastWeek[index].ingresos) / baseData.lastWeek[index].ingresos * 100).toFixed(1)
+        ingresosAnterior: baseData.lastMonth[index].ingresos,
+        reservasAnterior: baseData.lastMonth[index].reservas,
+        diferencia: current.ingresos - baseData.lastMonth[index].ingresos,
+        porcentajeCambio: ((current.ingresos - baseData.lastMonth[index].ingresos) / baseData.lastMonth[index].ingresos * 100).toFixed(1)
       }));
     }
 
     return baseData[timeframe];
   }, [timeframe]);
 
-  // Calcular estadísticas de la semana
-  const weekStats = useMemo(() => {
-    const total = weeklyData.reduce((sum, day) => sum + day.ingresos, 0);
-    const totalReservas = weeklyData.reduce((sum, day) => sum + day.reservas, 0);
-    const promedio = total / weeklyData.length;
-    const mejorDia = weeklyData.reduce((best, day) => day.ingresos > best.ingresos ? day : best);
-    const metaTotal = weeklyData.reduce((sum, day) => sum + (day.meta || 4000), 0);
+  // Calcular estadísticas del mes
+  const monthStats = useMemo(() => {
+    const total = monthlyData.reduce((sum, day) => sum + day.ingresos, 0);
+    const totalReservas = monthlyData.reduce((sum, day) => sum + day.reservas, 0);
+    const promedio = total / monthlyData.length;
+    const mejorDia = monthlyData.reduce((best, day) => day.ingresos > best.ingresos ? day : best);
+    const metaTotal = monthlyData.reduce((sum, day) => sum + (day.meta || 4000), 0);
     const porcentajeMeta = (total / metaTotal * 100).toFixed(1);
 
     return {
@@ -145,7 +145,7 @@ const WeeklyIncomeChart = () => {
       mejorDiaIngreso: mejorDia.ingresos,
       porcentajeMeta
     };
-  }, [weeklyData]);
+  }, [monthlyData]);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -197,7 +197,7 @@ const WeeklyIncomeChart = () => {
 
   const renderChart = () => {
     const commonProps = {
-      data: weeklyData,
+      data: monthlyData,
       margin: { top: 20, right: 30, left: 20, bottom: 5 }
     };
 
@@ -250,7 +250,7 @@ const WeeklyIncomeChart = () => {
                 strokeDasharray="5 5"
                 fillOpacity={1}
                 fill="url(#colorAnterior)"
-                name="Semana Anterior ($)"
+                name="Mes Anterior ($)"
                 dot={{ fill: '#6B7280', strokeWidth: 2, r: 4 }}
               />
             )}
@@ -278,7 +278,7 @@ const WeeklyIncomeChart = () => {
               <Bar 
                 dataKey="ingresosAnterior" 
                 fill="#6B7280" 
-                name="Semana Anterior ($)"
+                name="Mes Anterior ($)"
                 radius={[4, 4, 0, 0]}
               />
             )}
@@ -313,7 +313,7 @@ const WeeklyIncomeChart = () => {
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 dot={{ fill: '#6B7280', strokeWidth: 2, r: 4 }}
-                name="Semana Anterior ($)"
+                name="Mes Anterior ($)"
               />
             )}
           </LineChart>
@@ -371,7 +371,7 @@ const WeeklyIncomeChart = () => {
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-              {t('dashboard.weeklyIncome')}
+              {t('dashboard.monthlyIncome')}
             </h3>
             <p className="text-sm text-gray-500">
               {t('dashboard.dailyIncomeAnalysis')}
@@ -386,32 +386,34 @@ const WeeklyIncomeChart = () => {
             value={timeframe}
             onChange={(e) => setTimeframe(e.target.value)}
           >
-            <option value="thisWeek">Esta semana</option>
-            <option value="lastWeek">Semana pasada</option>
-            <option value="comparison">Comparación</option>
+            <option value="thisMonth">{t('dashboard.timeRanges.thisMonth')}</option>
+            <option value="lastMonth">{t('dashboard.timeRanges.lastMonth')}</option>
+            <option value="comparison">{t('dashboard.timeRanges.comparison')}</option>
           </select>
 
           {/* Tipo de gráfico */}
-          <div className="flex bg-gray-100 rounded-lg p-1">
+          <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
             {[
-              { key: 'area', label: 'Área', icon: ChartBarIcon },
-              { key: 'bar', label: 'Barras', icon: ChartBarIcon },
-              { key: 'line', label: 'Línea', icon: ArrowTrendingUpIcon },
-              { key: 'composed', label: 'Mixto', icon: EyeIcon }
+              { key: 'area', label: t('dashboard.chartTypes.area'), icon: ChartBarIcon },
+              { key: 'bar', label: t('dashboard.chartTypes.bar'), icon: ChartBarIcon },
+              { key: 'line', label: t('dashboard.chartTypes.line'), icon: ArrowTrendingUpIcon },
+              { key: 'composed', label: t('dashboard.chartTypes.mixed'), icon: EyeIcon }
             ].map(({ key, label, icon: Icon }) => (
               <InteractiveButton
                 key={key}
-                variant={viewType === key ? 'primary' : 'ghost'}
+                variant="ghost"
                 size="sm"
-                className={`px-2 py-1 text-xs ${
+                className={`px-3 py-1.5 text-sm font-medium ${
                   viewType === key
-                    ? 'bg-white text-gray-900 shadow-sm'
+                    ? 'bg-white !text-gray-900 shadow-sm ring-1 ring-gray-200'
                     : 'text-gray-600 hover:text-gray-900'
-                }`}
+                } transition-all duration-200`}
                 onClick={() => setViewType(key)}
-                icon={Icon}
               >
-                {label}
+                <div className="flex items-center gap-1.5">
+                  <Icon className="w-4 h-4" />
+                  <span>{label}</span>
+                </div>
               </InteractiveButton>
             ))}
           </div>
@@ -419,11 +421,13 @@ const WeeklyIncomeChart = () => {
           <InteractiveButton
             variant="ghost"
             size="sm"
-            icon={showDetails ? EyeIcon : ArrowPathIcon}
             onClick={() => setShowDetails(!showDetails)}
-            className="text-gray-600 hover:text-gray-900"
+            className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-all duration-200"
           >
-            {showDetails ? 'Ocultar' : 'Detalles'}
+            <div className="flex items-center gap-1.5">
+              {showDetails ? <EyeIcon className="w-4 h-4" /> : <ArrowPathIcon className="w-4 h-4" />}
+              <span>{showDetails ? t('common.hide') : t('common.details')}</span>
+            </div>
           </InteractiveButton>
         </div>
       </div>
@@ -433,9 +437,9 @@ const WeeklyIncomeChart = () => {
         <InteractiveCard className="bg-gradient-to-r from-primary-50 to-blue-50 p-4 group/stat">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-primary-600 font-medium">{t('dashboard.weekTotal')}</p>
+              <p className="text-xs text-primary-600 font-medium">{t('dashboard.monthTotal')}</p>
               <p className="text-xl font-bold text-primary-800 group-hover/stat:scale-105 transition-transform">
-                ${weekStats.total.toLocaleString()}
+                ${monthStats.total.toLocaleString()}
               </p>
             </div>
             <CurrencyDollarIcon className="w-8 h-8 text-primary-400 group-hover/stat:text-primary-600 group-hover/stat:animate-pulse transition-all" />
@@ -447,7 +451,7 @@ const WeeklyIncomeChart = () => {
             <div>
               <p className="text-xs text-green-600 font-medium">{t('dashboard.dailyAverage')}</p>
               <p className="text-xl font-bold text-green-800 group-hover/stat:scale-105 transition-transform">
-                ${weekStats.promedio}
+                ${monthStats.promedio}
               </p>
             </div>
             <ArrowTrendingUpIcon className="w-8 h-8 text-green-400 group-hover/stat:text-green-600 group-hover/stat:animate-bounce transition-all" />
@@ -459,9 +463,9 @@ const WeeklyIncomeChart = () => {
             <div>
               <p className="text-xs text-purple-600 font-medium">{t('dashboard.bestDay')}</p>
               <p className="text-sm font-bold text-purple-800 group-hover/stat:scale-105 transition-transform">
-                {weekStats.mejorDia}
+                {monthStats.mejorDia}
               </p>
-              <p className="text-xs text-purple-600">${weekStats.mejorDiaIngreso.toLocaleString()}</p>
+              <p className="text-xs text-purple-600">${monthStats.mejorDiaIngreso.toLocaleString()}</p>
             </div>
             <CalendarDaysIcon className="w-8 h-8 text-purple-400 group-hover/stat:text-purple-600 group-hover/stat:animate-spin transition-all" />
           </div>
@@ -472,15 +476,15 @@ const WeeklyIncomeChart = () => {
             <div>
               <p className="text-xs text-orange-600 font-medium">{t('dashboard.goalAchieved')}</p>
               <p className={`text-xl font-bold group-hover/stat:scale-105 transition-transform ${
-                parseFloat(weekStats.porcentajeMeta) >= 100 ? 'text-green-800' : 'text-orange-800'
+                parseFloat(monthStats.porcentajeMeta) >= 100 ? 'text-green-800' : 'text-orange-800'
               }`}>
-                {weekStats.porcentajeMeta}%
+                {monthStats.porcentajeMeta}%
               </p>
             </div>
             <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover/stat:scale-110 transition-transform ${
-              parseFloat(weekStats.porcentajeMeta) >= 100 ? 'bg-green-200 text-green-600' : 'bg-orange-200 text-orange-600'
+              parseFloat(monthStats.porcentajeMeta) >= 100 ? 'bg-green-200 text-green-600' : 'bg-orange-200 text-orange-600'
             }`}>
-              {parseFloat(weekStats.porcentajeMeta) >= 100 ? '✓' : '!'}
+              {parseFloat(monthStats.porcentajeMeta) >= 100 ? '✓' : '!'}
             </div>
           </div>
         </InteractiveCard>
@@ -498,7 +502,7 @@ const WeeklyIncomeChart = () => {
         <div className="mt-6 pt-6 border-t border-gray-200 animate-in slide-in-from-top-2 duration-300">
           <h4 className="text-md font-semibold text-gray-900 mb-4">Detalles por Día</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {weeklyData.map((day, index) => (
+            {monthlyData.map((day, index) => (
               <InteractiveCard key={index} className="p-4 border border-gray-200 group/detail">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-medium text-gray-900 group-hover/detail:text-primary-600 transition-colors">
@@ -543,4 +547,4 @@ const WeeklyIncomeChart = () => {
   );
 };
 
-export default WeeklyIncomeChart;
+export default MonthlyIncomeChart;

@@ -22,6 +22,7 @@ import {
 import AssignmentManager from '../../components/assignments/AssignmentManager';
 import ExcelButton from '../../components/common/ExcelButton';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const ReservationManagement = () => {
   const [reservations, setReservations] = useState([]);
@@ -269,7 +270,7 @@ const ReservationManagement = () => {
   }, [filteredReservations, clientCategories]);
 
   const handleExport = () => {
-    console.log('Exportando reservas filtradas:', filteredReservations);
+    Logger.debug('Exportando reservas filtradas:', filteredReservations);
     toast.success(`Exportando ${filteredReservations.length} reservas...`);
   };
 

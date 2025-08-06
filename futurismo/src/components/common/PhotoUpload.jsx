@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { PhotoIcon, PlusIcon, XMarkIcon, EyeIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const PhotoUpload = ({ photos = [], onPhotosChange, maxPhotos = 5, acceptedTypes = "image/*" }) => {
   const [uploading, setUploading] = useState(false);
@@ -59,7 +60,7 @@ const PhotoUpload = ({ photos = [], onPhotosChange, maxPhotos = 5, acceptedTypes
       
     } catch (error) {
       toast.error('Error al subir las fotos');
-      console.error(error);
+      Logger.error(error);
     } finally {
       setUploading(false);
       // Limpiar el input

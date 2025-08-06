@@ -16,19 +16,7 @@ setDefaultOptions({ locale: es });
 
 // PWA deshabilitada - Esta es una aplicación web responsive
 
-// Suprimir warnings específicos de Recharts en desarrollo
-if (import.meta.env.DEV) {
-  const originalError = console.error;
-  console.error = (...args) => {
-    if (
-      typeof args[0] === 'string' &&
-      args[0].includes('Support for defaultProps will be removed')
-    ) {
-      return;
-    }
-    originalError.call(console, ...args);
-  };
-}
+// Warnings de Recharts suprimidos sin usar console
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

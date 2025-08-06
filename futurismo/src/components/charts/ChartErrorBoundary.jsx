@@ -1,4 +1,5 @@
 import React from 'react';
+import Logger from '../../utils/logger';
 
 class ChartErrorBoundary extends React.Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class ChartErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Chart Error:', error, errorInfo);
+    Logger.error('Chart Error:', error, errorInfo);
   }
 
   render() {

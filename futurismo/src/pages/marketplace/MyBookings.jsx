@@ -18,6 +18,7 @@ import useMarketplaceStore from '../../stores/marketplaceStore';
 import useAuthStore from '../../stores/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import toast from 'react-hot-toast';
+import Logger from '../../utils/logger';
 
 const MyBookings = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const MyBookings = () => {
       setBookings(enrichedBookings);
       setFilteredBookings(enrichedBookings);
     } catch (error) {
-      console.error('Error loading bookings:', error);
+      Logger.error('Error loading bookings:', error);
       toast.error('Error al cargar las reservas');
     } finally {
       setIsLoading(false);
@@ -139,15 +140,14 @@ const MyBookings = () => {
       setSelectedBooking(null);
       loadBookings();
     } catch (error) {
-      console.error('Error cancelling booking:', error);
+      Logger.error('Error cancelling booking:', error);
       toast.error('Error al cancelar la reserva');
     }
   };
 
   const handleContactGuide = (booking) => {
-    if (booking.guide?.phone) {
-      window.location.href = `tel:${booking.guide.phone}`;
-    }
+    // Redirigir al chat en lugar de llamar
+    navigate('/chat');
   };
 
   const handleViewDetails = (booking) => {

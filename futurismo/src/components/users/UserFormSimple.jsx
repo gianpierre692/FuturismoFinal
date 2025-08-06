@@ -9,6 +9,7 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useUsersStore } from '../../stores/usersStoreSimple';
+import Logger from '../../utils/logger';
 
 const UserForm = ({ user = null, onSubmit, onCancel, isLoading = false }) => {
   const { createUser, updateUser, getRoles } = useUsersStore();
@@ -128,7 +129,7 @@ const UserForm = ({ user = null, onSubmit, onCancel, isLoading = false }) => {
         onSubmit(formData);
       }
     } catch (error) {
-      console.error('Error al guardar usuario:', error);
+      Logger.error('Error al guardar usuario:', error);
     }
   };
 

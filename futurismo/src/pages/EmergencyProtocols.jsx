@@ -8,6 +8,7 @@ import emergencyPDFService from '../services/emergencyPDFService';
 import useAuthStore from '../stores/authStore';
 import AdminEmergency from './AdminEmergency';
 import AdvancedDataTable from '../components/common/AdvancedDataTable';
+import Logger from '../utils/logger';
 
 const EmergencyProtocols = () => {
   const { user } = useAuthStore();
@@ -41,7 +42,7 @@ const EmergencyProtocols = () => {
     try {
       await emergencyPDFService.downloadProtocolPDF(protocol);
     } catch (error) {
-      console.error('Error descargando protocolo:', error);
+      Logger.error('Error descargando protocolo:', error);
       alert('Error al generar el PDF del protocolo');
     }
   };
@@ -50,7 +51,7 @@ const EmergencyProtocols = () => {
     try {
       await emergencyPDFService.downloadAllProtocolsPDF(filteredProtocols);
     } catch (error) {
-      console.error('Error descargando todos los protocolos:', error);
+      Logger.error('Error descargando todos los protocolos:', error);
       alert('Error al generar el PDF de todos los protocolos');
     }
   };
@@ -59,7 +60,7 @@ const EmergencyProtocols = () => {
     try {
       await emergencyPDFService.downloadGuideEmergencyKit();
     } catch (error) {
-      console.error('Error descargando kit de guía:', error);
+      Logger.error('Error descargando kit de guía:', error);
       alert('Error al generar el PDF del kit de emergencia');
     }
   };

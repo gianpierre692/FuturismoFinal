@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   PlusIcon, 
   UserGroupIcon, 
@@ -11,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { es, enUS } from 'date-fns/locale';
 import FantasticalLayout from '../calendar/FantasticalLayout';
 import CalendarSidebar from '../calendar/Sidebar/CalendarSidebar';
 import DayView from '../calendar/Views/DayView';
@@ -19,8 +20,10 @@ import WeekView from '../calendar/Views/WeekView';
 import MonthView from '../calendar/Views/MonthView';
 import useIndependentAgendaStore from '../../stores/independentAgendaStore';
 import useAuthStore from '../../stores/authStore';
+import Logger from '../../utils/logger';
 
 const AdminAvailabilityView = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const { 
@@ -146,13 +149,13 @@ const AdminAvailabilityView = () => {
   };
 
   const handleEventClick = (event) => {
-    console.log('Admin clicked on event:', event);
+    Logger.debug('Admin clicked on event:', event);
     // Mostrar detalles del evento o permitir modificación si es tour de empresa
   };
 
   const handleDateClick = (date) => {
     // Cambiar a vista día de esa fecha específica
-    console.log('Admin clicked on date:', date);
+    Logger.debug('Admin clicked on date:', date);
   };
 
   const renderCurrentView = () => {
@@ -181,7 +184,7 @@ const AdminAvailabilityView = () => {
       {/* Info del guía seleccionado */}
       {currentGuideInfo && (
         <div className="p-4 border-t border-gray-100">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Guía Seleccionado</h4>
+          <h4 className="text-sm font-medium text-gray-700 mb-3">{t('admin.availability.selectedGuide')}</h4>
           
           <div className="bg-gray-50 rounded-lg p-3">
             <div className="flex items-center space-x-3 mb-3">
@@ -219,7 +222,7 @@ const AdminAvailabilityView = () => {
                 className="flex-1 flex items-center justify-center space-x-1 px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
               >
                 <ChatBubbleLeftRightIcon className="w-3 h-3" />
-                <span>Ir al Chat</span>
+                <span>{t('admin.availability.goToChat')}</span>
               </button>
             </div>
           </div>
@@ -228,7 +231,7 @@ const AdminAvailabilityView = () => {
 
       {/* Lista de todos los guías */}
       <div className="p-4 border-t border-gray-100 flex-1 overflow-y-auto">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Todos los Guías</h4>
+        <h4 className="text-sm font-medium text-gray-700 mb-3">{t('admin.availability.allGuides')}</h4>
         <div className="space-y-2">
           {guides.map(guide => (
             <button
@@ -296,13 +299,13 @@ const AdminAvailabilityView = () => {
               >
                 <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 mb-4">
-                    Asignar Tour a {currentGuideInfo?.name}
+                    {t('admin.availability.assignTourTo')} {currentGuideInfo?.name}
                   </Dialog.Title>
 
                   {selectedTimeSlot && (
                     <div className="bg-blue-50 rounded-lg p-3 mb-4">
                       <p className="text-sm text-blue-800">
-                        📅 {format(selectedDate, 'EEEE, d \'de\' MMMM', { locale: es })}
+                        📅 {format(selectedDate, 'EEEE, d \'de\' MMMM', { locale: i18n.language === 'es' ? es : enUS })}
                       </p>
                       <p className="text-sm text-blue-600">
                         🕒 {selectedTimeSlot.startTime} - {selectedTimeSlot.endTime}
@@ -313,33 +316,33 @@ const AdminAvailabilityView = () => {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Nombre del Tour *
+                        {t('admin.availability.tourName')} *
                       </label>
                       <input
                         type="text"
                         value={tourForm.title}
                         onChange={(e) => setTourForm({...tourForm, title: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ej: City Tour Cusco, Machu Picchu..."
+                        placeholder={t('admin.availability.tourNamePlaceholder')}
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Cliente *
+                          {t('admin.availability.client')} *
                         </label>
                         <input
                           type="text"
                           value={tourForm.client}
                           onChange={(e) => setTourForm({...tourForm, client: e.target.value})}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nombre del cliente"
+                          placeholder={t('admin.availability.clientPlaceholder')}
                         />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Duración (horas)
+                          {t('admin.availability.duration')}
                         </label>
                         <input
                           type="number"
@@ -354,21 +357,21 @@ const AdminAvailabilityView = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Ubicación/Punto de encuentro
+                        {t('admin.availability.meetingPoint')}
                       </label>
                       <input
                         type="text"
                         value={tourForm.location}
                         onChange={(e) => setTourForm({...tourForm, location: e.target.value})}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Ej: Plaza de Armas, Hotel..."
+                        placeholder={t('admin.availability.meetingPointPlaceholder')}
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Precio (S/.)
+                          {t('admin.availability.price')}
                         </label>
                         <input
                           type="number"
@@ -381,30 +384,30 @@ const AdminAvailabilityView = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Estado inicial
+                          {t('admin.availability.initialStatus')}
                         </label>
                         <select
                           value={tourForm.status}
                           onChange={(e) => setTourForm({...tourForm, status: e.target.value})}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
-                          <option value="pending">Pendiente</option>
-                          <option value="confirmed">Confirmado</option>
-                          <option value="tentative">Tentativo</option>
+                          <option value="pending">{t('common.pending')}</option>
+                          <option value="confirmed">{t('common.confirmed')}</option>
+                          <option value="tentative">{t('admin.availability.tentative')}</option>
                         </select>
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Descripción/Notas
+                        {t('admin.availability.descriptionNotes')}
                       </label>
                       <textarea
                         value={tourForm.description}
                         onChange={(e) => setTourForm({...tourForm, description: e.target.value})}
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Detalles del tour, requisitos especiales..."
+                        placeholder={t('admin.availability.descriptionPlaceholder')}
                       />
                     </div>
                   </div>
@@ -415,14 +418,14 @@ const AdminAvailabilityView = () => {
                       className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
                       onClick={() => setIsAssignTourModalOpen(false)}
                     >
-                      Cancelar
+                      {t('common.cancel')}
                     </button>
                     <button
                       type="button"
                       className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                       onClick={handleAssignTour}
                     >
-                      Asignar Tour
+                      {t('admin.availability.assignTour')}
                     </button>
                   </div>
                 </Dialog.Panel>

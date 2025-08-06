@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import Logger from '../../utils/logger';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo);
+    Logger.error('ErrorBoundary caught:', error, errorInfo);
     
     // Aquí podrías enviar el error a un servicio de logging
     if (import.meta.env.PROD) {
