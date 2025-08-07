@@ -73,11 +73,15 @@
   .relative input[type="email"],
   .relative input[type="tel"],
   .relative input[type="search"],
-  .relative input[type="password"],
   .relative input[type="number"],
   .relative select,
   .relative textarea {
     padding-left: 2.75rem !important; /* 44px = espacio para icono de 20px + margen */
+  }
+  
+  /* Excepción para inputs de password que solo tienen icono a la derecha */
+  .relative input[type="password"]:not(.with-left-icon) {
+    padding-left: 1rem !important; /* padding normal */
   }
   
   /* Asegurar que los iconos estén bien posicionados */
@@ -165,6 +169,23 @@
   /* Inputs */
   .input {
     @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200;
+  }
+  
+  /* Normalizar estilos de inputs password para que coincidan con email */
+  input[type="password"].input {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background: white !important;
+  }
+  
+  input[type="password"].input::-webkit-inner-spin-button,
+  input[type="password"].input::-webkit-outer-spin-button {
+    display: none !important;
+  }
+  
+  input[type="password"].input::-webkit-credentials-auto-fill-button {
+    display: none !important;
   }
   
   .input-error {
