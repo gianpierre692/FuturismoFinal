@@ -3,8 +3,8 @@ import {
   ChartBarIcon,
   MapIcon,
   CurrencyDollarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   UserGroupIcon,
   ClockIcon,
   CalendarIcon,
@@ -397,7 +397,7 @@ const RouteAnalytics = () => {
                       <p className="text-sm text-gray-600">{zone.tours} tours • S/. {zone.revenue.toLocaleString()}</p>
                     </div>
                     <div className={`flex items-center ${zone.growth > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {zone.growth > 0 ? <TrendingUpIcon className="h-5 w-5 mr-1" /> : <TrendingDownIcon className="h-5 w-5 mr-1" />}
+                      {zone.growth > 0 ? <ArrowTrendingUpIcon className="h-5 w-5 mr-1" /> : <ArrowTrendingDownIcon className="h-5 w-5 mr-1" />}
                       <span className="font-medium">{zone.growth > 0 ? '+' : ''}{zone.growth}%</span>
                     </div>
                   </div>

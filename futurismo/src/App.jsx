@@ -25,6 +25,8 @@ const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ './pages
 const Monitoring = lazy(() => import(/* webpackChunkName: "monitoring" */ './pages/Monitoring'));
 const Reservations = lazy(() => import(/* webpackChunkName: "reservations" */ './pages/Reservations'));
 const History = lazy(() => import('./pages/History'));
+const MisTours = lazy(() => import('./pages/MisTours'));
+const Historial = lazy(() => import('./pages/Historial'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Chat = lazy(() => import('./pages/Chat'));
 const Users = lazy(() => import('./pages/Users'));
@@ -47,7 +49,6 @@ const TourReassignment = lazy(() => import('./pages/admin/TourReassignment'));
 const AgencyApproval = lazy(() => import('./pages/admin/AgencyApproval'));
 const MassNotifications = lazy(() => import('./pages/admin/MassNotifications'));
 const RouteAnalytics = lazy(() => import('./pages/admin/RouteAnalytics'));
-const TourPhotosManagement = lazy(() => import('./pages/admin/TourPhotosManagement'));
 const FinancialDashboard = lazy(() => import('./pages/guide/FinancialDashboard'));
 const PointsStore = lazy(() => import('./pages/guide/PointsStore'));
 const ResponsiveTest = lazy(() => import('./pages/ResponsiveTest'));
@@ -197,6 +198,22 @@ function App() {
               } 
             />
             <Route path="history" element={<History />} />
+            <Route 
+              path="mis-tours" 
+              element={
+                <ProtectedRoute allowedRoles={['guide']}>
+                  <MisTours />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="historial" 
+              element={
+                <ProtectedRoute allowedRoles={['guide']}>
+                  <Historial />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="chat" element={<Chat />} />
             <Route path="profile" element={<Profile />} />
             <Route path="responsive-test" element={<ResponsiveTest />} />
@@ -328,14 +345,6 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <RouteAnalytics />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="admin/tour-photos" 
-              element={
-                <ProtectedRoute allowedRoles={['admin', 'agency']}>
-                  <TourPhotosManagement />
                 </ProtectedRoute>
               } 
             />

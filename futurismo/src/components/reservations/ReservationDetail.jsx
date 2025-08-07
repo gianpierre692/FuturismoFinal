@@ -1,4 +1,4 @@
-import { XMarkIcon, CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, PhoneIcon, CurrencyDollarIcon, DocumentTextIcon, ArrowDownTrayIcon, PaperAirplaneIcon, PencilIcon, CheckCircleIcon, ExclamationTriangleIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, CalendarIcon, ClockIcon, UserGroupIcon, MapPinIcon, PhoneIcon, CurrencyDollarIcon, DocumentTextIcon, ArrowDownTrayIcon, PaperAirplaneIcon, PencilIcon, CheckCircleIcon, ExclamationTriangleIcon, BuildingOfficeIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { formatters } from '../../utils/formatters';
 import Logger from '../../utils/logger';
 
@@ -282,6 +282,45 @@ const ReservationDetail = ({ reservation, onClose }) => {
               <div className="bg-gray-50 rounded-lg p-6">
                 <h3 className="font-semibold text-lg mb-2">Requerimientos Especiales</h3>
                 <p className="text-gray-700">{reservation.specialRequirements}</p>
+              </div>
+            )}
+
+            {/* Fotos del Tour - Solo mostrar si hay fotos o el tour está en progreso/completado */}
+            {((reservation.status === 'en_progreso' || reservation.status === 'completada') && reservation.tourPhotos) && (
+              <div className="bg-gray-50 rounded-lg p-6">
+                <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                  <PhotoIcon className="w-5 h-5 text-primary-600" />
+                  Fotos del Tour
+                </h3>
+                {reservation.tourPhotos && reservation.tourPhotos.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {reservation.tourPhotos.map((photo, index) => (
+                      <div key={index} className="relative group">
+                        <img
+                          src={photo.url}
+                          alt={`Foto ${index + 1}`}
+                          className="w-full h-24 object-cover rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                          onClick={() => window.open(photo.url, '_blank')}
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                          <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            Ver ampliada
+                          </span>
+                        </div>
+                        {photo.timestamp && (
+                          <div className="absolute bottom-1 right-1 bg-black bg-opacity-60 text-white text-xs px-1 rounded">
+                            {formatters.formatTime(photo.timestamp)}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <PhotoIcon className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                    <p>El guía aún no ha subido fotos del tour</p>
+                  </div>
+                )}
               </div>
             )}
 

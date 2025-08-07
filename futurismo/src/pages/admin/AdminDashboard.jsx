@@ -30,8 +30,7 @@ import {
   ScaleIcon,
   XCircleIcon,
   PlusCircleIcon,
-  MegaphoneIcon,
-  ArrowTrendingUpIcon
+  MegaphoneIcon
 } from '@heroicons/react/24/outline';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import UniversalExportService from '../../services/universalExportService';
@@ -182,7 +181,7 @@ const AdminDashboard = () => {
         {
           title: 'Análisis de Rutas',
           subtitle: 'Rutas rentables y desempeño',
-          icon: TrendingUpIcon,
+          icon: ArrowTrendingUpIcon,
           path: '/admin/route-analytics',
           stats: { profitable: 8, analyzed: 15 },
           color: 'indigo',

@@ -118,13 +118,13 @@ const Dashboard = () => {
       
       // Guide role actions
       case 'my-tours':
-        navigate('/monitoring?view=my-tours');
+        navigate('/mis-tours');
         break;
       case 'completed':
-        navigate('/monitoring?filter=completed');
+        navigate('/historial?filter=completados');
         break;
       case 'next-tour':
-        navigate('/agenda?view=next');
+        navigate('/agenda');
         break;
       case 'my-rating':
         navigate('/profile');

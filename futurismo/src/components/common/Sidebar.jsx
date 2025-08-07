@@ -24,7 +24,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         { path: '/marketplace/bookings', icon: BriefcaseIcon, label: t('navigation.myContracts') },
         { path: '/agency/calendar', icon: CalendarDaysIcon, label: t('navigation.calendar') },
         { path: '/agency/reports', icon: ChartBarIcon, label: t('navigation.reports') },
-        { path: '/admin/tour-photos', icon: PhotoIcon, label: 'Fotos de Tours' },
         { path: '/agency/points', icon: StarIcon, label: t('navigation.points') },
         { path: '/history', icon: ClockIcon, label: t('navigation.history') },
         { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') },
@@ -33,14 +32,17 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     } else if (user?.role === 'guide') {
       const guideItems = [
         ...baseItems,
-        { path: '/monitoring', icon: MapIcon, label: t('navigation.myTours') },
-        { path: '/history', icon: ClockIcon, label: t('navigation.history') },
+        { path: '/mis-tours', icon: MapIcon, label: 'Mis Tours' },
+        { path: '/monitoring', icon: GlobeAltIcon, label: t('navigation.monitoring') },
+        { path: '/historial', icon: ClockIcon, label: 'Historial' },
         { path: '/chat', icon: ChatBubbleLeftRightIcon, label: t('navigation.chat') }
       ];
       
+      // Agregar agenda para todos los guías
+      guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: user?.guideType === 'planta' ? 'Mi Agenda de Trabajo' : 'Mi Agenda' });
+      
       // Agregar opciones específicas para guías freelance
       if (user?.guideType === 'freelance') {
-        guideItems.splice(-1, 0, { path: '/agenda', icon: CalendarDaysIcon, label: t('navigation.myAgenda') });
         guideItems.splice(-1, 0, { path: '/marketplace/guide-dashboard', icon: BriefcaseIcon, label: t('navigation.myServices') });
         guideItems.splice(-1, 0, { path: '/guide/finances', icon: CurrencyDollarIcon, label: t('navigation.finances') });
         guideItems.splice(-1, 0, { path: '/guide/points-store', icon: StarIcon, label: t('navigation.pointsStore') });
@@ -72,8 +74,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           section: 'ANÁLISIS',
           items: [
             { path: '/admin/reports', icon: ChartBarIcon, label: 'Reportes' },
-            { path: '/admin/tour-photos', icon: PhotoIcon, label: 'Fotos de Tours' },
-            { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
+                { path: '/history', icon: DocumentTextIcon, label: 'Historial' },
           ]
         },
         {
