@@ -23,9 +23,9 @@ const Chat = () => {
   const isFromAgenda = searchParams.get('guide');
 
   return (
-    <div className="page-container">
+    <div className="page-container h-full">
       <div className="page-content-none flex flex-col h-full">
-        <div className="page-header-none">
+        <div className="page-header-none flex-shrink-0">
           <h1 className="page-title">Chat</h1>
           <p className="page-subtitle">
             {isFromAgenda && guideName ? 
@@ -35,7 +35,7 @@ const Chat = () => {
           </p>
         </div>
         
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden">
           <ChatContainer />
         </div>
       </div>

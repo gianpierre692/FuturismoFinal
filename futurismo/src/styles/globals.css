@@ -560,9 +560,11 @@
 .unified-main {
   flex: 1;
   margin-top: var(--header-height);
-  overflow-x: hidden;
-  min-height: calc(100vh - var(--header-height));
+  overflow: hidden;
+  height: calc(100vh - var(--header-height));
   border: none;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Con sidebar (desktop) */
@@ -573,12 +575,13 @@
 /* Con bottom navigation (mobile) */
 .unified-main.with-bottom-nav {
   margin-bottom: var(--bottom-nav-height);
+  height: calc(100vh - var(--header-height) - var(--bottom-nav-height));
 }
 
 /* Sin header (marketplace mobile) */
 .unified-main.no-header {
   margin-top: 0;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 /* Contenedor de contenido */
@@ -587,6 +590,9 @@
   padding: 0.5rem;
   width: 100%;
   border: none;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 640px) {

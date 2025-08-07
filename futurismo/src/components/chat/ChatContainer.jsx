@@ -50,9 +50,9 @@ const ChatContainer = () => {
   }, [searchParams]);
 
   return (
-    <div className="flex h-full bg-gray-50">
+    <div className="flex h-full bg-gray-50 overflow-hidden">
       {/* Lista de chats - oculta en móvil cuando hay chat seleccionado */}
-      <div className={`w-full lg:w-80 ${isMobileView ? 'hidden lg:block' : 'block'}`}>
+      <div className={`w-full lg:w-80 flex-shrink-0 ${isMobileView ? 'hidden lg:block' : 'block'}`}>
         <ChatList 
           onSelectChat={handleSelectChat} 
           selectedChatId={selectedChat?.id}
@@ -60,7 +60,7 @@ const ChatContainer = () => {
       </div>
 
       {/* Ventana de chat - visible en móvil cuando hay chat seleccionado */}
-      <div className={`flex-1 ${!isMobileView && !selectedChat ? 'hidden lg:flex' : 'flex'}`}>
+      <div className={`flex-1 ${!isMobileView && !selectedChat ? 'hidden lg:flex' : 'flex'} overflow-hidden`}>
         {selectedChat ? (
           <ChatWindow 
             chat={selectedChat} 
